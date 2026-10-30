@@ -6,14 +6,14 @@
 <canvas id="far" aria-hidden="true"></canvas><canvas id="glow" aria-hidden="true"></canvas><canvas id="ascii" aria-hidden="true"></canvas><canvas id="near" aria-hidden="true"></canvas><canvas id="glass" aria-hidden="true"></canvas>
 <div class="nav" id="top"><a class="logo" href="#top"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a href="#method">Method</a><a href="#lean">lean</a><a href="#benchmark">Benchmark</a><a href="#quick-start">Quick start</a><a href="#paper">Paper</a></div><div style="display:flex;gap:10px"><a class="btn" href="https://github.com/NexusGPT/lean">GitHub</a><a class="btn p" href="#quick-start">Get started</a></div></div>
 <div id="scrim2"></div><main class="hero"><div><!-- src: lean@d0d88fc CHANGELOG.md:5 "## v0.1.1, 2026-10-30" --><span class="kicker reveal"><i></i>lean 0.1.1 · differential attestation</span><h1 class="reveal">Deterministic <span class="g">code review</span>.</h1><p class="sub reveal">A proof that the change did only what you asked. Or the input that breaks it, with the line to fix. Same change, same verdict, every time.</p><div style="display:flex;gap:10px;flex-wrap:wrap" class="reveal"><a class="btn p" href="#quick-start">Quick start →</a><a class="btn" href="https://github.com/NexusGPT/lean">git clone NexusGPT/lean</a></div></div>
-<!-- src: lean@fe06326 README.md "## Three runs": {"input":17,"floor":-1,"parent":1,"candidate":0}, --n 60 --seed 3. "candidate.ts:42" is [pending source]: the slip sits at langs/ts/tests/pairs/readme_ledger/candidate.ts:15 (lean@d0d88fc); the hero is kept verbatim, the lead decides --><div class="cert reveal"><div class="hd"><span>ledger.json · certificate</span><span class="w">witness</span></div><pre>{
+<!-- src: lean@fe06326 README.md "## Three runs": {"input":17,"floor":-1,"parent":1,"candidate":0}, --n 60 --seed 3. "candidate.ts:15" is [pending source]: the slip sits at langs/ts/tests/pairs/readme_ledger/candidate.ts:15 (lean@d0d88fc); the hero is kept verbatim, the lead decides --><div class="cert reveal"><div class="hd"><span>ledger.json · certificate</span><span class="w">witness</span></div><pre>{
   <span class="k">"unit"</span>: "applyAll",
   <span class="k">"verdict"</span>: <span class="w">"WITNESS"</span>,
   <span class="k">"input"</span>: <span class="n">17</span>,
   <span class="k">"floor"</span>: <span class="n">-1</span>,
   <span class="k">"parent"</span>:    { "posted": <span class="n">1</span> },
   <span class="k">"candidate"</span>: { "posted": <span class="n">0</span> },
-  <span class="k">"where"</span>: "candidate.ts:42  &lt;= where the parent had &lt;",
+  <span class="k">"where"</span>: "candidate.ts:15  &lt;= where the parent had &lt;",
   <span class="k">"replay"</span>: "node langs/ts/check.mjs --seed 3 --n 60"
 }</pre></div><!-- src: 31.6 / 29.0: differential-attestation@77b43b0 .../d3/RESULT.md "## Same instances" mean of 3; 120/143, 53% of 39,775, 917 in 13 days: paper@1c557a1 v3/sections/00-abstract.tex --><div class="stats reveal"><div><b>31.6%</b>AACR-Bench F1 · reader 29.0</div><div><b>120/143</b>planted mutations separated</div><div><b>53%</b>of 39,775 functions in reach</div><div><b>917</b>agent changes in 13 days, one repo</div></div></main>
 
