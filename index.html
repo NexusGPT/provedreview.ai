@@ -123,13 +123,13 @@
     </div>
     <div class="two">
       <div>
-        <table class="table">
+        <div class="table-wrap"><table class="table">
           <thead><tr><th>Entry</th><th>Precision</th><th>Recall</th><th>F1</th><th>Comments</th></tr></thead>
           <tbody>
             <tr class="us"><td><strong>Differential attestation + lean</strong><br><span class="dim" style="color:rgba(255,255,255,.6);font-size:13px">d2 reader, gate, C4 rows</span></td><td class="num">34.1<span class="delta">+6.4</span></td><td class="num">29.5<span class="delta neg">−1.0</span></td><td class="num">31.6<span class="delta">+2.6</span></td><td class="num">1,059</td></tr>
             <tr><td>Open Code Review<br><span style="color:rgba(255,255,255,.6);font-size:13px">the published reader</span></td><td class="num">27.7</td><td class="num">30.4</td><td class="num">29.0</td><td class="num">1,426</td></tr>
           </tbody>
-        </table>
+        </table></div>
         <p class="note">Mean of three judge rounds (claude-opus-5-5), 184 instances both entries scored; 12 of 196 unscored, 11 because GitHub no longer serves the commit. The readers ran on different models (ours on opus-5-5, the floor on opus-4-6); a same-model run is scheduled. Every per-instance verdict and both judge logs are in the repository.</p>
       </div>
       <div>

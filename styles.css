@@ -107,7 +107,8 @@ h1, h2, h3 { font-family: var(--ff-serif); font-weight: 700; letter-spacing: -0.
 .bench .head h2 em { color: rgba(255,255,255,0.6); }
 .bench .head p { color: rgba(255,255,255,0.7); }
 .bench .rule-dash { color: rgba(255,255,255,0.7); }
-.table { width: 100%; border-collapse: collapse; font-size: 15px; }
+.table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.table { width: 100%; border-collapse: collapse; font-size: 15px; min-width: 520px; }
 .table th { text-align: left; font-family: var(--ff-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,0.55); padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,0.25); font-weight: 400; }
 .table td { padding: 20px 14px; border-bottom: 1px solid rgba(255,255,255,0.14); vertical-align: top; }
 .table td.num { font-family: "YepFont", monospace; font-size: 28px; letter-spacing: -0.01em; }
@@ -165,7 +166,8 @@ h1, h2, h3 { font-family: var(--ff-serif); font-weight: 700; letter-spacing: -0.
   .section { padding: 72px var(--px); }
   .head h2 { font-size: 36px; }
   .cards--3, .cards--2, .steps { grid-template-columns: 1fr; }
-  .bench .two { grid-template-columns: 1fr; }
+  .bench .two { grid-template-columns: minmax(0, 1fr); }
+  .bench .two > * { min-width: 0; }
   .bar-row { grid-template-columns: 110px 1fr 56px; }
   .table { font-size: 13px; } .table td.num { font-size: 22px; } .table th, .table td { padding: 12px 8px; }
   .footer .inner { align-items: flex-start; flex-direction: column; }
