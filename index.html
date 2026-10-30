@@ -1,0 +1,261 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>provedreview: deterministic code review</title><meta name="description" content="A proof that the change did only what you asked, or the input that breaks it.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@1,8..60,400&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<script>document.documentElement.classList.add("js")</script>
+</head><body>
+<canvas id="far" aria-hidden="true"></canvas><canvas id="glow" aria-hidden="true"></canvas><canvas id="ascii" aria-hidden="true"></canvas><canvas id="near" aria-hidden="true"></canvas><canvas id="glass" aria-hidden="true"></canvas>
+<div class="nav" id="top"><a class="logo" href="#top"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a href="#method">Method</a><a href="#lean">lean</a><a href="#benchmark">Benchmark</a><a href="#quick-start">Quick start</a><a href="#paper">Paper</a></div><div style="display:flex;gap:10px"><a class="btn" href="https://github.com/NexusGPT/lean">GitHub</a><a class="btn p" href="#quick-start">Get started</a></div></div>
+<div id="scrim2"></div><main class="hero"><div><!-- src: lean@d0d88fc CHANGELOG.md:5 "## v0.1.1, 2026-10-30" --><span class="kicker reveal"><i></i>lean 0.1.1 · differential attestation</span><h1 class="reveal">Deterministic <span class="g">code review</span>.</h1><p class="sub reveal">A proof that the change did only what you asked. Or the input that breaks it, with the line to fix. Same change, same verdict, every time.</p><div style="display:flex;gap:10px;flex-wrap:wrap" class="reveal"><a class="btn p" href="#quick-start">Quick start →</a><a class="btn" href="https://github.com/NexusGPT/lean">git clone NexusGPT/lean</a></div></div>
+<!-- src: lean@fe06326 README.md "## Three runs": {"input":17,"floor":-1,"parent":1,"candidate":0}, --n 60 --seed 3. "candidate.ts:15" is [pending source]: the slip sits at langs/ts/tests/pairs/readme_ledger/candidate.ts:15 (lean@d0d88fc); the hero is kept verbatim, the lead decides --><div class="cert reveal"><div class="hd"><span>ledger.json · certificate</span><span class="w">witness</span></div><pre>{
+  <span class="k">"unit"</span>: "applyAll",
+  <span class="k">"verdict"</span>: <span class="w">"WITNESS"</span>,
+  <span class="k">"input"</span>: <span class="n">17</span>,
+  <span class="k">"floor"</span>: <span class="n">-1</span>,
+  <span class="k">"parent"</span>:    { "posted": <span class="n">1</span> },
+  <span class="k">"candidate"</span>: { "posted": <span class="n">0</span> },
+  <span class="k">"where"</span>: "candidate.ts:15  &lt;= where the parent had &lt;",
+  <span class="k">"replay"</span>: "node langs/ts/check.mjs --seed 3 --n 60"
+}</pre></div><!-- src: 31.6 / 29.0: differential-attestation@77b43b0 .../d3/RESULT.md "## Same instances" mean of 3; 120/143, 53% of 39,775, 917 in 13 days: paper@1c557a1 v3/sections/00-abstract.tex --><div class="stats reveal"><div><b>31.6%</b>AACR-Bench F1 · reader 29.0</div><div><b>120/143</b>planted mutations separated</div><div><b>53%</b>of 39,775 functions in reach</div><div><b>917</b>agent changes in 13 days, one repo</div></div></main>
+
+<div class="below">
+
+<!-- 1. counters -->
+<section class="sec counters" id="numbers" aria-label="Numbers">
+  <div class="row5">
+    <div class="ctr rv">
+      <!-- src: differential-attestation@77b43b0 legit/round7/lean-v3/research/open-code-review/d3/RESULT.md, "## Same instances", mean of 3: composed F1 31.61 %, floor F1 29.02 % -->
+      <div class="v">31.6<small>vs 29.0</small></div>
+      <div class="k">AACR-Bench F1</div>
+      <p>Against the published reader, same 184 instances, same judge.</p>
+    </div>
+    <div class="ctr rv">
+      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "the recording checks caught 22 of 43, 2.2 times the reader"; reader "10 of 43" -->
+      <div class="v">2.2x<small>22 vs 10</small></div>
+      <div class="k">Escaped defects caught</div>
+      <p>Recordings against the strongest reader, on 43 defects that passed review.</p>
+    </div>
+    <div class="ctr rv">
+      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "found a separating input for 120 of 143 planted mutations and proved none of them equal" -->
+      <div class="v">120<small>of 143</small></div>
+      <div class="k">Planted mutations</div>
+      <p>Each separated by an input lean found. None proved equal.</p>
+    </div>
+    <div class="ctr rv">
+      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "its reach is 53 percent of 39,775 functions in 36 repositories" -->
+      <div class="v">53%<small>of 39,775</small></div>
+      <div class="k">Functions in reach</div>
+      <p>Proved or executed, across 36 repositories.</p>
+    </div>
+    <div class="ctr rv">
+      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "917 changes in 13 days, against about ten a day for a reviewer" -->
+      <div class="v">917<small>in 13 days</small></div>
+      <div class="k">Agent changes</div>
+      <p>One repository we operate. A reviewer reads about ten a day.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 2. use cases -->
+<section class="sec" id="use-cases">
+  <div class="head rv">
+    <div>
+      <span class="eyebrow">Use cases</span>
+      <h2>Where a reader cannot keep up.</h2>
+      <p class="lede">The gate reads neither the change text nor any statement by its producer. It runs both versions and compares them.</p>
+    </div>
+    <canvas class="fig" data-fig="branch" aria-hidden="true"></canvas>
+  </div>
+  <div class="cards c3">
+    <article class="card rim rv">
+      <div class="tag"><span>01 · AGENTS</span><span class="w">WITNESS</span></div>
+      <h3>Agent-heavy repositories</h3>
+      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "917 changes in 13 days" -->
+      <p>917 changes in 13 days in one repository. The agent's account of a change never enters the verdict.</p>
+      <!-- src: lean@fe06326 README.md, "### 5. A coding agent's loop" -->
+      <div class="ex">A <span class="w">WITNESS</span> carries the source line of the first difference and the advised rewrite. The agent fixes against an input it can replay.</div>
+    </article>
+    <article class="card rim rv">
+      <div class="tag"><span>02 · PLATFORM</span><span class="w">--block witness</span></div>
+      <h3>Platform teams</h3>
+      <p>A gate in CI. Run it advisory first: one comment per pull request, updated on every push. Then block on <code>WITNESS</code>.</p>
+      <!-- src: lean@fe06326 README.md, "## Using it", the pull-request comment and gate row -->
+      <div class="ex"><span class="k">$</span> node langs/ts/ci/comment.mjs --repo &lt;checkout&gt; --base &lt;sha&gt; --head &lt;sha&gt; --post --block witness</div>
+    </article>
+    <article class="card rim rv">
+      <div class="tag"><span>03 · RESEARCH</span><span class="ok">judge.jsonl</span></div>
+      <h3>Researchers</h3>
+      <!-- src: differential-attestation@77b43b0 .../d3/RESULT.md, "Files:" (per-round metrics with every judge verdict, judge.jsonl); lean@fe06326 README.md "## Contributing" and "## What is built and what is planned" (Python at its second milestone, five pairs) -->
+      <p>The benchmark ships with every judge verdict and both judge logs. A new language merges when it passes the conformance suite.</p>
+      <div class="ex"><span class="k">$</span> python3 -I conformance/run.py<br>Python at milestone 2: the lint names the rewrite, lane B in the TypeScript record shape, five pairs.</div>
+    </article>
+  </div>
+</section>
+
+<!-- 3. core features -->
+<section class="sec" id="method">
+  <div class="head rv">
+    <div>
+      <span class="eyebrow">Core features</span>
+      <h2>Three instruments. Five verdicts.</h2>
+      <p class="lede">Each instrument compares two versions of the system and refuses on evidence. lean reports the strongest verdict the evidence supports.</p>
+    </div>
+    <canvas class="fig" data-fig="scale" aria-hidden="true"></canvas>
+  </div>
+  <div class="cards c3">
+    <article class="card rim rv">
+      <div class="tag"><span>RECORDING</span><span>instrument 1</span></div>
+      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex, "A recording: ..."; "caught 22 of 43 ... refused 4 of 43 clean changes" -->
+      <p>The system runs under a fixed stimulus set before and after the change. A difference outside the selected scope is refused.</p>
+      <div class="ex">The difference inside the scope must equal an edit the requester made on a real recording. <b>22 of 43</b> escaped defects caught, <b>4 of 43</b> clean changes refused.</div>
+    </article>
+    <article class="card rim rv" id="lean">
+      <div class="tag"><span>PROOF</span><span class="ok">PASS-proved · PASS-decided</span></div>
+      <!-- src: lean@fe06326 README.md, "## Three runs" (statement, Toggle) -->
+      <p>lean proves the candidate equal to the parent for every input and every world. A component finite by its types is explored to the end.</p>
+      <div class="ex"><b>statement</b>: a loop with <code>continue</code> became a <code>filter</code> and a <code>map</code>. <span class="ok">Equal_statement: true</span>, 5 verified, 0 errors.<br><b>Toggle</b>: <span class="ok">PASS-decided</span>, 8 state pairs over 2 assignment(s).</div>
+    </article>
+    <article class="card rim rv">
+      <div class="tag"><span>RELATION</span><span>instrument 3</span></div>
+      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex, "A relation: ..."; "the artifact lane to \artunion", \artunion = "40 of 43" in v3/sections/numbers.tex:12 -->
+      <p>For every artifact that is not a function, a predicate declared outside the change compares the two versions.</p>
+      <div class="ex">Build and pipeline configuration, locale files, schemas, documents. With the artifact lane: <b>40 of 43</b> escaped defects caught.</div>
+    </article>
+    <article class="card rim rv">
+      <div class="tag"><span>VERDICT</span><span class="w">WITNESS</span></div>
+      <!-- src: lean@fe06326 README.md, "## Three runs", "A slip the tests missed" -->
+      <p>An input on which the two versions differ. lean draws it itself, and names the source line on each side.</p>
+      <div class="ex"><b>applyAll</b>: <code>&lt;=</code> where the parent had <code>&lt;</code>.<br>{"input":17,"floor":-1,"parent":<span class="ok">1</span>,"candidate":<span class="w">0</span>}</div>
+    </article>
+    <article class="card rim rv">
+      <div class="tag"><span>VERDICT</span><span class="ask">PASS-bounded · ASK</span></div>
+      <!-- src: lean@fe06326 README.md, "## The verdicts" and "## Writing code lean can prove", usual/booking.ts -->
+      <p>No difference found within a stated bound, and it says so. A bounded pass never becomes a proof. ASK names the construct.</p>
+      <div class="ex"><span class="ask">PASS-bounded</span> -&gt; usual-booking.json<br># lanes.A: <span class="ask">ASK</span>, translate: outside the subset (unsupported-syntax)</div>
+    </article>
+    <article class="card rim rv">
+      <div class="tag"><span>SCREEN ROW</span><span>in DA</span></div>
+      <!-- src: lean@fe06326 README.md, "## What couples with lean" and "### 4. The front end" -->
+      <p>Two builds on the same screens: pixels, layout and the accessibility tree. lean names the state where two renders differ.</p>
+      <div class="ex"><b>Search</b>: <span class="w">WITNESS</span> after a click and a timer.<br>div[2]/ul[0] insert &lt;li key="vefqj"&gt;"vefqj"&lt;/li&gt;</div>
+    </article>
+  </div>
+</section>
+
+<!-- 4. open benchmark -->
+<section class="sec" id="benchmark">
+  <div class="head rv">
+    <div>
+      <span class="eyebrow">Open benchmark</span>
+      <h2>AACR-Bench, with the judge's logs.</h2>
+      <!-- src: differential-attestation@77b43b0 .../d3/RESULT.md, header: official pipeline, 3 rounds, judge claude-opus-5-5; "## Same instances": 184 instances both scored -->
+      <p class="lede">The official pipeline, unchanged judge, three rounds. Both entries counted over the 184 instances both scored.</p>
+    </div>
+    <canvas class="fig" data-fig="dial" aria-hidden="true"></canvas>
+  </div>
+  <div class="bench">
+    <div class="rim tbl-wrap rv">
+      <!-- src: differential-attestation@77b43b0 legit/round7/lean-v3/research/open-code-review/d3/RESULT.md, "## Same instances", mean of 3 rows; comments from round rows (1059 generated, composed; 1426 generated, floor); deltas are composed minus floor -->
+      <table class="tbl">
+        <thead><tr><th>Entry</th><th>Precision</th><th>Recall</th><th>F1</th><th>Comments</th></tr></thead>
+        <tbody>
+          <tr class="ours"><td class="en">DA + lean<small>reader, gate, lean</small></td><td><span class="num">34.09</span><span class="d up">+6.37</span></td><td><span class="num">29.47</span><span class="d dn">−0.96</span></td><td><span class="num">31.61</span><span class="d up">+2.59</span></td><td><span class="num">1,059</span><span class="d up">−367</span></td></tr>
+          <tr><td class="en">Open Code Review<small>the published reader</small></td><td><span class="num">27.72</span></td><td><span class="num">30.43</span></td><td><span class="num">29.02</span></td><td><span class="num">1,426</span></td></tr>
+        </tbody>
+      </table>
+      <!-- src: same RESULT.md: "## Tokens and dollars" (composed reader claude-opus-5-5 + claude-opus-4-8 filter; floor reader claude-opus-4-6); "## Instances not scored" (12 listed, 11 "GitHub no longer serves the commit", 1 composed-only reader failure). "A same-model run is scheduled" is the lead's brief, no file states it. -->
+      <p class="caveat">Percent, mean of three judge rounds. The readers ran on different models: ours on claude-opus-5-5 with a claude-opus-4-8 filter, the floor on claude-opus-4-6. A same-model run is scheduled. 12 of 196 instances unscored: 11 commits GitHub no longer serves, 1 reader failure.</p>
+    </div>
+    <div class="rim bars rv">
+      <h3>On 43 defects that escaped human review</h3>
+      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: reader "10 of 43"; recordings "22 of 43"; "the proof lane raised the count to 31" -->
+      <div class="bar"><span>Strongest reader</span><span class="track"><span class="fill" style="--w:23.26%;--c:var(--mut)"></span></span><span class="n">10 / 43</span></div>
+      <div class="bar"><span>Recordings</span><span class="track"><span class="fill" style="--w:51.16%;--c:var(--steel)"></span></span><span class="n">22 / 43</span></div>
+      <div class="bar"><span>Recordings + proof</span><span class="track"><span class="fill" style="--w:72.09%;--c:var(--ok)"></span></span><span class="n">31 / 43</span></div>
+      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "refused 22 of 43 clean changes"; recordings "refused 4 of 43 clean changes"; "two readers from different vendors missed the same defects"; "144 defects that escaped review in six repositories" -->
+      <p>The reader also refused 22 of 43 clean changes; the recordings refused 4. Two readers from different vendors missed the same defects. 144 escaped defects, six repositories.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 5. quick start -->
+<section class="sec" id="quick-start">
+  <div class="head rv">
+    <div>
+      <span class="eyebrow">Quick start</span>
+      <h2>One function, one verdict.</h2>
+      <!-- src: lean@fe06326 README.md, "## Three runs" (first code block comment) and "## Using it" ("Lane B needs only Node") -->
+      <p class="lede">Lane B needs only Node 24. Python 3 and Dafny 4 run the proof lane; without them lane A reports ASK.</p>
+    </div>
+    <canvas class="fig" data-fig="term" aria-hidden="true"></canvas>
+  </div>
+  <!-- src: every command and output below is verbatim from lean@fe06326 README.md, "## Three runs" -->
+  <div class="steps">
+    <div class="step rim rv">
+      <span class="no">01</span>
+      <h3>Clone</h3>
+      <p>The checkout holds the pairs the runs below use.</p>
+      <pre class="term"><span class="p">$</span> git clone https://github.com/NexusGPT/lean &amp;&amp; cd lean</pre>
+    </div>
+    <div class="step rim rv">
+      <span class="no">02</span>
+      <h3>Check one function</h3>
+      <p>Parent, candidate, unit name. lean picks the lanes and draws the input.</p>
+      <pre class="term"><span class="p">$</span> node langs/ts/check.mjs --parent langs/ts/tests/pairs/readme_ledger/parent.ts --candidate langs/ts/tests/pairs/readme_ledger/candidate.ts --unit applyAll --no-project --n 60 --seed 3 --out ledger.json
+<span class="p">$</span> jq -c '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json
+<span class="w">{"input":17,"floor":-1,"parent":1,"candidate":0}</span></pre>
+    </div>
+    <div class="step rim rv">
+      <span class="no">03</span>
+      <h3>Decide a component</h3>
+      <p>Every click order from every prop assignment, to the end of its state space.</p>
+      <pre class="term"><span class="p">$</span> node langs/ts/check.mjs --parent langs/ts/tests/pairs/finite_components/parent.tsx --candidate langs/ts/tests/pairs/finite_components/candidate.tsx --unit Toggle --no-project --n 60 --out toggle.json
+<span class="ok">PASS-decided -&gt; toggle.json</span>   <span class="p"># every click order from every prop assignment, decided: 8 state pairs over 2 assignment(s)</span></pre>
+    </div>
+  </div>
+  <!-- src: lean@fe06326 README.md, "## What is built and what is planned" (node 24.22.2, python3, Dafny 4.11.0, Z3 4.12.1 pinned in the Dockerfile) -->
+  <div class="docker rv"><span>Or the image, both lanes pinned:</span><code>docker build -t lean:local .</code></div>
+</section>
+
+<!-- 6. the paper -->
+<section class="sec" id="paper">
+  <div class="paper rim glass rv">
+    <div>
+      <span class="eyebrow">The paper</span>
+      <!-- src: paper@1c557a1 v3/main.tex:20 \title -->
+      <h2>Differential Attestation: Accepting Agent-Written Changes from Recordings, Proofs and Declared Relations, Never from the Producer's Account</h2>
+      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex -->
+      <p class="lede">An acceptance gate that reads neither the change text nor any statement by its producer.</p>
+      <div class="btns"><a class="btn p" href="https://github.com/NexusGPT/differential-attestation">The DA repository →</a><a class="btn" href="https://github.com/NexusGPT/lean">lean on GitHub</a></div>
+    </div>
+    <canvas class="fig" data-fig="page" aria-hidden="true"></canvas>
+  </div>
+</section>
+
+<!-- 7. footer -->
+<footer class="foot">
+  <div class="wm">
+    <a class="logo" href="#top"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a>
+    <span>Differential attestation and lean are built by Nexus.</span>
+  </div>
+  <nav class="fl" aria-label="Footer"><a href="https://github.com/NexusGPT/lean">lean</a><a href="https://github.com/NexusGPT/differential-attestation">differential-attestation</a><a href="#benchmark">benchmark</a><a href="#paper">paper</a><a href="https://gpt.nexus">Nexus</a></nav>
+</footer>
+
+</div>
+
+<script src="/engine.js"></script>
+<script src="/public/figures.js"></script>
+<script>
+(() => {
+  // the koi draw only while the hero is on screen; below it the sections cover them
+  const hero = document.querySelector('main.hero');
+  if ('IntersectionObserver' in window) new IntersectionObserver((es) => { window.__koiIdle = !es[0].isIntersecting; }).observe(hero);
+  // section reveal: on scroll, and on any jump (anchor, full-page capture) since every element checks its own position
+  const els = [...document.querySelectorAll('.rv')];
+  const show = () => { const line = innerHeight * 0.92; for (const el of els) if (!el.classList.contains('in') && el.getBoundingClientRect().top < line) el.classList.add('in'); };
+  let q = false; const tick = () => { if (!q) { q = true; requestAnimationFrame(() => { q = false; show(); }); } };
+  addEventListener('scroll', tick, { passive: true }); addEventListener('resize', tick);
+  if ('IntersectionObserver' in window) { const io = new IntersectionObserver((es) => es.forEach((e) => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } }), { rootMargin: '0px 0px -6% 0px' }); els.forEach((el) => io.observe(el)); }
+  show();
+})();
+</script>
+</body></html>
