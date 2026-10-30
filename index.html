@@ -191,6 +191,8 @@
   const reveal = () => { queued = false; const line = innerHeight * 0.94; els.forEach((el, i) => { if (!el.classList.contains('in') && el.getBoundingClientRect().top < line) setTimeout(() => el.classList.add('in'), 40 * (i % 6)); }); };
   const onScroll = () => { if (!queued) { queued = true; requestAnimationFrame(reveal); } };
   addEventListener('scroll', onScroll, { passive: true }); addEventListener('resize', onScroll); reveal(); setTimeout(reveal, 300);
+  if ('IntersectionObserver' in window) { const io = new IntersectionObserver((es) => { if (es.some((e) => e.isIntersecting)) reveal(); }, { threshold: 0.02 }); els.forEach((el) => io.observe(el)); }
+  setTimeout(() => els.forEach((el) => el.classList.add('in')), 6000);
   const tabs = document.querySelectorAll('.install .tabs button');
   tabs.forEach((b) => b.addEventListener('click', () => { tabs.forEach((x) => x.setAttribute('aria-selected', String(x === b))); document.querySelectorAll('.install code').forEach((c) => { c.hidden = c.dataset.cmd !== b.dataset.tab; }); }));
   const copy = document.querySelector('.install .copy');
