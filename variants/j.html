@@ -1,0 +1,124 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>J: koi circling</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@1,8..60,400&display=swap">
+<style>
+:root{--sans:"Inter",ui-sans-serif,system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--serif:"Source Serif 4",Georgia,serif;--bg:#07080b;--fg:#e9eaee;--mut:#8b90a0;--line:rgba(255,255,255,.07);--steel:#9fb3c8;--cream:#f3efe6;--wit:#f0a08c;--ok:#8fd3b4;--ask:#e6c37a}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+#grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(159,179,200,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(159,179,200,.07) 1px,transparent 1px);background-size:26px 26px}
+#ascii{position:fixed;inset:0;z-index:0;width:100%;height:100%;display:block}
+#glow{position:fixed;inset:0;z-index:0;width:100%;height:100%;display:block;filter:blur(26px) saturate(1.2);opacity:.75;transform:translateZ(0)}
+#scrim{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(620px 380px at 50% 50%,rgba(7,8,11,.88),rgba(7,8,11,.4) 66%,transparent 100%)}
+.nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;font-size:14px}
+.logo{font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}.logo .mark{display:grid;grid-template-columns:repeat(3,7px);gap:1px}.logo .mark i{display:block;width:7px;height:7px;background:var(--steel);border-radius:1px;opacity:.9}.logo .mark i:nth-child(2),.logo .mark i:nth-child(4),.logo .mark i:nth-child(9){opacity:.35}
+.links{display:flex;gap:28px;color:var(--mut)}.links a:hover{color:var(--fg)}
+.btn{font-size:13.5px;padding:9px 14px;border-radius:8px;display:inline-flex;align-items:center;gap:8px;font-weight:500;border:1px solid var(--line);background:rgba(255,255,255,.04)}.btn.p{background:var(--fg);color:#07080b;border-color:var(--fg)}
+.hero{position:relative;z-index:1;min-height:calc(100vh - 62px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px 120px}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel)}
+.kicker i{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px var(--ok);display:inline-block;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+h1{font-size:64px;line-height:1.04;letter-spacing:-.035em;font-weight:500;margin:22px 0 14px;max-width:16ch}
+h1 .g{background:linear-gradient(90deg,#f3efe6 0%,#b7c6dc 45%,#b7a7f0 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.math{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--cream);margin:0 0 20px;opacity:.9}.math sub{font-family:var(--mono);font-style:normal;font-size:11px;color:var(--steel);margin:0 2px}.math .q{font-family:var(--mono);font-style:normal;font-size:12px;color:var(--mut);margin-left:14px;letter-spacing:.04em}
+.sub{font-size:17px;line-height:1.55;color:var(--mut);max-width:58ch;margin:0 0 30px}
+.box{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:rgba(10,11,15,.85);backdrop-filter:blur(10px);border-radius:14px;padding:10px 10px 10px 18px;font-family:var(--mono);font-size:13.5px;box-shadow:0 30px 80px -40px rgba(159,179,200,.35)}
+.box span{color:var(--fg)}.box .k{color:var(--mut);font-size:11px;margin-left:auto;padding-right:6px}
+.slash{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;justify-content:center}.slash a{font-family:var(--mono);font-size:12px;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:7px 12px;background:rgba(10,11,15,.7)}.slash a:hover{color:var(--fg)}
+.stats{display:flex;gap:44px;margin-top:56px;font-family:var(--mono);font-size:12px;color:var(--mut)}.stats b{display:block;font-family:var(--sans);font-size:22px;letter-spacing:-.02em;color:var(--fg);margin-bottom:4px;font-weight:600}
+.reveal{opacity:0;transform:translateY(14px);animation:up .8s cubic-bezier(.2,.7,.2,1) forwards}
+.reveal:nth-child(2){animation-delay:.1s}.reveal:nth-child(3){animation-delay:.2s}.reveal:nth-child(4){animation-delay:.3s}.reveal:nth-child(5){animation-delay:.4s}.reveal:nth-child(6){animation-delay:.5s}.reveal:nth-child(7){animation-delay:.6s}
+@keyframes up{to{opacity:1;transform:none}}
+@media (max-width:960px){h1{font-size:40px}.links{display:none}.stats{gap:22px;flex-wrap:wrap;justify-content:center}}
+</style></head><body>
+<canvas id="glow" aria-hidden="true"></canvas><canvas id="ascii" aria-hidden="true"></canvas><div id="scrim"></div>
+<div class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a>Method</a><a>lean</a><a>Benchmark</a><a>Quick start</a><a>Paper</a></div><div style="display:flex;gap:10px"><a class="btn">GitHub</a><a class="btn p">Get started</a></div></div>
+<main class="hero">
+  <span class="kicker reveal"><i></i>lean 0.1.1 · differential attestation</span>
+  <h1 class="reveal">Deterministic <span class="g">code review</span>.</h1>
+  <p class="math reveal"><i>f</i><sub>parent</sub>(x) = <i>f</i><sub>candidate</sub>(x)<span class="q">∀ x ∉ scope</span></p>
+  <p class="sub reveal">No opinions. A proof that the change did only what you asked, or the input that breaks it and the exact line to fix. Same change, same verdict, every time. Built on lean: code that is easy to verify, by construction.</p>
+  <div class="box reveal"><span>$ git clone https://github.com/NexusGPT/lean</span><span class="k">⌘C to copy</span><a class="btn p">Quick start →</a></div>
+  <div class="slash reveal"><a>/check a function</a><a>/gate a pull request</a><a>/lint for provability</a><a>/read the paper</a></div>
+  <div class="stats reveal"><div><b>31.6%</b>AACR-Bench F1 · reader 29.0</div><div><b>120/143</b>planted mutations separated</div><div><b>53%</b>of 39,775 functions in reach</div><div><b>917</b>agent changes in 13 days, one repo</div></div>
+</main>
+<script>
+(() => {
+  const cv = document.getElementById('ascii'); const ctx = cv.getContext('2d'); const gcv = document.getElementById('glow'); const gctx = gcv.getContext('2d');
+  const RAMP = " .`':;-,~=+oxt%SXO8#@"; const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, dpr, cols, rows, cell = 10, t0 = performance.now(), mouse = { x: -9999, y: -9999 }, seeds, lit;
+  const off = document.createElement('canvas'), octx = off.getContext('2d', { willReadFrequently: true });
+  function size() { dpr = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); gcv.width = Math.floor(W / 4); gcv.height = Math.floor(H / 4); cell = W > 700 ? 14 : 11; cols = Math.floor(W / cell); rows = Math.floor(H / cell); off.width = cols; off.height = rows; seeds = new Float32Array(cols * rows); lit = new Float32Array(cols * rows); for (let i = 0; i < seeds.length; i++) seeds[i] = Math.random(); }
+  const soft = (x, y, r, a) => { const g = octx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(255,255,255,${a})`); g.addColorStop(1, 'rgba(255,255,255,0)'); octx.fillStyle = g; octx.beginPath(); octx.arc(x, y, r, 0, 7); octx.fill(); };
+  // ---- two koi circling the copy. The silhouette is a real top view; only the tail sways and the body bends into the turn ----
+  // local coordinates: the fish points along +x, nose at x = 1, length 1.35 with the tail; y is width (half-width max 0.14)
+  const bez = (p0, p1, p2, p3, n, out) => { for (let i = 0; i <= n; i++) { const t = i / n, m = 1 - t; out.push([m*m*m*p0[0] + 3*m*m*t*p1[0] + 3*m*t*t*p2[0] + t*t*t*p3[0], m*m*m*p0[1] + 3*m*m*t*p1[1] + 3*m*t*t*p2[1] + t*t*t*p3[1]]); } return out; };
+  const BODY = (() => { const o = []; // right side nose to peduncle, then back along the left side
+    bez([1.00, 0.00], [1.00, 0.07], [0.93, 0.115], [0.80, 0.125], 10, o); bez([0.80, 0.125], [0.66, 0.14], [0.50, 0.135], [0.36, 0.105], 12, o); bez([0.36, 0.105], [0.24, 0.08], [0.14, 0.05], [0.06, 0.035], 10, o);
+    bez([0.06, 0.035], [0.14, 0.05], [0.24, 0.08], [0.36, 0.105], 0, o);
+    const L = o.map(([x, y]) => [x, -y]).reverse(); return o.concat([[0.04, 0.0]], L); })();
+  const TAIL = (() => { const o = []; bez([0.06, 0.03], [-0.06, 0.07], [-0.20, 0.22], [-0.36, 0.26], 10, o); bez([-0.36, 0.26], [-0.26, 0.14], [-0.22, 0.06], [-0.19, 0.0], 8, o); const L = o.map(([x, y]) => [x, -y]).reverse(); return o.concat(L); })();
+  const PEC = (() => { const o = []; bez([0.0, 0.0], [0.10, 0.16], [-0.06, 0.34], [-0.22, 0.30], 10, o); bez([-0.22, 0.30], [-0.14, 0.18], [-0.10, 0.08], [-0.08, 0.0], 8, o); return o; })();
+  const KOI = [ { k: 0, phase: 0.0, size: 1.0, speed: 0.17 }, { k: 1, phase: Math.PI, size: 0.92, speed: 0.17 } ];
+  function drawKoi(f, t, flare) {
+    const th = t * f.speed + f.phase; const a = cols * 0.40, b = rows * 0.40, cx = cols / 2, cy = rows / 2 + rows * 0.02;
+    const x = cx + a * Math.cos(th), y = cy + b * Math.sin(th); const heading = Math.atan2(b * Math.cos(th), -a * Math.sin(th));
+    const len = rows * 0.38 * f.size; const kick = Math.sin(t * 3.0 + f.phase);
+    const bend = 0.10;                     // the body curves into the turn (the orbit turns counterclockwise)
+    const map = (px, py, flex) => {        // local -> page, with a tail wave on the back half and the bend
+      const back = Math.max(0, (0.5 - px) / 0.5); const wave = Math.sin(t * 3.0 + f.phase - px * 5.5) * 0.06 * back * back * flex;
+      const yy = py + wave + bend * (px - 0.5) * (px - 0.5) * -1 * (1 + 0.3 * kick);
+      const X = px - 0.5, Y = yy; return [x + (X * Math.cos(heading) - Y * Math.sin(heading)) * len, y + (X * Math.sin(heading) + Y * Math.cos(heading)) * len];
+    };
+    const poly = (pts, flex, fill) => { octx.beginPath(); pts.forEach((p, i) => { const q = map(p[0], p[1], flex); i ? octx.lineTo(q[0], q[1]) : octx.moveTo(q[0], q[1]); }); octx.closePath(); octx.fillStyle = fill; octx.fill(); };
+    // tail and fins first (translucent), then the body over them
+    poly(TAIL, 1.8, 'rgba(255,255,255,.50)');
+    for (const side of [-1, 1]) { const flap = 0.12 * Math.sin(t * 2.0 + f.phase + side); const pec = PEC.map(([px, py]) => [0.70 + px, side * (0.11 + py + flap * py)]); poly(pec, 0.3, 'rgba(255,255,255,.55)'); const pel = PEC.map(([px, py]) => [0.42 + px * 0.55, side * (0.09 + py * 0.55)]); poly(pel, 0.6, 'rgba(255,255,255,.45)'); }
+    poly(BODY, 1.0, 'rgba(255,255,255,.86)');
+    // a brighter core along the back, the dorsal ridge, kohaku patches, eyes
+    poly(BODY.map(([px, py]) => [px, py * 0.5]), 1.0, 'rgba(255,255,255,.7)');
+    octx.strokeStyle = 'rgba(255,255,255,.95)'; octx.lineWidth = len * 0.012; octx.beginPath(); for (let i = 0; i <= 10; i++) { const px = 0.62 - i * 0.04; const q = map(px, 0, 1.0); i ? octx.lineTo(q[0], q[1]) : octx.moveTo(q[0], q[1]); } octx.stroke();
+    const patch = (px, py, r, red) => { const q = map(px, py, 1.0); const g = octx.createRadialGradient(q[0], q[1], 0, q[0], q[1], r * len); if (red) { g.addColorStop(0, `rgba(255,0,0,${0.8 + 0.2 * flare})`); g.addColorStop(1, 'rgba(255,0,0,0)'); } else { g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(1, 'rgba(255,255,255,0)'); } octx.fillStyle = g; octx.beginPath(); octx.arc(q[0], q[1], r * len, 0, 7); octx.fill(); };
+    patch(0.84, 0.0, 0.07, false); patch(0.30, 0.03, 0.06, false); patch(0.58, -0.04, 0.075, f.k === 1);
+    octx.fillStyle = 'rgba(0,0,0,.95)'; for (const side of [-1, 1]) { const q = map(0.88, side * 0.07, 1.0); octx.beginPath(); octx.arc(q[0], q[1], len * 0.014, 0, 7); octx.fill(); }
+  }
+  const plankton = Array.from({ length: 36 }, () => ({ u: Math.random(), v: Math.random(), sp: 0.004 + Math.random() * 0.01, ph: Math.random() * 7 }));
+  function drawWorld(t) {
+    octx.clearRect(0, 0, cols, rows);
+    const ph = (t % 7); const flare = ph < 1.6 ? Math.sin(Math.PI * ph / 1.6) : 0;
+    for (const f of KOI) drawKoi(f, t, flare);
+    octx.fillStyle = 'rgba(255,255,255,.13)'; for (const p of plankton) { p.v -= p.sp * 0.016; if (p.v < -0.02) { p.v = 1.02; p.u = Math.random(); } octx.fillRect(p.u * cols + Math.sin(t + p.ph) * 0.6, p.v * rows, 1, 1); }
+    return octx.getImageData(0, 0, cols, rows).data;
+  }
+  function frame(now) {
+    const t = (now - t0) / 1000; const lum = drawWorld(t); ctx.clearRect(0, 0, W, H);
+    gctx.clearRect(0, 0, gcv.width, gcv.height); gctx.globalCompositeOperation = 'source-over'; gctx.imageSmoothingEnabled = true; gctx.drawImage(off, 0, 0, gcv.width, gcv.height); gctx.globalCompositeOperation = 'source-in'; gctx.fillStyle = 'rgba(125,155,205,0.95)'; gctx.fillRect(0, 0, gcv.width, gcv.height);
+    // the background: every square of the grid, barely there
+    ctx.strokeStyle = 'rgba(159,179,200,.055)'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let c = 0; c <= cols; c++) { ctx.moveTo(c * cell + 0.5, 0); ctx.lineTo(c * cell + 0.5, rows * cell); }
+    for (let r = 0; r <= rows; r++) { ctx.moveTo(0, r * cell + 0.5); ctx.lineTo(cols * cell, r * cell + 0.5); }
+    ctx.stroke();
+    ctx.font = `500 ${cell * 0.82}px "JetBrains Mono", ui-monospace, monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    const appear = reduce ? 1 : Math.min(1, Math.max(0, (t - 0.3) / 1.6));
+    for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) {
+      const i = (r * cols + c); const target = lum[i * 4 + 3] / 255; const seed = seeds[i]; const red = lum[i * 4] > 180 && lum[i * 4 + 2] < 90 && lum[i * 4 + 3] > 40;
+      // a square lights up fast and fades slowly: the figure is squares switching on, never a sprite moving
+      const prev = lit[i]; const nv = target > prev ? prev + (target - prev) * 0.45 : prev * 0.90; lit[i] = nv < 0.012 ? 0 : nv;
+      const v0 = lit[i];
+      if (v0 < 0.05) { if (seed > 0.9985) { ctx.fillStyle = `rgba(159,179,200,${0.16 + 0.12 * Math.sin(t + seed * 50)})`; ctx.fillRect(c * cell + cell * .2, r * cell + cell * .5, cell * .6, 1); } continue; }
+      const x = c * cell, y = r * cell; const dm = Math.hypot(mouse.x - x - cell / 2, mouse.y - y - cell / 2); const boost = dm < 110 ? (1 - dm / 110) * 0.45 : 0;
+      const tw = Math.sin(t * (1.5 + seed * 2.5) + seed * 60) * 0.09; const v = Math.max(0.02, Math.min(1, v0 + boost + tw));
+      // alive: each square re-picks a neighbouring glyph on its own slow clock
+      const tick = Math.floor(t * (0.8 + seed * 1.6) + seed * 97); const jit = ((tick * 7919 + Math.floor(seed * 1e4)) % 5) - 2;
+      const idx = Math.max(0, Math.min(RAMP.length - 1, Math.floor(v * (RAMP.length - 1)) + (Math.abs(jit) === 2 ? 0 : jit))); const glyph = RAMP[idx];
+      let col = seed > 0.996 ? (seed > 0.9985 ? '230,195,122' : '183,167,240') : v > 0.8 ? '243,239,230' : v > 0.45 ? '201,212,224' : '159,179,200'; let fl = 0;
+      if (red) { fl = Math.min(1, lum[i * 4 + 3] / 255 + 0.2); col = '240,138,96'; }
+      // the square lights: its background first, then the glyph on the brighter ones
+      ctx.fillStyle = fl > 0 ? `rgba(240,138,96,${0.14 + fl * 0.55})` : `rgba(159,179,200,${(0.05 + v * 0.26) * appear})`; ctx.fillRect(x + 1, y + 1, cell - 1, cell - 1);
+      if (v > 0.16) { ctx.fillStyle = `rgba(${col},${(0.3 + v * 0.7) * appear})`; ctx.fillText(glyph, x + cell / 2, y + cell / 2 + 0.5); }
+    }
+    requestAnimationFrame(frame);
+  }
+  addEventListener('resize', size); addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; }); addEventListener('mouseleave', () => { mouse.x = mouse.y = -9999; });
+  size(); requestAnimationFrame(frame);
+})();
+</script>
+</body></html>
