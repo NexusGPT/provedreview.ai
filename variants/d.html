@@ -1,0 +1,114 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>D: Linear + blueprint + ASCII</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@1,8..60,400&display=swap">
+<style>
+:root{--sans:"Inter",ui-sans-serif,system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--serif:"Source Serif 4",Georgia,serif;--bg:#07080b;--fg:#e9eaee;--mut:#8b90a0;--line:rgba(255,255,255,.07);--steel:#9fb3c8;--cream:#f3efe6;--wit:#f0a08c;--ok:#8fd3b4;--ask:#e6c37a}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+#grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(159,179,200,.075) 1px,transparent 1px),linear-gradient(90deg,rgba(159,179,200,.075) 1px,transparent 1px);background-size:28px 28px;-webkit-mask-image:radial-gradient(1200px 800px at 60% 30%,#000 30%,transparent 80%);mask-image:radial-gradient(1200px 800px at 60% 30%,#000 30%,transparent 80%)}
+#glow{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(800px 380px at 50% -8%,rgba(159,179,200,.18),transparent 60%),radial-gradient(700px 500px at 78% 55%,rgba(79,115,145,.14),transparent 60%)}
+#ascii{position:absolute;inset:0;z-index:0;width:100%;height:100%;display:block}
+.art{overflow:visible}
+.nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;border-bottom:1px solid var(--line);backdrop-filter:blur(8px);font-size:14px}
+.logo{font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}.logo .mark{font-family:var(--mono);font-size:11px;color:var(--steel);letter-spacing:0;line-height:1;display:grid;grid-template-columns:repeat(3,7px);gap:1px}.logo .mark i{display:block;width:7px;height:7px;background:var(--steel);opacity:.9;border-radius:1px}.logo .mark i:nth-child(2),.logo .mark i:nth-child(4),.logo .mark i:nth-child(9){opacity:.35}
+.links{display:flex;gap:28px;color:var(--mut)}.links a:hover{color:var(--fg)}
+.btn{font-size:13.5px;padding:9px 14px;border-radius:8px;display:inline-flex;align-items:center;gap:8px;font-weight:500;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.btn.p{background:var(--fg);color:#07080b;border-color:var(--fg)}
+.hero{position:relative;z-index:1;min-height:calc(100vh - 62px);display:grid;grid-template-columns:minmax(0,56%) minmax(0,44%);align-items:center;padding:40px 48px 80px;max-width:1400px;margin:0 auto}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel);border:1px solid var(--line);padding:6px 10px;border-radius:999px;background:rgba(7,8,11,.6)}
+.kicker i{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px var(--ok);display:inline-block;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+h1{font-size:66px;line-height:1.02;letter-spacing:-.035em;font-weight:600;margin:22px 0 14px;max-width:11ch}
+h1 .g{background:linear-gradient(90deg,#f3efe6 0%,#9fb3c8 50%,#b7a7f0 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.math{font-family:var(--serif);font-style:italic;font-size:24px;color:var(--cream);margin:0 0 22px;opacity:.92}.math sub{font-family:var(--mono);font-style:normal;font-size:11px;color:var(--steel);margin:0 2px}.math .q{font-family:var(--mono);font-style:normal;font-size:12px;color:var(--mut);margin-left:14px;letter-spacing:.04em}
+.math .caret{display:inline-block;width:2px;height:22px;background:var(--cream);vertical-align:-3px;margin-left:4px;animation:blink 1s steps(2) infinite}
+@keyframes blink{to{opacity:0}}
+.sub{font-size:18px;line-height:1.55;color:var(--mut);max-width:50ch;margin:0 0 28px}
+.row{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+.cmd{font-family:var(--mono);font-size:13px;padding:10px 14px;border-radius:8px;display:inline-flex;gap:14px;align-items:center;border:1px solid var(--line);background:rgba(255,255,255,.035);color:var(--fg)}
+.chips{display:flex;gap:8px;margin-top:26px;flex-wrap:wrap}.chip{font-family:var(--mono);font-size:11px;letter-spacing:.08em;padding:6px 10px;border-radius:6px;border:1px solid var(--line);background:rgba(255,255,255,.03);color:var(--mut)}.chip.w{color:var(--wit)}.chip.ok{color:var(--ok)}.chip.a{color:var(--ask)}
+.stats{display:flex;gap:40px;margin-top:40px;font-family:var(--mono);font-size:12px;color:var(--mut)}.stats b{display:block;font-family:var(--sans);font-size:24px;letter-spacing:-.02em;color:var(--fg);margin-bottom:4px;font-weight:600}
+.art{position:relative;height:640px;pointer-events:none}
+.art .cap{position:absolute;left:0;bottom:-40px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--mut)}
+.art .cap b{color:var(--steel);font-weight:500}
+.reveal{opacity:0;transform:translateY(14px);animation:up .7s cubic-bezier(.2,.7,.2,1) forwards}
+.reveal:nth-child(2){animation-delay:.08s}.reveal:nth-child(3){animation-delay:.16s}.reveal:nth-child(4){animation-delay:.24s}.reveal:nth-child(5){animation-delay:.32s}.reveal:nth-child(6){animation-delay:.4s}.reveal:nth-child(7){animation-delay:.48s}
+@keyframes up{to{opacity:1;transform:none}}
+@media (max-width:960px){.hero{grid-template-columns:1fr;padding:28px 20px 60px}.art{height:420px;order:-1}h1{font-size:42px}.links{display:none}}
+</style></head><body>
+<div id="glow"></div><div id="grid"></div>
+<div class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a>Method</a><a>lean</a><a>Benchmark</a><a>Quick start</a><a>Paper</a></div><div class="row"><a class="btn">GitHub</a><a class="btn p">Get started</a></div></div>
+<main class="hero">
+  <div style="position:relative;z-index:1">
+    <span class="kicker reveal"><i></i>lean 0.1.1 · differential attestation</span>
+    <h1 class="reveal">Code review with the <span class="g">proof</span> attached.</h1>
+    <p class="math reveal"><i>f</i><sub>parent</sub>(x) = <i>f</i><sub>candidate</sub>(x)<span class="q">∀ x ∉ scope</span><span class="caret"></span></p>
+    <p class="sub reveal">lean proves the new version of a function equal to the old, or returns the input where they differ. No annotations. No wrapper library. No model in the loop. Every verdict ships a certificate you can re-run.</p>
+    <div class="row reveal"><span class="cmd">$ git clone https://github.com/NexusGPT/lean <span style="opacity:.5">⌘C</span></span><a class="btn p">Quick start →</a><a class="btn">Read the method</a></div>
+    <div class="chips reveal"><span class="chip w">WITNESS</span><span class="chip ok">PASS proved</span><span class="chip ok">PASS decided</span><span class="chip ok">PASS bounded</span><span class="chip a">ASK</span></div>
+    <div class="stats reveal"><div><b>31.6%</b>AACR-Bench F1 · reader 29.0</div><div><b>120/143</b>planted mutations separated</div><div><b>53%</b>of 39,775 functions in reach</div></div>
+  </div>
+  <div class="art"><canvas id="ascii" aria-hidden="true"></canvas><span class="cap"><b>parent</b> · candidate · the balance settles when the proof closes</span></div>
+</main>
+<script>
+(() => {
+  const cv = document.getElementById('ascii'); const ctx = cv.getContext('2d');
+  const RAMP = " .`':;-,~=+oxt%SXO8#@"; const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, dpr, cols, rows, cell = 16, cells = [], t0 = performance.now(), mouse = { x: -9999, y: -9999 };
+  const off = document.createElement('canvas'), octx = off.getContext('2d', { willReadFrequently: true });
+  function size() { dpr = Math.min(2, devicePixelRatio || 1); W = cv.clientWidth; H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); cell = W > 480 ? 13 : 11; cols = Math.floor(W / cell); rows = Math.floor(H / cell); off.width = cols; off.height = rows; cells = []; for (let r = 0; r < rows; r++) for (let c = 0; c < cols; c++) cells.push({ c, r, delay: 0, seed: Math.random(), glyph: ' ' }); seedDelays(); }
+  function seedDelays() { const cx = cols * 0.5, cy = rows * 0.5; for (const k of cells) { const d = Math.hypot(k.c - cx, k.r - cy); k.delay = 300 + d * 28 + k.seed * 500; } }
+  // the figure: a balance (two pans, a beam, a fulcrum), drawn in luminance on the offscreen grid; tilt eases to level over the first seconds
+  function drawFigure(tilt) {
+    octx.clearRect(0, 0, cols, rows); octx.save(); octx.translate(cols * 0.5, rows * 0.5); const s = Math.min(cols / 22, rows / 21);
+    const soft = (x, y, r, a) => { const g = octx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(255,255,255,${a})`); g.addColorStop(1, 'rgba(255,255,255,0)'); octx.fillStyle = g; octx.beginPath(); octx.arc(x, y, r, 0, 7); octx.fill(); };
+    // a halo gives the mass its shaded body
+    soft(0, 3 * s, 7.5 * s, .07);
+    // base and pillar: solid, shaded
+    let g = octx.createLinearGradient(0, -2 * s, 0, 10 * s); g.addColorStop(0, 'rgba(255,255,255,.9)'); g.addColorStop(1, 'rgba(255,255,255,.45)');
+    octx.fillStyle = g; octx.fillRect(-1.3 * s, -1.2 * s, 2.6 * s, 11 * s);
+    g = octx.createLinearGradient(-6 * s, 0, 6 * s, 0); g.addColorStop(0, 'rgba(255,255,255,.3)'); g.addColorStop(.5, 'rgba(255,255,255,.95)'); g.addColorStop(1, 'rgba(255,255,255,.3)');
+    octx.fillStyle = g; octx.beginPath(); octx.moveTo(-6 * s, 11.6 * s); octx.lineTo(6 * s, 11.6 * s); octx.lineTo(4 * s, 9.6 * s); octx.lineTo(-4 * s, 9.6 * s); octx.closePath(); octx.fill();
+    // the beam, rotated by the tilt, with a bright pivot
+    octx.save(); octx.rotate(tilt);
+    g = octx.createLinearGradient(-9.6 * s, 0, 9.6 * s, 0); g.addColorStop(0, 'rgba(255,255,255,.55)'); g.addColorStop(.5, 'rgba(255,255,255,1)'); g.addColorStop(1, 'rgba(255,255,255,.55)');
+    octx.fillStyle = g; octx.fillRect(-9.6 * s, -2.2 * s, 19.2 * s, 1.5 * s); soft(0, -1.5 * s, 2.6 * s, 1);
+    for (const side of [-1, 1]) {
+      const px = side * 8.6 * s, py = -1.5 * s;
+      octx.strokeStyle = 'rgba(255,255,255,.7)'; octx.lineWidth = 0.55 * s; octx.beginPath(); octx.moveTo(px, py); octx.lineTo(px - 3.2 * s, py + 5.6 * s); octx.moveTo(px, py); octx.lineTo(px + 3.2 * s, py + 5.6 * s); octx.stroke();
+      // the pan: a solid bowl, bright rim, shaded belly
+      octx.save(); octx.translate(px, py + 5.8 * s);
+      const b = octx.createRadialGradient(0, -0.5 * s, 0, 0, 0, 4.2 * s); b.addColorStop(0, 'rgba(255,255,255,1)'); b.addColorStop(.6, 'rgba(255,255,255,.7)'); b.addColorStop(1, 'rgba(255,255,255,.25)');
+      octx.fillStyle = b; octx.beginPath(); octx.ellipse(0, 0, 4.2 * s, 1.3 * s, 0, 0, Math.PI); octx.lineTo(-4.2 * s, 0); octx.fill();
+      octx.beginPath(); octx.ellipse(0, 0, 4.2 * s, 1.3 * s, 0, 0, 7); octx.strokeStyle = 'rgba(255,255,255,1)'; octx.lineWidth = 0.6 * s; octx.stroke();
+      octx.restore();
+    }
+    octx.restore(); octx.restore();
+    return octx.getImageData(0, 0, cols, rows).data;
+  }
+  const ease = (x) => 1 - Math.pow(1 - x, 3);
+  function frame(now) {
+    const t = now - t0; const tiltT = Math.min(1, t / 5200); const tilt = reduce ? 0 : (1 - ease(tiltT)) * 0.11 * Math.cos(t / 900) ;
+    const lum = drawFigure(tilt); ctx.clearRect(0, 0, W, H);
+    ctx.font = `500 ${cell * 0.78}px "JetBrains Mono", ui-monospace, monospace`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    for (const k of cells) {
+      const i = (k.r * cols + k.c) * 4; let v = lum[i + 3] / 255 * (lum[i] / 255 || 1); if (v < 0.05) { // sparse dashes on the empty grid
+        if (k.seed > 0.9965 && t > k.delay) { ctx.fillStyle = 'rgba(159,179,200,.28)'; ctx.fillRect(k.c * cell + cell * .25, k.r * cell + cell * .5, cell * .5, 1); } continue; }
+      const appear = reduce ? 1 : Math.max(0, Math.min(1, (t - k.delay) / 650)); if (appear <= 0) continue;
+      const dm = Math.hypot(mouse.x - (k.c + .5) * cell, mouse.y - (k.r + .5) * cell); const boost = dm < 120 ? (1 - dm / 120) * 0.6 : 0;
+      const tw = Math.sin(t / 700 + k.seed * 40) * 0.06; const vv = Math.max(0.02, Math.min(1, v + boost + tw));
+      const settled = appear >= 1; const idx = Math.min(RAMP.length - 1, Math.floor(vv * (RAMP.length - 1)));
+      const glyph = settled ? (boost > 0.2 ? RAMP[Math.min(RAMP.length - 1, idx + 2)] : RAMP[idx]) : RAMP[Math.floor((k.seed * 977 + Math.floor(t / 60)) % RAMP.length)];
+      const x = k.c * cell, y = k.r * cell;
+      // tile
+      ctx.fillStyle = `rgba(159,179,200,${(0.07 + vv * 0.2) * appear})`; ctx.fillRect(x + 1, y + 1, cell - 2, cell - 2);
+      // glyph: steel greys; the brightest cells go cream; one in a few hundred takes the accent
+      const accent = k.seed > 0.996; const col = accent ? (k.seed > 0.998 ? '230,195,122' : '183,167,240') : vv > 0.82 ? '243,239,230' : vv > 0.5 ? '201,212,224' : '159,179,200';
+      ctx.fillStyle = `rgba(${col},${(0.35 + vv * 0.65) * appear})`; ctx.fillText(glyph, x + cell / 2, y + cell / 2 + 0.5);
+    }
+    requestAnimationFrame(frame);
+  }
+  addEventListener('resize', size); cv.parentElement.parentElement.addEventListener('mousemove', (e) => { const b = cv.getBoundingClientRect(); mouse.x = e.clientX - b.left; mouse.y = e.clientY - b.top; }); cv.parentElement.parentElement.addEventListener('mouseleave', () => { mouse.x = mouse.y = -9999; });
+  size(); requestAnimationFrame(frame);
+})();
+</script>
+</body></html>

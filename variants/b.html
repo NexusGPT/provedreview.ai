@@ -1,0 +1,35 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>B: Linear</title>
+<link rel="stylesheet" href="/variants/base.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+:root{--sans:"Inter",ui-sans-serif,system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--bg:#0a0b0e;--fg:#ededef;--mut:#8b8f98;--line:rgba(255,255,255,.08);--acc:#9fb3c8;--wit:#f0a08c;--ok:#8fd3b4}
+body{background:var(--bg);color:var(--fg);font-family:var(--sans)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background:radial-gradient(900px 420px at 50% -10%,rgba(159,179,200,.22),transparent 60%),radial-gradient(600px 300px at 85% 30%,rgba(79,115,145,.16),transparent 60%)}
+.nav{border-bottom:1px solid var(--line)}.logo{font-weight:600;letter-spacing:-.02em;font-size:16px;display:flex;align-items:center;gap:8px}.logo i{width:10px;height:10px;border:1.5px solid var(--acc);border-radius:2px;display:inline-block;transform:rotate(45deg)}
+.btn{background:var(--fg);color:#0a0b0e;border:1px solid var(--fg)}.btn.o{background:rgba(255,255,255,.04);color:var(--fg);border:1px solid var(--line)}
+h1{font-size:64px;font-weight:600;letter-spacing:-.035em;background:linear-gradient(180deg,#fff 0%,#c9cfd8 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.sub{color:var(--mut);font-size:18px}.kicker{color:var(--acc);border:1px solid var(--line);display:inline-block;padding:5px 10px;border-radius:999px;font-size:11px}
+.cmd{background:rgba(255,255,255,.04);border:1px solid var(--line);color:var(--fg)}
+.term{border:1px solid var(--line);background:linear-gradient(180deg,#121419,#0d0f13);box-shadow:0 0 0 1px rgba(255,255,255,.02),0 60px 120px -60px rgba(159,179,200,.35)}.term .bar{color:var(--mut);border-bottom:1px solid var(--line)}
+.term .p{color:var(--acc)}.term .w{color:var(--wit)}.term .g{color:var(--ok)}.term .d{color:#6b7078}
+.chip{border:1px solid var(--line);color:var(--mut);background:rgba(255,255,255,.03)}.chip.w{color:var(--wit)}.chip.p,.chip.d,.chip.b{color:var(--ok)}.chip.a{color:#e6c37a}
+.stats{color:var(--mut)}.stats b{color:var(--fg)}
+</style></head><body>
+<div class="nav"><span class="logo"><i></i>provedreview</span><div class="links"><a>Method</a><a>lean</a><a>Benchmark</a><a>Quick start</a><a>Paper</a></div><div class="row"><a class="btn o">GitHub</a><a class="btn">Get started</a></div></div>
+<main class="hero"><div>
+<span class="kicker">lean 0.1.1 · differential attestation</span>
+<h1>Code review with the proof attached.</h1>
+<p class="sub">lean proves the new version of a function equal to the old, or returns the input where they differ. No annotations. No wrapper library. No model in the loop. Every verdict ships a certificate you can re-run.</p>
+<div class="row"><span class="cmd">$ git clone https://github.com/NexusGPT/lean <span style="opacity:.5">⌘C</span></span><a class="btn">Quick start →</a></div>
+<div class="chips"><span class="chip w">WITNESS</span><span class="chip p">PASS proved</span><span class="chip d">PASS decided</span><span class="chip b">PASS bounded</span><span class="chip a">ASK</span></div>
+<div class="stats"><div><b>31.6%</b>AACR-Bench F1 · reader 29.0</div><div><b>120/143</b>planted mutations separated</div><div><b>53%</b>of 39,775 functions in reach</div></div>
+</div>
+<div class="term"><div class="bar"><span>parent · candidate</span><span>a real run</span></div><pre><span class="p">$</span> node langs/ts/check.mjs --parent parent.ts --candidate candidate.ts --unit applyAll --n 60 --seed 3 --out ledger.json
+<span class="w">WITNESS</span> -> ledger.json
+<span class="p">$</span> jq -c '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json
+{"input":17,"floor":-1,"parent":1,"candidate":0}
+<span class="d"># the candidate rejects an event landing exactly on the floor: &lt;= where the parent had &lt;</span>
+
+<span class="p">$</span> node langs/ts/check.mjs --parent parent.tsx --candidate candidate.tsx --unit Toggle --n 60 --out toggle.json
+<span class="g">PASS-decided</span> -> toggle.json  <span class="d"># 8 state pairs over 2 assignments, every click order</span></pre></div>
+</main></body></html>

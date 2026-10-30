@@ -1,0 +1,38 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>A: Blueprint</title>
+<link rel="stylesheet" href="/variants/base.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap">
+<style>
+:root{--sans:"Source Serif 4",Georgia,serif;--mono:"IBM Plex Mono",ui-monospace,monospace;--bg0:#0f1b2d;--bg1:#1c2f4a;--cream:#f3efe6;--steel:#9fb3c8;--line:#3c5272;--wit:#8a4a4a;--prv:#3d7a62;--dec:#4f7391;--bnd:#3c5272;--ask:#8a7540}
+body{background:radial-gradient(1200px 700px at 70% 10%,var(--bg1),var(--bg0) 60%);color:var(--cream);font-family:var(--sans)}
+body::before{content:"";position:fixed;inset:0;pointer-events:none;background-image:linear-gradient(rgba(159,179,200,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(159,179,200,.07) 1px,transparent 1px);background-size:36px 36px}
+.nav{font-family:var(--mono);font-size:13px}.logo{font-family:var(--sans);font-size:28px;letter-spacing:-.02em}
+.btn{background:var(--cream);color:#0f1b2d;border:1px solid var(--cream);font-family:var(--mono);font-size:12px;letter-spacing:.06em;border-radius:3px}
+.btn.o{background:transparent;color:var(--cream);border-color:var(--line)}
+h1{font-size:68px;font-weight:400}.sub{color:#c9d4e0;font-size:21px}
+.kicker{color:var(--steel)}
+.math{font-size:26px;color:var(--cream);margin:0 0 30px}.math sub{font-size:13px;color:var(--steel);margin:0 2px}.math span{color:var(--steel);font-size:20px;margin-left:12px}
+.cmd{border:1px solid var(--line);background:rgba(15,27,45,.6);color:#c9d4e0;border-radius:3px}
+.term{border:1px solid var(--line);background:#0b1526;box-shadow:0 40px 80px -40px #000}.term .bar{color:var(--steel);border-bottom:1px solid var(--line);font-family:var(--mono)}
+.term .p{color:var(--steel)}.term .w{color:#d9a08f}.term .g{color:#8fd3b4}.term .d{color:#7f91a6}
+.chip{border:1px solid var(--line);color:var(--cream)}.chip.w{background:var(--wit)}.chip.p{background:var(--prv)}.chip.d{background:var(--dec)}.chip.b{background:var(--bnd)}.chip.a{background:var(--ask)}
+.stats{color:var(--steel)}.stats b{color:var(--cream);font-family:var(--sans);font-size:26px}
+</style></head><body>
+<div class="nav"><span class="logo">provedreview</span><div class="links"><a>Method</a><a>lean</a><a>Benchmark</a><a>Quick start</a><a>Paper</a></div><div class="row"><a class="btn o">GitHub</a><a class="btn">Get started</a></div></div>
+<main class="hero"><div>
+<div class="kicker">Differential attestation · lean</div>
+<h1>Code review with the proof attached.</h1>
+<p class="math"><i>f</i><sub>parent</sub>(x) = <i>f</i><sub>candidate</sub>(x) <span>for every x outside the scope</span></p>
+<p class="sub">lean proves the new version of a function equal to the old, or returns the input where they differ. No annotations. No wrapper library. No model in the loop. Every verdict ships a certificate you can re-run.</p>
+<div class="row"><span class="cmd">$ git clone https://github.com/NexusGPT/lean <span style="opacity:.5">copy</span></span><a class="btn">Quick start</a></div>
+<div class="chips"><span class="chip w">WITNESS</span><span class="chip p">PASS proved</span><span class="chip d">PASS decided</span><span class="chip b">PASS bounded</span><span class="chip a">ASK</span></div>
+<div class="stats"><div><b>31.6%</b>AACR-Bench F1 · reader 29.0</div><div><b>120/143</b>planted mutations separated</div><div><b>53%</b>of 39,775 functions in reach</div></div>
+</div>
+<div class="term"><div class="bar"><span>parent · candidate</span><span>a real run</span></div><pre><span class="p">$</span> node langs/ts/check.mjs --parent parent.ts --candidate candidate.ts --unit applyAll --n 60 --seed 3 --out ledger.json
+<span class="w">WITNESS</span> -> ledger.json
+<span class="p">$</span> jq -c '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json
+{"input":17,"floor":-1,"parent":1,"candidate":0}
+<span class="d"># the candidate rejects an event landing exactly on the floor: &lt;= where the parent had &lt;</span>
+
+<span class="p">$</span> node langs/ts/check.mjs --parent parent.tsx --candidate candidate.tsx --unit Toggle --n 60 --out toggle.json
+<span class="g">PASS-decided</span> -> toggle.json  <span class="d"># 8 state pairs over 2 assignments, every click order</span></pre></div>
+</main></body></html>
