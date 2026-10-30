@@ -1,0 +1,125 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>L: koi from the photo</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Source+Serif+4:ital,opsz,wght@1,8..60,400&display=swap">
+<style>
+:root{--sans:"Inter",ui-sans-serif,system-ui,sans-serif;--mono:"JetBrains Mono",ui-monospace,monospace;--serif:"Source Serif 4",Georgia,serif;--bg:#07080b;--fg:#e9eaee;--mut:#8b90a0;--line:rgba(255,255,255,.07);--steel:#9fb3c8;--cream:#f3efe6;--wit:#f0a08c;--ok:#8fd3b4;--ask:#e6c37a}
+*{box-sizing:border-box}html,body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+#grid{position:fixed;inset:0;z-index:0;pointer-events:none;background-image:linear-gradient(rgba(159,179,200,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(159,179,200,.07) 1px,transparent 1px);background-size:26px 26px}
+#ascii{position:fixed;inset:0;z-index:0;width:100%;height:100%;display:block}
+#glow{position:fixed;inset:0;z-index:0;width:100%;height:100%;display:block;filter:blur(28px) saturate(1.25);opacity:.8;transform:translateZ(0)}
+#far{position:fixed;inset:0;z-index:0;width:100%;height:100%;display:block;filter:blur(1.2px);opacity:.42}
+#near{position:fixed;inset:0;z-index:0;width:100%;height:100%;display:block;filter:blur(.4px);opacity:.9;pointer-events:none}
+#scrim{position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(620px 380px at 50% 50%,rgba(7,8,11,.88),rgba(7,8,11,.4) 66%,transparent 100%)}
+.nav{position:relative;z-index:2;display:flex;align-items:center;justify-content:space-between;padding:18px 48px;font-size:14px}
+.logo{font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}.logo .mark{display:grid;grid-template-columns:repeat(3,7px);gap:1px}.logo .mark i{display:block;width:7px;height:7px;background:var(--steel);border-radius:1px;opacity:.9}.logo .mark i:nth-child(2),.logo .mark i:nth-child(4),.logo .mark i:nth-child(9){opacity:.35}
+.links{display:flex;gap:28px;color:var(--mut)}.links a:hover{color:var(--fg)}
+.btn{font-size:13.5px;padding:9px 14px;border-radius:8px;display:inline-flex;align-items:center;gap:8px;font-weight:500;border:1px solid var(--line);background:rgba(255,255,255,.04)}.btn.p{background:var(--fg);color:#07080b;border-color:var(--fg)}
+.hero{position:relative;z-index:1;min-height:calc(100vh - 62px);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:40px 24px 120px}
+.kicker{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel)}
+.kicker i{width:6px;height:6px;border-radius:50%;background:var(--ok);box-shadow:0 0 12px var(--ok);display:inline-block;animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.35}}
+h1{font-size:64px;line-height:1.04;letter-spacing:-.035em;font-weight:500;margin:22px 0 14px;max-width:16ch}
+h1 .g{background:linear-gradient(90deg,#f3efe6 0%,#b7c6dc 45%,#b7a7f0 100%);-webkit-background-clip:text;background-clip:text;color:transparent}
+.math{font-family:var(--serif);font-style:italic;font-size:22px;color:var(--cream);margin:0 0 20px;opacity:.9}.math sub{font-family:var(--mono);font-style:normal;font-size:11px;color:var(--steel);margin:0 2px}.math .q{font-family:var(--mono);font-style:normal;font-size:12px;color:var(--mut);margin-left:14px;letter-spacing:.04em}
+.sub{font-size:17px;line-height:1.55;color:var(--mut);max-width:58ch;margin:0 0 30px}
+.box{display:flex;align-items:center;gap:10px;border:1px solid var(--line);background:rgba(10,11,15,.85);backdrop-filter:blur(10px);border-radius:14px;padding:10px 10px 10px 18px;font-family:var(--mono);font-size:13.5px;box-shadow:0 30px 80px -40px rgba(159,179,200,.35)}
+.box span{color:var(--fg)}.box .k{color:var(--mut);font-size:11px;margin-left:auto;padding-right:6px}
+.slash{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap;justify-content:center}.slash a{font-family:var(--mono);font-size:12px;color:var(--mut);border:1px solid var(--line);border-radius:999px;padding:7px 12px;background:rgba(10,11,15,.7)}.slash a:hover{color:var(--fg)}
+.stats{display:flex;gap:44px;margin-top:56px;font-family:var(--mono);font-size:12px;color:var(--mut)}.stats b{display:block;font-family:var(--sans);font-size:22px;letter-spacing:-.02em;color:var(--fg);margin-bottom:4px;font-weight:600}
+.reveal{opacity:0;transform:translateY(14px);animation:up .8s cubic-bezier(.2,.7,.2,1) forwards}
+.reveal:nth-child(2){animation-delay:.1s}.reveal:nth-child(3){animation-delay:.2s}.reveal:nth-child(4){animation-delay:.3s}.reveal:nth-child(5){animation-delay:.4s}.reveal:nth-child(6){animation-delay:.5s}.reveal:nth-child(7){animation-delay:.6s}
+@keyframes up{to{opacity:1;transform:none}}
+@media (max-width:960px){h1{font-size:40px}.links{display:none}.stats{gap:22px;flex-wrap:wrap;justify-content:center}}
+</style></head><body>
+<canvas id="far" aria-hidden="true"></canvas><canvas id="glow" aria-hidden="true"></canvas><canvas id="ascii" aria-hidden="true"></canvas><canvas id="near" aria-hidden="true"></canvas><div id="scrim"></div>
+<div class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a>Method</a><a>lean</a><a>Benchmark</a><a>Quick start</a><a>Paper</a></div><div style="display:flex;gap:10px"><a class="btn">GitHub</a><a class="btn p">Get started</a></div></div>
+<main class="hero">
+  <span class="kicker reveal"><i></i>lean 0.1.1 · differential attestation</span>
+  <h1 class="reveal">Deterministic <span class="g">code review</span>.</h1>
+  <p class="math reveal"><i>f</i><sub>parent</sub>(x) = <i>f</i><sub>candidate</sub>(x)<span class="q">∀ x ∉ scope</span></p>
+  <p class="sub reveal">No opinions. A proof that the change did only what you asked, or the input that breaks it and the exact line to fix. Same change, same verdict, every time. Built on lean: code that is easy to verify, by construction.</p>
+  <div class="box reveal"><span>$ git clone https://github.com/NexusGPT/lean</span><span class="k">⌘C to copy</span><a class="btn p">Quick start →</a></div>
+  <div class="slash reveal"><a>/check a function</a><a>/gate a pull request</a><a>/lint for provability</a><a>/read the paper</a></div>
+  <div class="stats reveal"><div><b>31.6%</b>AACR-Bench F1 · reader 29.0</div><div><b>120/143</b>planted mutations separated</div><div><b>53%</b>of 39,775 functions in reach</div><div><b>917</b>agent changes in 13 days, one repo</div></div>
+</main>
+<script>
+(() => {
+  const cv = document.getElementById('ascii'); const ctx = cv.getContext('2d'); const gcv = document.getElementById('glow'); const gctx = gcv.getContext('2d');
+  const RAMP = " .`':;-,~=+oxt%SXO8#@"; const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let W, H, dpr, cols, rows, cell = 14, t0 = performance.now(), mouse = { x: -9999, y: -9999 }, seeds, lit;
+  const off = document.createElement('canvas'), octx = off.getContext('2d', { willReadFrequently: true });
+  function size() { dpr = Math.min(2, devicePixelRatio || 1); W = innerWidth; H = innerHeight; cv.width = W * dpr; cv.height = H * dpr; ctx.setTransform(dpr, 0, 0, dpr, 0, 0); gcv.width = Math.floor(W / 4); gcv.height = Math.floor(H / 4); cell = W > 700 ? 14 : 11; cols = Math.floor(W / cell); rows = Math.floor(H / cell); off.width = cols; off.height = rows; seeds = new Float32Array(cols * rows); lit = new Float32Array(cols * rows); for (let i = 0; i < seeds.length; i++) seeds[i] = Math.random(); }
+  const soft = (x, y, r, a) => { const g = octx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, `rgba(255,255,255,${a})`); g.addColorStop(1, 'rgba(255,255,255,0)'); octx.fillStyle = g; octx.beginPath(); octx.arc(x, y, r, 0, 7); octx.fill(); };
+  // ---- the koi are the owner's photo, cut out. Each is sliced along its length and swum with a travelling wave ----
+  const farOff = document.createElement('canvas'), fctx = farOff.getContext('2d', { willReadFrequently: true });
+  const fcv = document.getElementById('far'), fcx = fcv.getContext('2d'); const ncv = document.getElementById('near'), ncx = ncv.getContext('2d');
+  const world = document.createElement('canvas'), wctx = world.getContext('2d'); const farWorld = document.createElement('canvas'), fwctx = farWorld.getContext('2d');
+  let fcols, frows, fcell, flit, fseeds; const WS = 0.5; // the world canvases run at half page resolution
+  const sizeLayers = () => { fcell = Math.max(7, Math.round(cell * 0.62)); fcols = Math.floor(W / fcell); frows = Math.floor(H / fcell); farOff.width = fcols; farOff.height = frows; fcv.width = W * dpr; fcv.height = H * dpr; fcx.setTransform(dpr, 0, 0, dpr, 0, 0); ncv.width = W * dpr; ncv.height = H * dpr; ncx.setTransform(dpr, 0, 0, dpr, 0, 0); flit = new Float32Array(fcols * frows); fseeds = new Float32Array(fcols * frows); for (let i = 0; i < fseeds.length; i++) fseeds[i] = Math.random(); world.width = Math.floor(W * WS); world.height = Math.floor(H * WS); farWorld.width = world.width; farWorld.height = world.height; };
+  const sprites = {}; let ready = 0; for (const n of ['koi-a', 'koi-b', 'koi-c']) { const im = new Image(); im.onload = () => { ready++; }; im.src = `/public/${n}.png`; sprites[n] = im; }
+  // draw one sprite, head to the right in its own frame, sliced into strips that follow a travelling wave toward the tail
+  function swim(c, im, x, y, len, heading, t, phase, kick, mirror) {
+    const K = 40; const sw = im.width / K; const scale = len / im.width; const h = im.height * scale;
+    c.save(); c.translate(x, y); c.rotate(heading); if (mirror) c.scale(1, -1);
+    for (let j = 0; j < K; j++) {
+      const u = 1 - (j + 0.5) / K;                                   // 0 at the head, 1 at the tail
+      const amp = len * (0.012 + 0.11 * u * u) * (0.7 + 0.5 * kick);  // the wave grows toward the tail and with the stroke
+      const dy = Math.sin(t * 3.1 + phase - u * 4.2) * amp;
+      const dx = -u * u * len * 0.03 * (1 - Math.cos(t * 3.1 + phase - u * 4.2)) * 0.5; // the tail draws in a little on the stroke
+      c.drawImage(im, j * sw, 0, sw + 1, im.height, -len / 2 + j * sw * scale + dx, -h / 2 + dy, sw * scale + 0.8, h);
+    }
+    c.restore();
+  }
+  const KOI = [ { sprite: 'koi-a', phase: 0.0, len: 0.42, rx: 0.31, ry: 0.33, dy: 0.03, speed: 0.13, mirror: false, tilt: 0.3 }, { sprite: 'koi-b', phase: Math.PI, len: 0.40, rx: 0.31, ry: 0.33, dy: 0.03, speed: 0.13, mirror: false, tilt: 0.3 } ];
+  const FAR = [ { sprite: 'koi-c', phase: 2.2, len: 0.30, rx: 0.46, ry: 0.28, dy: -0.06, speed: -0.07, mirror: true, tilt: 0.1 } ];
+  function placeKoi(c, cw, ch, f, t) {
+    const im = sprites[f.sprite]; if (!im.complete || !im.width) return;
+    const th = t * f.speed + f.phase; const a = cw * f.rx, b = ch * f.ry, cx = cw / 2, cy = ch * (0.5 + f.dy);
+    const x = cx + a * Math.cos(th), y = cy + b * Math.sin(th); const dir = Math.sign(f.speed) || 1;
+    const heading = Math.atan2(b * Math.cos(th) * dir, -a * Math.sin(th) * dir) + Math.sin(t * 0.9 + f.phase) * 0.05 - f.tilt * dir;
+    const kick = 0.5 + 0.5 * Math.sin(t * 3.1 + f.phase);
+    swim(c, im, x, y, ch * f.len, heading, t, f.phase, kick, f.mirror);
+  }
+  const plankton = Array.from({ length: 40 }, () => ({ u: Math.random(), v: Math.random(), sp: 0.003 + Math.random() * 0.008, ph: Math.random() * 7, z: Math.random() }));
+  function drawWorld(t) {
+    wctx.clearRect(0, 0, world.width, world.height); for (const f of KOI) placeKoi(wctx, world.width, world.height, f, t);
+    fwctx.clearRect(0, 0, farWorld.width, farWorld.height); for (const f of FAR) placeKoi(fwctx, farWorld.width, farWorld.height, f, t);
+    fwctx.fillStyle = 'rgba(255,255,255,.5)'; for (const p of plankton) { if (p.z > 0.5) continue; p.v -= p.sp * 0.016; if (p.v < -0.02) { p.v = 1.02; p.u = Math.random(); } fwctx.fillRect(p.u * farWorld.width + Math.sin(t + p.ph) * 3, p.v * farWorld.height, 3, 3); }
+    octx.clearRect(0, 0, cols, rows); octx.imageSmoothingEnabled = true; octx.imageSmoothingQuality = 'high'; octx.drawImage(world, 0, 0, cols, rows);
+    fctx.clearRect(0, 0, fcols, frows); fctx.imageSmoothingEnabled = true; fctx.imageSmoothingQuality = 'high'; fctx.drawImage(farWorld, 0, 0, fcols, frows);
+    return [octx.getImageData(0, 0, cols, rows).data, fctx.getImageData(0, 0, fcols, frows).data];
+  }
+  // one tile pass over a luminance buffer: squares light fast and fade slow; glyph by brightness; red channel = orange
+  function tiles(g, lum, cw, ch, cs, litArr, seedArr, appear, t, strength, withGrid) {
+    if (withGrid) { g.strokeStyle = 'rgba(159,179,200,.055)'; g.lineWidth = 1; g.beginPath(); for (let c = 0; c <= cw; c++) { g.moveTo(c * cs + 0.5, 0); g.lineTo(c * cs + 0.5, ch * cs); } for (let r = 0; r <= ch; r++) { g.moveTo(0, r * cs + 0.5); g.lineTo(cw * cs, r * cs + 0.5); } g.stroke(); }
+    g.font = `500 ${cs * 0.82}px "JetBrains Mono", ui-monospace, monospace`; g.textAlign = 'center'; g.textBaseline = 'middle';
+    for (let r = 0; r < ch; r++) for (let c = 0; c < cw; c++) {
+      const i = r * cw + c; const A = lum[i * 4 + 3] / 255; const R = lum[i * 4], G = lum[i * 4 + 1], B = lum[i * 4 + 2]; const Y = (0.3 * R + 0.59 * G + 0.11 * B) / 255; const target = Math.min(1, A * (0.7 + 0.4 * Y)); const seed = seedArr[i]; const red = A > 0.15 && R > 120 && R > G * 1.25 && R > B * 1.5;
+      const prev = litArr[i]; const nv = target > prev ? prev + (target - prev) * 0.5 : prev * 0.91; litArr[i] = nv < 0.012 ? 0 : nv; const v0 = litArr[i];
+      if (v0 < 0.05) { if (withGrid && seed > 0.9985) { g.fillStyle = `rgba(159,179,200,${0.16 + 0.12 * Math.sin(t + seed * 50)})`; g.fillRect(c * cs + cs * .2, r * cs + cs * .5, cs * .6, 1); } continue; }
+      const x = c * cs, y = r * cs; const dm = Math.hypot(mouse.x - x - cs / 2, mouse.y - y - cs / 2); const boost = dm < 110 ? (1 - dm / 110) * 0.4 : 0;
+      const twk = Math.sin(t * (1.5 + seed * 2.5) + seed * 60) * 0.08; const v = Math.max(0.02, Math.min(1, v0 + boost + twk)) * strength;
+      const tick = Math.floor(t * (0.8 + seed * 1.6) + seed * 97); const jit = ((tick * 7919 + Math.floor(seed * 1e4)) % 5) - 2;
+      const idx = Math.max(0, Math.min(RAMP.length - 1, Math.floor(v * (RAMP.length - 1)) + (Math.abs(jit) === 2 ? 0 : jit))); const glyph = RAMP[idx];
+      const col = red ? (v > 0.55 ? '255,150,96' : '214,118,74') : v > 0.8 ? '245,241,232' : v > 0.45 ? '204,214,226' : '159,179,200';
+      g.fillStyle = red ? `rgba(240,138,96,${(0.10 + v * 0.3) * appear})` : `rgba(159,179,200,${(0.05 + v * 0.26) * appear})`; g.fillRect(x + 1, y + 1, cs - 1, cs - 1);
+      if (v > 0.12) { g.fillStyle = `rgba(${col},${(0.3 + v * 0.7) * appear})`; g.fillText(glyph, x + cs / 2, y + cs / 2 + 0.5); }
+    }
+  }
+  function frame(now) {
+    const t = (now - t0) / 1000; const [lum, flum] = drawWorld(t);
+    gctx.clearRect(0, 0, gcv.width, gcv.height); gctx.globalCompositeOperation = 'source-over'; gctx.imageSmoothingEnabled = true; gctx.drawImage(off, 0, 0, gcv.width, gcv.height); gctx.globalCompositeOperation = 'source-in'; gctx.fillStyle = 'rgba(135,160,205,0.9)'; gctx.fillRect(0, 0, gcv.width, gcv.height);
+    if (ready < 3) { t0 = now; requestAnimationFrame(frame); return; }
+    const appear = reduce ? 1 : Math.min(1, Math.max(0, (t - 0.3) / 1.6));
+    fcx.clearRect(0, 0, W, H); tiles(fcx, flum, fcols, frows, fcell, flit, fseeds, appear, t, 0.75, false);
+    ctx.clearRect(0, 0, W, H); tiles(ctx, lum, cols, rows, cell, lit, seeds, appear, t, 1, true);
+    // the near layer: a few bright squares drifting up, with parallax to the pointer
+    ncx.clearRect(0, 0, W, H); const px = mouse.x > 0 ? (mouse.x / W - 0.5) * 24 : 0, py = mouse.y > 0 ? (mouse.y / H - 0.5) * 16 : 0;
+    for (const p of plankton) { if (p.z <= 0.5) continue; const x = p.u * W + Math.sin(t * 0.7 + p.ph) * 9 - px * (p.z), y = ((p.v + t * p.sp * 0.5) % 1.04 - 0.02) * H - py * p.z; const al = 0.25 + 0.35 * Math.sin(t * 1.3 + p.ph) ** 2; ncx.fillStyle = `rgba(214,224,236,${al * appear})`; ncx.fillRect(Math.round(x), Math.round(H - y), cell * 0.8, cell * 0.8); }
+    requestAnimationFrame(frame);
+  }
+  addEventListener('resize', () => { size(); sizeLayers(); }); addEventListener('mousemove', (e) => { mouse.x = e.clientX; mouse.y = e.clientY; }); addEventListener('mouseleave', () => { mouse.x = mouse.y = -9999; });
+  size(); sizeLayers(); requestAnimationFrame(frame);
+})();
+</script>
+</body></html>
