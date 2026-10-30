@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>provedreview: differential attestation and lean</title>
+<meta name="description" content="A code review gate that accepts a change from recordings, proofs and declared relations. Never from the producer's account. Built on lean, a differential equivalence checker for TypeScript.">
+<link rel="stylesheet" href="/styles.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 32 32%27%3E%3Crect width=%2732%27 height=%2732%27 fill=%27%23FAFAFA%27/%3E%3Ccircle cx=%2716%27 cy=%2716%27 r=%277%27 fill=%27%23F5451A%27/%3E%3C/svg%3E">
+</head>
+<body>
+
+<header class="header">
+  <a class="wordmark" href="#"><span>provedreview</span><span class="dot" aria-hidden="true"></span></a>
+  <nav class="nav" aria-label="Sections">
+    <a href="#method">Method</a>
+    <a href="#features">lean</a>
+    <a href="#benchmark">Benchmark</a>
+    <a href="#quickstart">Quick start</a>
+    <a href="#paper">Paper</a>
+  </nav>
+  <div class="header-right">
+    <a class="gh" href="https://github.com/NexusGPT/lean" aria-label="lean on GitHub"><svg width="20" height="20" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg></a>
+    <a class="btn btn--primary btn--small" href="#quickstart">Run it</a>
+  </div>
+</header>
+
+<section class="hero" id="top">
+  <div class="hero-stage">
+    <video autoplay loop muted playsinline src="/public/hero-mesh.mp4" poster="/public/hero-poster.avif" aria-hidden="true"></video>
+    <div class="wash" aria-hidden="true"></div>
+    <div class="fade" aria-hidden="true"></div>
+    <div class="grid-sheet" aria-hidden="true"></div>
+    <div class="grain" aria-hidden="true"></div>
+    <div class="hero-content">
+      <div>
+        <span class="rule-dash">Differential attestation, with lean</span>
+        <h1>Not another AI reviewer. <em>A proof, or the input that breaks it.</em></h1>
+        <p class="tagline">A change is accepted from recordings, proofs and declared relations. Never from the producer's account.</p>
+        <div class="install" role="group" aria-label="Install">
+          <div class="tabs" role="tablist">
+            <button role="tab" aria-selected="true" data-tab="git">git</button>
+            <button role="tab" aria-selected="false" data-tab="docker">docker</button>
+          </div>
+          <div class="line">
+            <code data-cmd="git">git clone https://github.com/NexusGPT/lean &amp;&amp; cd lean</code>
+            <code data-cmd="docker" hidden>docker build -t lean:local . &amp;&amp; docker run --rm -v "$PWD:/work" -w /work lean:local check --help</code>
+            <button class="copy" type="button">copy</button>
+          </div>
+        </div>
+        <div class="cta-row">
+          <a class="btn btn--primary" href="#quickstart">Quick start</a>
+          <a class="btn btn--outline" href="#method">Read the method</a>
+        </div>
+      </div>
+      <div class="terminal" aria-label="A real run">
+        <div class="bar"><span class="dots" aria-hidden="true"><span></span><span></span><span></span></span><span>lean, a real run of the checkout</span></div>
+<pre><span class="l"><span class="n">1</span><span><span class="p">$</span> node langs/ts/check.mjs --parent parent.ts --candidate candidate.ts --unit applyAll --no-project --n 60 --seed 3 --out ledger.json</span></span>
+<span class="l"><span class="n">2</span><span><span class="wit">WITNESS</span> -> ledger.json</span></span>
+<span class="l"><span class="n">3</span><span><span class="p">$</span> jq -c '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json</span></span>
+<span class="l"><span class="n">4</span><span>{"input":17,"floor":-1,"parent":1,"candidate":0}</span></span>
+<span class="l"><span class="n">5</span><span><span class="dim">a ledger that rejects the event landing exactly on the floor: &lt;= where the parent had &lt;</span></span></span>
+<span class="l"><span class="n">6</span><span></span></span>
+<span class="l"><span class="n">7</span><span><span class="p">$</span> node langs/ts/check.mjs --parent parent.tsx --candidate candidate.tsx --unit Toggle --no-project --n 60 --out toggle.json</span></span>
+<span class="l"><span class="n">8</span><span><span class="ok">PASS-decided</span> -> toggle.json   <span class="dim">every click order from every prop assignment: 8 state pairs over 2 assignments</span></span></span>
+<span class="l"><span class="n">9</span><span><span class="p">$</span> <span class="cur"></span></span></span></pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section counters reveal" aria-label="Measured">
+  <div class="inner">
+    <div class="grid">
+      <div class="cell"><span class="callout">AACR-Bench F1</span><span class="stat">31.6<small>%</small></span><p class="cap">against 29.0 for the published reader, same 184 pull requests, same judge.</p></div>
+      <div class="cell"><span class="callout">Escaped defects caught</span><span class="stat">2.2<small>×</small></span><p class="cap">recordings against the strongest language model reader, on 43 defects that passed review.</p></div>
+      <div class="cell"><span class="callout">Planted mutations</span><span class="stat">120<small>/143</small></span><p class="cap">separated by lean with a concrete input. None proved equal.</p></div>
+      <div class="cell"><span class="callout">Functions in reach</span><span class="stat">53<small>%</small></span><p class="cap">of 39,775 functions across 36 repositories, proved or executed.</p></div>
+      <div class="cell"><span class="callout">Changes in 13 days</span><span class="stat">917</span><p class="cap">merged by agents in one repository we run. A reviewer reads about ten a day.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal" id="method">
+  <div class="inner">
+    <div class="head">
+      <span class="rule-dash">The method</span>
+      <h2>Three instruments. <em>Zero trust in the author.</em></h2>
+      <p>Differential attestation reads neither the change text nor any statement by its producer. Each instrument compares two versions of the system and refuses on evidence.</p>
+    </div>
+    <div class="cards cards--3">
+      <div class="card"><span class="num">01</span><h3>Recording</h3><p>The system runs under a fixed stimulus set before and after the change. Any difference outside the scope the requester selected is refused. The difference inside it must equal an edit the requester made on a real recording.</p><span class="tag">22 of 43 defects</span></div>
+      <div class="card"><span class="num">02</span><h3>Proof</h3><p>For every function outside the scope, lean proves the candidate equal to the parent, or returns an input on which they differ. A proof is checked by Dafny; a witness is a run you can replay.</p><span class="tag">31 of 43 with the proof lane</span></div>
+      <div class="card"><span class="num">03</span><h3>Relation</h3><p>For every artifact that is not a function: build and pipeline configuration, locale files, schemas, documents. A predicate derived from an authoritative artifact, or declared outside the change, compares the two versions.</p><span class="tag">the artifact lane</span></div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal" id="features">
+  <div class="inner">
+    <div class="head">
+      <span class="rule-dash">lean</span>
+      <h2>Five words. <em>Each one earned.</em></h2>
+      <p>lean is a differential equivalence checker for TypeScript. Two versions of a function in, one verdict out, with the evidence that backs it.</p>
+    </div>
+    <div class="cards cards--3">
+      <div class="card"><span class="num">PASS-proved</span><h3>A theorem, checked.</h3><p>Lane A translates both versions to Dafny and proves them equal for every input and every world. The certificate names the theorem and the prover version.</p></div>
+      <div class="card"><span class="num">PASS-decided</span><h3>A state space, exhausted.</h3><p>A component is explored over every click order from every prop assignment. As final as a proof for that component.</p></div>
+      <div class="card"><span class="num">WITNESS</span><h3>An input that differs.</h3><p>Lane B runs both versions in a sandbox with a frozen world and draws inputs, the special numbers included. The witness names the source line on each side.</p></div>
+      <div class="card"><span class="num">PASS-bounded</span><h3>No difference found, and it says so.</h3><p>A bounded run keeps its word: generated inputs, click sequences to a stated depth, seconds per lane recorded in the certificate.</p></div>
+      <div class="card"><span class="num">ASK</span><h3>Refuses to guess.</h3><p>A loop with no measure, a result that may share an input, a value whose type nothing checked. lean names the construct and the rewrite, in the editor, before the change ships.</p></div>
+      <div class="card"><span class="num">The row</span><h3>Screens, too.</h3><p>Two builds rendered on the same screens under one pinned browser: pixels, layout boxes and the accessibility tree, with every tolerance in a parameters file. No model anywhere.</p></div>
+    </div>
+  </div>
+</section>
+
+<section class="section bench reveal" id="benchmark">
+  <div class="inner">
+    <div class="head">
+      <span class="rule-dash">Open benchmark</span>
+      <h2>Top of AACR-Bench. <em>With the judge's logs committed.</em></h2>
+      <p>196 real pull requests from 50 open source repositories, scored by the benchmark's own judge in three rounds. The composed entry (reader, gate, lean) against the published reader, on the 184 instances both scored.</p>
+    </div>
+    <div class="two">
+      <div>
+        <table class="table">
+          <thead><tr><th>Entry</th><th>Precision</th><th>Recall</th><th>F1</th><th>Comments</th></tr></thead>
+          <tbody>
+            <tr class="us"><td><strong>Differential attestation + lean</strong><br><span class="dim" style="color:rgba(255,255,255,.6);font-size:13px">d2 reader, gate, C4 rows</span></td><td class="num">34.1<span class="delta">+6.4</span></td><td class="num">29.5<span class="delta neg">−1.0</span></td><td class="num">31.6<span class="delta">+2.6</span></td><td class="num">1,059</td></tr>
+            <tr><td>Open Code Review<br><span style="color:rgba(255,255,255,.6);font-size:13px">the published reader</span></td><td class="num">27.7</td><td class="num">30.4</td><td class="num">29.0</td><td class="num">1,426</td></tr>
+          </tbody>
+        </table>
+        <p class="note">Mean of three judge rounds (claude-opus-5-5), 184 instances both entries scored; 12 of 196 unscored, 11 because GitHub no longer serves the commit. The readers ran on different models (ours on opus-5-5, the floor on opus-4-6); a same-model run is scheduled. Every per-instance verdict and both judge logs are in the repository.</p>
+      </div>
+      <div>
+        <span class="callout" style="color:rgba(255,255,255,.55)">On 43 defects that escaped human review</span>
+        <div class="bars" style="margin-top:22px">
+          <div class="bar-row"><span>Strongest LLM reader</span><div class="track"><div class="fill" style="width:23.3%"></div></div><span class="v">10 / 43</span></div>
+          <div class="bar-row us"><span>Recordings</span><div class="track"><div class="fill" style="width:51.2%"></div></div><span class="v">22 / 43</span></div>
+          <div class="bar-row us"><span>Recordings + proof</span><div class="track"><div class="fill" style="width:72.1%"></div></div><span class="v">31 / 43</span></div>
+        </div>
+        <p class="note">The reader also refused 22 of 43 clean changes; the recordings refused 4. Two readers from different vendors missed the same defects. Six repositories, 144 escaped defects in the study.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal" id="quickstart">
+  <div class="inner">
+    <div class="head">
+      <span class="rule-dash">Quick start</span>
+      <h2>One function. <em>Three minutes.</em></h2>
+      <p>node 24 for lane B. python3 and Dafny 4 for the proof lane, or the container image with both pinned.</p>
+    </div>
+    <div class="steps">
+      <div class="step"><span class="n">01</span><h3>Install</h3><p>Clone the checkout, or build the image with node, Dafny and Z3 pinned.</p><pre><span class="p">$</span> git clone https://github.com/NexusGPT/lean &amp;&amp; cd lean
+<span class="p">$</span> docker build -t lean:local .</pre></div>
+      <div class="step"><span class="n">02</span><h3>Check one function</h3><p>Two versions of a file, one unit name. lean picks the lanes.</p><pre><span class="p">$</span> node langs/ts/check.mjs --parent old.ts --candidate new.ts --unit applyAll --no-project --n 60 --out ledger.json
+<span class="wit">WITNESS</span> -> ledger.json</pre></div>
+      <div class="step"><span class="n">03</span><h3>Read the certificate</h3><p>One JSON per function: the verdict, what backs it, the hashes of both sides, the seconds each lane took.</p><pre><span class="p">$</span> jq -c '.witness | {input, parent: .parent.outcome, candidate: .candidate.outcome}' ledger.json
+{"input":17,"parent":{"returned":1},"candidate":{"returned":0}}</pre></div>
+    </div>
+  </div>
+</section>
+
+<section class="section reveal" id="paper">
+  <div class="inner">
+    <div class="head">
+      <span class="rule-dash">The paper</span>
+      <h2>Differential Attestation. <em>Accepting agent-written changes from recordings, proofs and declared relations, never from the producer's account.</em></h2>
+      <p>Four bounds fix what a gate can observe and a proof can decide. Three independent attacks locate the release step's remaining condition. Assem Chammah, Nexus, 2026.</p>
+    </div>
+    <div class="cta-row">
+      <a class="btn btn--primary" href="https://github.com/NexusGPT/differential-attestation">The repository</a>
+      <a class="btn btn--outline" href="https://github.com/NexusGPT/lean">lean on GitHub</a>
+    </div>
+  </div>
+</section>
+
+<footer class="footer">
+  <div class="inner">
+    <div><a class="wordmark" href="#top"><span>provedreview</span><span class="dot" aria-hidden="true"></span></a><p>Differential attestation and lean are built by Nexus. © 2026.</p></div>
+    <div class="links"><a href="https://github.com/NexusGPT/lean">lean</a><a href="https://github.com/NexusGPT/differential-attestation">differential-attestation</a><a href="https://gpt.nexus">Nexus</a></div>
+  </div>
+</footer>
+
+<script>
+(() => {
+  const io = new IntersectionObserver((es) => es.forEach((e, i) => { if (e.isIntersecting) { setTimeout(() => e.target.classList.add('in'), 40 * (i % 6)); io.unobserve(e.target); } }), { rootMargin: '0px 0px -8% 0px' });
+  document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+  const tabs = document.querySelectorAll('.install .tabs button');
+  tabs.forEach((b) => b.addEventListener('click', () => { tabs.forEach((x) => x.setAttribute('aria-selected', String(x === b))); document.querySelectorAll('.install code').forEach((c) => { c.hidden = c.dataset.cmd !== b.dataset.tab; }); }));
+  const copy = document.querySelector('.install .copy');
+  copy.addEventListener('click', async () => { const c = document.querySelector('.install code:not([hidden])'); try { await navigator.clipboard.writeText(c.textContent); copy.textContent = 'copied'; setTimeout(() => (copy.textContent = 'copy'), 1200); } catch { copy.textContent = 'select it'; } });
+})();
+</script>
+</body>
+</html>
