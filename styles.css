@@ -150,7 +150,12 @@ h1, h2, h3 { font-family: var(--ff-serif); font-weight: 700; letter-spacing: -0.
   :root { --px: 24px; }
   .nav { display: none; }
   .hero-stage { min-height: 0; }
-  .hero-content { grid-template-columns: 1fr; padding: 32px 0 72px; gap: 36px; }
+  .hero-content { grid-template-columns: minmax(0, 1fr); padding: 32px 0 72px; gap: 36px; }
+  .hero-content > * { min-width: 0; }
+  .install { display: flex; width: 100%; }
+  .install .line { min-width: 0; }
+  .install .line code { display: block; min-width: 0; overflow-x: auto; flex: 1 1 auto; }
+  .terminal { min-width: 0; }
   .hero h1 { font-size: 40px; max-width: none; }
   .hero .tagline { font-size: 19px; }
   .hero .wash { background: linear-gradient(to bottom, var(--paper-white) 0%, rgba(250,250,250,0.92) 55%, rgba(250,250,250,0.6) 100%); }
