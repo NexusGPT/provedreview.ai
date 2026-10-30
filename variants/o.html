@@ -70,12 +70,12 @@ h1 .g{background:linear-gradient(90deg,#f3efe6 0%,#b7c6dc 45%,#b7a7f0 100%);-web
       const L = this.L, N = this.N, d = L / N;
       if (!this.inited) { for (let i = 0; i <= N; i++) { this.joints.push([hx - Math.cos(hdir) * d * i, hy - Math.sin(hdir) * d * i]); this.ang.push(hdir); } this.inited = true; }
       this.joints[0] = [hx, hy]; this.ang[0] = hdir;
-      const kick = 0.5 + 0.5 * Math.sin(t * 2.4 + this.phase);
+      const kick = 0.5 + 0.5 * Math.sin(t * 1.1 + this.phase);
       for (let i = 1; i <= N; i++) {
         const u = i / N; const p = this.joints[i], q = this.joints[i - 1];
         // where the joint already trails, the muscle wave it wants, and the bend a spine allows
         const follow = Math.atan2(q[1] - p[1], q[0] - p[0]);
-        const amp = (0.012 + 0.11 * u * u) * (0.8 + 0.5 * kick); const want = this.ang[i - 1] + Math.sin(t * 2.4 + this.phase - u * 6.0) * amp * 4;
+        const amp = (0.012 + 0.11 * u * u) * (0.8 + 0.5 * kick); const want = this.ang[i - 1] + Math.sin(t * 1.1 + this.phase - u * 5.0) * amp * 4;
         let a = lerpAng(follow, want, 0.22); a = clampAng(a, this.ang[i - 1], u > BODY_END ? 0.22 : 0.10);
         this.ang[i] = a; this.joints[i] = [q[0] - Math.cos(a) * d, q[1] - Math.sin(a) * d];
       }
@@ -92,9 +92,9 @@ h1 .g{background:linear-gradient(90deg,#f3efe6 0%,#b7c6dc 45%,#b7a7f0 100%);-web
         // rays
         c.strokeStyle = 'rgba(255,255,255,.55)'; c.lineWidth = L * 0.004; for (const v of [-0.7, -0.35, 0, 0.35, 0.7]) { const r = edge(BODY_END, 0.98, v, 6); c.beginPath(); r.forEach((p, i) => i ? c.lineTo(p[0], p[1]) : c.moveTo(p[0], p[1])); c.stroke(); } }
       // paired fins: pectoral behind the head, pelvic at mid body; leaves on their joints that beat, out of phase
-      const leaf = (u, len, wid, spread, ph, alpha) => { for (const side of [-1, 1]) { const [bx, by, a] = this.at(u, 0.85 * side); const b = Math.sin(t * 2.0 + this.phase + ph + (side > 0 ? 0.9 : 0)); const flap = (b > 0 ? b * 0.32 : b * 0.12) * side; const ang = a + Math.PI - side * (Math.PI / 2 - spread) + flap;
+      const leaf = (u, len, wid, spread, ph, alpha) => { for (const side of [-1, 1]) { const [bx, by, a] = this.at(u, 0.85 * side); const b = Math.sin(t * 0.9 + this.phase + ph + (side > 0 ? 0.7 : 0)); const flap = (b > 0 ? Math.pow(b, 0.7) * 0.55 : b * 0.22) * side; const ang = a + Math.PI - side * (Math.PI / 2 - spread) + flap;
         c.save(); c.translate(bx, by); c.rotate(ang); c.fillStyle = `rgba(255,255,255,${alpha})`; c.beginPath(); c.moveTo(0, 0); c.quadraticCurveTo(len * 0.5, -wid * side * 0.9, len, -wid * side * 0.1); c.quadraticCurveTo(len * 0.55, wid * side * 0.35, 0, 0); c.fill(); c.restore(); } };
-      leaf(0.20, L * 0.20, L * 0.085, 0.55, 0, 0.6); leaf(0.50, L * 0.11, L * 0.045, 0.75, 1.3, 0.5);
+      leaf(0.20, L * 0.24, L * 0.10, 0.5, 0, 0.62); leaf(0.50, L * 0.13, L * 0.055, 0.7, 1.6, 0.52);
       // the body: edges from the nose cap to the peduncle, a brighter core, the dorsal ridge
       { const top = edge(0.01, BODY_END, 1, 36), bot = edge(0.01, BODY_END, -1, 36).reverse(); const nose = this.at(0, 0); const cap = []; for (let i = 0; i <= 8; i++) { const a = nose[2] + Math.PI / 2 - Math.PI * i / 8; const r = halfWidth(0.01) * L; cap.push([nose[0] + Math.cos(a) * r, nose[1] + Math.sin(a) * r]); }
         poly(bot.concat(cap, top), 'rgba(255,255,255,.95)');
@@ -110,12 +110,12 @@ h1 .g{background:linear-gradient(90deg,#f3efe6 0%,#b7c6dc 45%,#b7a7f0 100%);-web
   function swim(c, im, x, y, len, heading, t, phase, kick, mirror) {
     const K = 30; const sw = im.width / K; const scale = len / im.width; const h = im.height * scale;
     c.save(); c.translate(x, y); c.rotate(heading); if (mirror) c.scale(1, -1);
-    for (let j = 0; j < K; j++) { const u = 1 - (j + 0.5) / K; const dy = Math.sin(t * 2.4 + phase - u * 5) * len * (0.01 + 0.09 * u * u) * (0.7 + 0.5 * kick); c.drawImage(im, j * sw, 0, sw + 1, im.height, -len / 2 + j * sw * scale, -h / 2 + dy, sw * scale + 0.8, h); }
+    for (let j = 0; j < K; j++) { const u = 1 - (j + 0.5) / K; const dy = Math.sin(t * 1.1 + phase - u * 5) * len * (0.01 + 0.09 * u * u) * (0.7 + 0.5 * kick); c.drawImage(im, j * sw, 0, sw + 1, im.height, -len / 2 + j * sw * scale, -h / 2 + dy, sw * scale + 0.8, h); }
     c.restore();
   }
   // the two koi circle the copy half a turn apart; the head leads along the orbit, the chain does the rest
-  const KOI = [ { phase: 0.0, len: 0.50, rx: 0.33, ry: 0.34, dy: 0.04, speed: 0.11, candidate: false }, { phase: Math.PI, len: 0.47, rx: 0.33, ry: 0.34, dy: 0.04, speed: 0.11, candidate: true } ];
-  const FAR = [ { sprite: 'koi-c', phase: 2.2, len: 0.30, rx: 0.46, ry: 0.28, dy: -0.06, speed: -0.07, mirror: true } ];
+  const KOI = [ { phase: 0.0, len: 0.50, rx: 0.33, ry: 0.34, dy: 0.04, speed: 0.042, candidate: false }, { phase: Math.PI, len: 0.47, rx: 0.33, ry: 0.34, dy: 0.04, speed: 0.042, candidate: true } ];
+  const FAR = [ { sprite: 'koi-c', phase: 2.2, len: 0.30, rx: 0.46, ry: 0.28, dy: -0.06, speed: -0.03, mirror: true } ];
   const fish = new Map();
   function placeKoi(c, cw, ch, f, t, flare) {
     const th = t * f.speed + f.phase; const a = cw * f.rx, b = ch * f.ry, cx = cw / 2, cy = ch * (0.5 + f.dy);
