@@ -1,0 +1,10 @@
+[
+ {
+  "id": "A",
+  "rung": "layout",
+  "title": "Scoreboard first",
+  "axis": "what is dominant: the leaderboard fills the first screen; one thin bar of filters above; method, escaped defects and downloads below",
+  "entry": "index.html",
+  "worse_at": "the caveat is one sentence and one column, so sixteen interleaved rows read as one contest; comparing two rows means two expansions and vertical travel; the method sits below every row; on the phone precision, recall, time and tokens hide behind a sideways swipe"
+ }
+]

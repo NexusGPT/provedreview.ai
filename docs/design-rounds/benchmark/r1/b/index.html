@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Benchmark · layout rung 1 · B: dossier</title>
+<style>
+  body { margin: 24px; background: #fff; color: #000; }
+  .badge { display: inline-block; border: 2px solid #555; padding: 2px 10px; font-weight: bold; font-size: 22px; margin-right: 10px; }
+  .frame { position: relative; border: 2px solid #555; margin: 12px 0 40px; box-sizing: border-box; }
+  .frame-label { font-weight: bold; margin-top: 28px; }
+  .desk { width: 1440px; }
+  .phone { width: 390px; }
+  .box { border: 1px solid #999; padding: 6px 8px; box-sizing: border-box; margin: 6px 0; }
+  .box > b { display: block; }
+  .box > span { display: block; font-size: 13px; }
+  .row { display: flex; gap: 8px; align-items: stretch; }
+  .row > .box { margin: 0; }
+  .grow { flex: 1; }
+  .dash { border-style: dashed; }
+  .sel { border-width: 3px; border-color: #555; }
+  .fold { position: absolute; left: -2px; right: -2px; border-top: 2px dashed #555; }
+  .fold > i { position: absolute; right: 6px; top: 2px; font-size: 12px; background: #fff; padding: 0 4px; }
+  .note { font-size: 13px; max-width: 1440px; }
+  .inner { padding: 0 80px; }
+  .tiny { font-size: 12px; }
+  .listrow { height: 40px; display: flex; gap: 6px; align-items: center; border: 1px solid #bbb; margin: 3px 0; padding: 0 6px; font-size: 12px; box-sizing: border-box; }
+  .listrow > div { border-right: 1px dotted #bbb; padding-right: 6px; }
+  .prow { min-height: 56px; display: flex; gap: 6px; align-items: center; border: 1px solid #bbb; margin: 3px 0; padding: 4px 6px; font-size: 12px; box-sizing: border-box; }
+  .links { font-size: 13px; border-collapse: collapse; margin-top: 8px; }
+  .links td, .links th { border: 1px solid #999; padding: 4px 8px; text-align: left; vertical-align: top; }
+</style>
+</head>
+<body>
+
+<p><span class="badge">B</span><b>Benchmark page · rung 1 LAYOUT · axis "dossier"</b></p>
+<p class="note">Thesis: the page is a compact ranked list with a persistent dossier beside it. One row is always selected, and its measurement conditions are always on screen. Scan on the left, read and cite on the right. Labelled boxes only: no data, no style.</p>
+
+<!-- ============ DESKTOP ============ -->
+<div class="frame-label">Desktop · 1440 wide (primary) · dashed line = the 900 px fold</div>
+<div class="frame desk">
+  <div class="fold" style="top: 900px;"><i>1440 × 900 fold: header, filters and rows 1 to 10 sit above it</i></div>
+
+  <div class="box" style="height: 64px; margin: 0;">
+    <b>Shared nav</b>
+    <span>Wordmark "provedreview" (to Home) · Benchmark (active) · Quick start · Docs · Paper · GitHub</span>
+  </div>
+
+  <div class="inner">
+    <div class="row" style="margin-top: 16px; height: 116px;">
+      <div class="box grow">
+        <b>Page header</b>
+        <span>Page title + one line: what AACR-Bench measures (1,505 human notes) and the date the rows were read.</span>
+        <span>Caveat line, always shown: our rows and Open Code Review's rows come from separate judge runs.</span>
+      </div>
+      <div class="box" style="width: 300px;">
+        <b>Row counts + jump links</b>
+        <span>Rows in total · measured by us · published by Open Code Review. Jump links: Method · Escaped defects · Downloads.</span>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 12px; height: 56px;">
+      <div class="box grow">
+        <b>Filter bar</b>
+        <span>Chips "System" (one per system, multi-select) · chips "Measured by" (Measured by us · Published by Open Code Review) · "N of M rows" · Reset filters</span>
+      </div>
+    </div>
+
+    <div class="row" style="margin-top: 12px; align-items: flex-start;">
+      <!-- LIST -->
+      <div class="box" style="width: 768px; margin: 0;">
+        <b>Compact ranked list (about 60% of width)</b>
+        <span>One 40 px line per row. Click a line to select it into the dossier. Arrow keys move the selection. Every number column sorts on header click; F1 descending by default.</span>
+        <div class="listrow" style="font-weight: bold; height: 36px;">
+          <div style="width: 30px;">#</div>
+          <div style="width: 250px;">System · model (header sorts A to Z)</div>
+          <div style="width: 110px;">Measured by</div>
+          <div style="width: 50px;">F1 ▾</div>
+          <div style="width: 50px;">P</div>
+          <div style="width: 50px;">R</div>
+          <div style="width: 55px;">Time/PR</div>
+          <div style="width: 60px;">Tokens/PR</div>
+          <div>n</div>
+        </div>
+        <div class="listrow sel"><div style="width: 30px;">1</div><div style="width: 250px;">Row 1 · SELECTED (marked, matches the dossier)</div><div style="width: 110px;">ours / published</div><div>scores · time · tokens · instances</div></div>
+        <div class="listrow"><div style="width: 30px;">2</div><div style="width: 250px;">Row 2</div><div style="width: 110px;">tag</div><div>…</div></div>
+        <div class="listrow"><div style="width: 30px;">3</div><div style="width: 250px;">Row 3</div><div style="width: 110px;">tag</div><div>…</div></div>
+        <div class="listrow"><div style="width: 30px;">4</div><div style="width: 250px;">Row 4</div><div style="width: 110px;">tag</div><div>…</div></div>
+        <div class="listrow"><div style="width: 30px;">5</div><div style="width: 250px;">Row 5</div><div style="width: 110px;">tag</div><div>…</div></div>
+        <div class="listrow"><div style="width: 30px;">6</div><div style="width: 250px;">Row 6</div><div style="width: 110px;">tag</div><div>…</div></div>
+        <div class="listrow"><div style="width: 30px;">7</div><div style="width: 250px;">Row 7</div><div style="width: 110px;">tag</div><div>…</div></div>
+        <div class="listrow"><div style="width: 30px;">8</div><div style="width: 250px;">Row 8</div><div style="width: 110px;">tag</div><div>…</div></div>
+        <div class="listrow"><div style="width: 30px;">9</div><div style="width: 250px;">Row 9</div><div style="width: 110px;">tag</div><div>…</div></div>
+        <div class="listrow"><div style="width: 30px;">10</div><div style="width: 250px;">Row 10</div><div style="width: 110px;">tag</div><div>…</div></div>
+        <div class="listrow dash"><div style="width: 30px;">11+</div><div>Remaining rows: the list grows with the page; no inner scroll</div></div>
+        <div class="box dash">
+          <b>Empty filter state (in place of the lines)</b>
+          <span>"No row matches" + Reset filters. The dossier keeps the last selection, marked "hidden by the filter".</span>
+        </div>
+        <div class="box">
+          <b>Rank rule</b>
+          <span>Rank numbers follow the current sort. No medals: rows from two judge runs are not one contest.</span>
+        </div>
+      </div>
+
+      <!-- DOSSIER -->
+      <div class="box sel" style="width: 488px; margin: 0; position: sticky; top: 0;">
+        <b>Dossier pane (sticky, about 40%; never empty)</b>
+        <span>Shows the selected row. On load: the top row under the current sort. The selection lives in the URL, so a link opens the same row.</span>
+        <div class="box" style="height: 64px;">
+          <b>Identity</b>
+          <span>System · model · "Measured by …" tag · rank under the current sort</span>
+        </div>
+        <div class="box" style="height: 64px;">
+          <b>Scores strip</b>
+          <span>F1 (lead figure) · precision · recall · time per PR · tokens per PR</span>
+        </div>
+        <div class="box" style="height: 150px;">
+          <b>Measurement conditions</b>
+          <span>Instances scored of total + why the rest are unscored</span>
+          <span>Human notes matched against</span>
+          <span>Judge model · rounds · reader model (and filter model, ours)</span>
+          <span>Version (DA commit + lean version, or the published version)</span>
+          <span>Source link · read date</span>
+        </div>
+        <div class="box" style="height: 56px;">
+          <b>Comparability line</b>
+          <span>Which other rows were judged in the same run, and which were not.</span>
+        </div>
+        <div class="box" style="height: 64px;">
+          <b>Citation line + copy</b>
+          <span>One quotable sentence: number + measured by + version + instances + judge + rounds + date.</span>
+        </div>
+        <div class="row" style="height: 56px;">
+          <div class="box grow">
+            <b>Judge logs</b>
+            <span>Download per round (our rows). Published rows: "logs not published" + source.</span>
+          </div>
+          <div class="box" style="width: 130px;">
+            <b>The paper →</b>
+            <span>Out to /paper/</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="box" style="margin-top: 40px; height: 220px;">
+      <b>Method section</b>
+      <span>The benchmark · the pipeline · the judge · how our rows were measured · the 12 unscored instances. Each part is a short labelled block; the dossier's terms link here.</span>
+    </div>
+    <div class="row" style="margin-top: 16px; height: 150px;">
+      <div class="box grow">
+        <b>Escaped-defects block</b>
+        <span>The two counts out of 43 side by side, with their one-line definition.</span>
+      </div>
+    </div>
+    <div class="box" style="margin-top: 16px; height: 110px;">
+      <b>Downloads</b>
+      <span>Every judge log (all our rows, all rounds) · the leaderboard data file · the source list with read dates.</span>
+    </div>
+  </div>
+
+  <div class="box" style="height: 72px; margin: 24px 0 0;">
+    <b>Shared footer</b>
+    <span>Same five links as the nav · repository links</span>
+  </div>
+</div>
+
+<!-- ============ PHONE ============ -->
+<div class="frame-label">Phone · 390 wide (secondary) · dashed line = the 844 px fold</div>
+<p class="note">Trade: 390 px has no room beside the list, so the dossier opens in place under the tapped row. The "always visible" property holds on desktop only.</p>
+<div class="frame phone">
+  <div class="fold" style="top: 844px;"><i>390 × 844 fold</i></div>
+
+  <div class="box" style="height: 56px; margin: 0;">
+    <b>Shared nav, collapsed</b>
+    <span>Wordmark · menu button (the five links)</span>
+  </div>
+  <div style="padding: 0 12px;">
+    <div class="box" style="height: 150px; margin-top: 12px;">
+      <b>Page header</b>
+      <span>Title + one line · caveat line (separate judge runs) · row counts</span>
+    </div>
+    <div class="box" style="height: 56px;">
+      <b>Filter rail</b>
+      <span>Chips scroll sideways; "N of M rows" + Reset under the rail</span>
+    </div>
+    <div class="box">
+      <b>Ranked list in a sideways-scrolling frame</b>
+      <span>Left column sticky: rank, system · model on two lines, measured-by tag. F1 next to it; P, R, time, tokens, n scroll sideways. Headers tap to sort.</span>
+      <div class="prow" style="font-weight: bold;"><div style="width: 200px;"># · System · model · by</div><div>F1 ▾ → more</div></div>
+      <div class="prow"><div style="width: 200px;">Row 1</div><div>F1 →</div></div>
+      <div class="box sel">
+        <b>Dossier, opened in place under row 1</b>
+        <span>Full frame width, outside the sideways scroll. Same blocks as desktop, stacked: identity · scores · conditions · comparability · citation + copy · judge logs · the paper →. A second tap closes it; one open at a time.</span>
+        <div class="box tiny" style="height: 40px;"><b>Identity</b></div>
+        <div class="box tiny" style="height: 40px;"><b>Scores strip</b></div>
+        <div class="box tiny" style="height: 100px;"><b>Measurement conditions</b></div>
+        <div class="box tiny" style="height: 40px;"><b>Comparability line</b></div>
+        <div class="box tiny" style="height: 52px;"><b>Citation line + copy</b></div>
+        <div class="row" style="height: 44px;">
+          <div class="box grow tiny"><b>Judge logs</b></div>
+          <div class="box tiny" style="width: 110px;"><b>The paper →</b></div>
+        </div>
+      </div>
+      <div class="prow"><div style="width: 200px;">Row 2</div><div>F1 →</div></div>
+      <div class="prow"><div style="width: 200px;">Row 3</div><div>F1 →</div></div>
+      <div class="prow dash"><div>Rows 4+</div></div>
+    </div>
+    <div class="box" style="height: 140px;">
+      <b>Method section</b>
+      <span>Same five blocks, stacked</span>
+    </div>
+    <div class="box" style="height: 100px;">
+      <b>Escaped-defects block</b>
+      <span>The two counts out of 43, stacked</span>
+    </div>
+    <div class="box" style="height: 80px;">
+      <b>Downloads</b>
+      <span>Judge logs · data file · source list</span>
+    </div>
+  </div>
+  <div class="box" style="height: 64px; margin: 12px 0 0;">
+    <b>Shared footer</b>
+  </div>
+</div>
+
+<!-- ============ LINKS ============ -->
+<p><b>Links carried by this board</b></p>
+<table class="links">
+  <tr><th>Journey step</th><th>Direction</th><th>Control on the board</th></tr>
+  <tr><td>J2.1 → J2.2</td><td>in, from Home</td><td>Nav "Benchmark" (top bar); Home teaser "every row →" lands with the top row selected</td></tr>
+  <tr><td>J2.2</td><td>same page</td><td>List header "F1" (and every number header), list top-left</td></tr>
+  <tr><td>J2.3</td><td>same page</td><td>Filter bar chips "Measured by" and "System", above the list</td></tr>
+  <tr><td>J2.4</td><td>same page</td><td>Click a list line: desktop fills the dossier pane at right; phone opens it under the row</td></tr>
+  <tr><td>J2.5</td><td>out, download</td><td>Dossier "Judge logs", bottom of the pane; all logs again in Downloads</td></tr>
+  <tr><td>J2.6</td><td>out, to Paper</td><td>Dossier "The paper →", bottom right of the pane; nav "Paper"</td></tr>
+  <tr><td>to Home</td><td>out</td><td>Nav wordmark "provedreview"; footer</td></tr>
+</table>
+
+</body>
+</html>

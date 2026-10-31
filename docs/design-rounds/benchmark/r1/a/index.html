@@ -1,0 +1,286 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Benchmark · layout round 1 · A · scoreboard first</title>
+<style>
+  body { margin: 0; padding: 24px; background: #fff; color: #222; }
+  .meta { max-width: 1440px; margin: 0 0 16px; }
+  .badge { display: inline-block; border: 2px solid #222; padding: 4px 12px; font-weight: bold; font-size: 22px; margin-right: 12px; }
+  h1.round { display: inline; font-size: 20px; }
+  .meta p { margin: 8px 0 0; }
+  h2.vp { font-size: 16px; margin: 32px 0 8px; }
+  .frame { border: 2px solid #444; position: relative; background: #fff; }
+  .desk { width: 1440px; }
+  .phone { width: 390px; }
+  .box { border: 1px solid #888; padding: 8px; margin: 0; box-sizing: border-box; position: relative; }
+  .box > b { display: block; font-size: 13px; }
+  .box > span { display: block; font-size: 12px; color: #555; margin-top: 2px; }
+  .dash { border-style: dashed; }
+  .row { display: flex; gap: 8px; }
+  .col { display: flex; flex-direction: column; gap: 8px; }
+  .grow { flex: 1; }
+  .pad { padding: 8px 80px; }
+  .phone .pad { padding: 8px 16px; }
+  .stack > * + * { margin-top: 8px; }
+  .cell { border: 1px solid #aaa; font-size: 11px; padding: 4px; box-sizing: border-box; color: #444; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+  .tr { display: flex; height: 52px; border-bottom: 1px solid #ccc; align-items: stretch; }
+  .tr.head { height: 40px; background: #f2f2f2; font-weight: bold; }
+  .tr .cell { border: none; border-right: 1px solid #ddd; display: flex; align-items: center; }
+  .fold { position: absolute; left: 0; right: 0; border-top: 2px dashed #222; z-index: 2; }
+  .fold i { position: absolute; right: 8px; top: -20px; font-size: 11px; font-style: normal; background: #fff; padding: 0 4px; }
+  .note { font-size: 12px; color: #555; margin: 6px 0 0; }
+  .states { width: 1440px; margin-top: 24px; }
+  .chip { display: inline-block; border: 1px solid #888; border-radius: 12px; font-size: 11px; padding: 2px 8px; margin: 2px; }
+  .scroller { overflow-x: auto; }
+  .w-rank{width:44px}.w-sys{width:260px}.w-by{width:150px}.w-f1{width:80px}.w-p{width:80px}.w-r{width:80px}.w-t{width:90px}.w-k{width:100px}.w-n{width:90px}.w-v{width:110px}.w-j{width:130px}.w-s{width:46px}.w-x{width:20px}
+  .legend td { font-size: 12px; padding: 2px 8px; vertical-align: top; }
+</style>
+</head>
+<body>
+
+<div class="meta">
+  <span class="badge">A</span><h1 class="round">Benchmark page · layout round 1 · lane A · "scoreboard first"</h1>
+  <p><b>Thesis:</b> the table is the page. Controls sit in one thin bar above it; the method, the escaped-defects block and the downloads sit below it.</p>
+  <p><b>Named axis:</b> what is dominant. The leaderboard owns the first viewport; every other zone is reached by scrolling past it.</p>
+  <p class="note">Labelled boxes only: zone name, then one line of what it holds. No data, no styling. Blind round: no current screen consulted.</p>
+</div>
+
+<!-- ============================ DESKTOP 1440 ============================ -->
+<h2 class="vp">Desktop · 1440 wide · primary viewport (dashed line = the 900 px fold)</h2>
+<div class="frame desk">
+  <div class="fold" style="top:900px"><i>900 px fold: header + control bar + table head + first ten rows sit above it</i></div>
+
+  <div class="box pad" style="height:64px">
+    <div class="row" style="height:100%">
+      <div class="box" style="width:220px"><b>Wordmark</b><span>links to Home</span></div>
+      <div class="box grow"><b>Shared nav</b><span>Benchmark (current, marked) · Quick start · Docs · Paper · GitHub</span></div>
+    </div>
+  </div>
+
+  <div class="box pad" style="height:80px">
+    <div class="row" style="height:100%">
+      <div class="box" style="width:420px"><b>Page title + scope line</b><span>"Benchmark"; the benchmark name and the size of the human-note set it is judged against</span></div>
+      <div class="box grow"><b>Two-runs caveat line</b><span>one sentence: rows measured by us and rows published by Open Code Review come from separate judge runs; points at the Measured-by column and at Method below</span></div>
+    </div>
+  </div>
+
+  <div class="box pad" style="height:56px">
+    <div class="row" style="height:100%">
+      <div class="box" style="width:360px"><b>Filter chips · System</b><span>one chip per system; multi-select</span></div>
+      <div class="box" style="width:320px"><b>Filter chips · Measured by</b><span>"Measured by us" · "Published by Open Code Review"</span></div>
+      <div class="box" style="width:150px"><b>Row count</b><span>"N of M rows"</span></div>
+      <div class="box" style="width:130px"><b>Reset filters</b><span>shown when a filter is on</span></div>
+      <div class="box grow"><b>Download all judge logs</b><span>jumps to Downloads; one zip of our rows' logs</span></div>
+    </div>
+  </div>
+
+  <div class="pad" style="padding-top:0;padding-bottom:0">
+    <div class="box" style="padding:0">
+      <div class="tr head">
+        <div class="cell w-rank">#</div>
+        <div class="cell w-sys">System · Model ↕</div>
+        <div class="cell w-by">Measured by ↕</div>
+        <div class="cell w-f1">F1 ▼ (default)</div>
+        <div class="cell w-p">Precision ↕</div>
+        <div class="cell w-r">Recall ↕</div>
+        <div class="cell w-t">Time / PR ↕</div>
+        <div class="cell w-k">Tokens / PR ↕</div>
+        <div class="cell w-n">Instances ↕</div>
+        <div class="cell w-v">Version</div>
+        <div class="cell w-j">Judge · rounds</div>
+        <div class="cell w-s">Src</div>
+        <div class="cell w-x"></div>
+      </div>
+      <div style="font-size:11px;color:#555;padding:4px 8px;border-bottom:1px solid #ccc">Table head: sticky under the nav on scroll; every header except Version, Judge, Src sorts on click; the sorted header shows its direction.</div>
+      <div id="desk-rows"></div>
+    </div>
+    <p class="note">Row anatomy: position number (no medals) · system name and model name stacked in one cell · Measured-by marker in words (never colour alone) · the three percentages · time and tokens per PR (a "not published" mark where the source gives none) · instances scored · version · judge model and rounds · source link (opens the source, read date in the row detail) · expand chevron. Whole row is the expand target.</p>
+  </div>
+
+  <div class="box pad" style="height:56px;margin-top:8px">
+    <div class="row" style="height:100%">
+      <div class="box" style="width:420px"><b>Table foot: legend</b><span>what each Measured-by value means; what "not published" means</span></div>
+      <div class="box" style="width:420px"><b>Table foot: metric line</b><span>how F1, precision, recall are computed; link "Method ↓"</span></div>
+      <div class="box grow"><b>Table foot: data freshness</b><span>date the published rows were read; build pin of our rows</span></div>
+    </div>
+  </div>
+
+  <div class="box pad" style="height:auto;padding-top:24px;padding-bottom:24px;margin-top:16px">
+    <div class="box" style="margin-bottom:8px"><b>Method · section heading</b><span>anchor target of "Method ↓" and of the caveat line</span></div>
+    <div class="row">
+      <div class="box grow" style="height:150px"><b>The benchmark</b><span>what the benchmark is, its PRs, its human notes</span></div>
+      <div class="box grow" style="height:150px"><b>The pipeline</b><span>how a review is produced for a PR; one diagram slot</span></div>
+      <div class="box grow" style="height:150px"><b>The judge</b><span>how a review comment is matched to a human note; model; rounds</span></div>
+      <div class="box grow" style="height:150px"><b>How our rows were measured</b><span>reader model, filter model, runs averaged, what differs from the published runs</span></div>
+      <div class="box grow" style="height:150px"><b>The unscored instances</b><span>which instances carry no score and why, by cause</span></div>
+    </div>
+  </div>
+
+  <div class="box pad" style="padding-top:24px;padding-bottom:24px;margin-top:8px">
+    <div class="box" style="margin-bottom:8px"><b>Escaped defects · heading + one-line definition</b><span>what counts as an escaped defect and over how many</span></div>
+    <div class="row">
+      <div class="box grow" style="height:110px"><b>Bar: ours</b><span>caught count of the total, as a bar and a number</span></div>
+      <div class="box grow" style="height:110px"><b>Bar: comparison system</b><span>caught count of the same total, same scale</span></div>
+      <div class="box" style="width:300px;height:110px"><b>Source line</b><span>where the counts come from; link to the log</span></div>
+    </div>
+  </div>
+
+  <div class="box pad" style="padding-top:24px;padding-bottom:24px;margin-top:8px">
+    <div class="box" style="margin-bottom:8px"><b>Downloads · heading</b><span>anchor target of "Download all judge logs"</span></div>
+    <div class="row">
+      <div class="box grow" style="height:90px"><b>Judge logs, per our entry and round</b><span>one line per file: name, size, what it holds</span></div>
+      <div class="box grow" style="height:90px"><b>Leaderboard data file</b><span>the full table as one data file</span></div>
+      <div class="box grow" style="height:90px"><b>Metrics sources</b><span>our metrics files at the build pin; the paper link</span></div>
+    </div>
+  </div>
+
+  <div class="box pad" style="height:80px;margin-top:8px">
+    <div class="row" style="height:100%">
+      <div class="box grow"><b>Shared footer</b><span>the site's footer, as on every page</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================ STATES ============================ -->
+<h2 class="vp">Desktop states · the same table, three moments</h2>
+<div class="states row">
+  <div class="box grow" style="padding:12px">
+    <b>State 1 · a row expanded in place</b><span>click a row (or its chevron): the detail opens directly under it, full table width; rows below shift down; a second click closes it. Several rows may stay open at once.</span>
+    <div class="box" style="margin-top:8px;height:40px"><b>The clicked row</b><span>stays visible, marked open</span></div>
+    <div class="box" style="margin-top:4px">
+      <b>Row detail band</b>
+      <div class="row" style="margin-top:6px">
+        <div class="box grow"><b>Instances</b><span>scored of total; unscored count and causes</span></div>
+        <div class="box grow"><b>Notes</b><span>human notes judged against</span></div>
+        <div class="box grow"><b>Judge</b><span>judge model, rounds, reader model</span></div>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <div class="box grow"><b>Version + date</b><span>tool version, commit, run date</span></div>
+        <div class="box grow"><b>Source</b><span>source link and its read date</span></div>
+        <div class="box grow"><b>Downloads</b><span>judge logs for our rows; "logs not published" for theirs</span></div>
+      </div>
+      <div class="row" style="margin-top:6px">
+        <div class="box grow"><b>Cite line</b><span>the row's number with its conditions, one copy control</span></div>
+        <div class="box" style="width:160px"><b>"The paper →"</b><span>link out to Paper</span></div>
+      </div>
+    </div>
+    <div class="box" style="margin-top:4px;height:40px"><b>Next row</b><span>continues below</span></div>
+  </div>
+  <div class="box" style="width:400px;padding:12px">
+    <b>State 2 · a filter leaves no row</b><span>the control bar stays; the table body becomes one line</span>
+    <div class="box" style="margin-top:8px;height:40px"><b>Table head</b><span>unchanged</span></div>
+    <div class="box" style="margin-top:4px;height:80px"><b>Empty line</b><span>"No row matches" + "Reset filters" control</span></div>
+  </div>
+  <div class="box" style="width:400px;padding:12px">
+    <b>State 3 · sorted by another column</b><span>the clicked header shows its direction; the # column shows the position in the current sort and its header names the sort ("# by Recall"), so a position is never read as the F1 rank</span>
+    <div class="box" style="margin-top:8px;height:40px"><b>Table head</b><span>sorted header marked; F1 header back to plain</span></div>
+    <div class="box" style="margin-top:4px;height:80px"><b>Rows</b><span>reordered at once; open details stay attached to their rows</span></div>
+  </div>
+</div>
+
+<!-- ============================ PHONE 390 ============================ -->
+<h2 class="vp">Phone · 390 wide · secondary viewport (adapted from desktop)</h2>
+<div class="row" style="align-items:flex-start;gap:32px">
+<div class="frame phone">
+  <div class="box pad" style="height:56px">
+    <div class="row" style="height:100%">
+      <div class="box grow"><b>Wordmark</b><span>links to Home</span></div>
+      <div class="box" style="width:110px"><b>Menu button</b><span>opens the shared nav</span></div>
+    </div>
+  </div>
+  <div class="box pad stack">
+    <div class="box"><b>Page title + scope line</b><span>as desktop, wraps to two lines</span></div>
+    <div class="box"><b>Two-runs caveat line</b><span>same sentence, full width, above the table</span></div>
+  </div>
+  <div class="box pad" style="height:56px">
+    <div class="row" style="height:100%">
+      <div class="box" style="width:120px"><b>Filters (n)</b><span>opens a sheet</span></div>
+      <div class="box grow"><b>Row count</b><span>"N of M"</span></div>
+      <div class="box" style="width:110px"><b>Sort select</b><span>column + direction</span></div>
+    </div>
+  </div>
+  <div class="pad" style="padding-top:8px;padding-bottom:8px">
+    <div class="box" style="padding:0">
+      <div style="display:flex">
+        <div style="width:190px;border-right:2px solid #444">
+          <div class="tr head" style="height:36px"><div class="cell" style="width:30px">#</div><div class="cell" style="width:110px">System · Model</div><div class="cell" style="width:50px">F1</div></div>
+          <div id="ph-fixed"></div>
+        </div>
+        <div class="scroller" style="width:166px">
+          <div style="width:900px">
+            <div class="tr head" style="height:36px"><div class="cell" style="width:130px">Measured by</div><div class="cell" style="width:80px">Precision</div><div class="cell" style="width:80px">Recall</div><div class="cell" style="width:90px">Time / PR</div><div class="cell" style="width:100px">Tokens / PR</div><div class="cell" style="width:90px">Instances</div><div class="cell" style="width:110px">Version</div><div class="cell" style="width:130px">Judge · rounds</div><div class="cell" style="width:50px">Src</div></div>
+            <div id="ph-scroll"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <p class="note">Leaderboard frame: the three left columns stay fixed (position, system and model, F1); the Measured-by marker is the first scrolled column and also rides as a short tag under the system name, so the caveat survives without a swipe. The rest scrolls sideways inside the frame; the page itself never scrolls sideways.</p>
+  </div>
+  <div class="box pad"><div class="box"><b>Row detail (when a row is tapped)</b><span>opens under the row at full frame width, never inside the sideways scroll; one column: instances, notes, judge, version + date, source, downloads, cite line, "The paper →"</span></div></div>
+  <div class="box pad"><div class="box"><b>Table foot</b><span>legend, metric line, data freshness: stacked</span></div></div>
+  <div class="box pad stack">
+    <div class="box"><b>Method · heading</b><span>anchor target</span></div>
+    <div class="box" style="height:70px"><b>The benchmark</b></div>
+    <div class="box" style="height:70px"><b>The pipeline</b><span>diagram scales to frame width</span></div>
+    <div class="box" style="height:70px"><b>The judge</b></div>
+    <div class="box" style="height:70px"><b>How our rows were measured</b></div>
+    <div class="box" style="height:70px"><b>The unscored instances</b></div>
+    <p class="note">Stacked open, no accordion, so in-page search finds every line.</p>
+  </div>
+  <div class="box pad stack">
+    <div class="box"><b>Escaped defects · heading + definition</b></div>
+    <div class="box" style="height:56px"><b>Bar: ours</b></div>
+    <div class="box" style="height:56px"><b>Bar: comparison system</b></div>
+    <div class="box"><b>Source line</b></div>
+  </div>
+  <div class="box pad stack">
+    <div class="box"><b>Downloads</b><span>one line per file, full width tap targets</span></div>
+  </div>
+  <div class="box pad" style="height:64px"><div class="box" style="height:100%"><b>Shared footer</b></div></div>
+</div>
+
+<div class="frame phone">
+  <div class="box pad" style="height:56px"><div class="box" style="height:100%"><b>Phone state · filter sheet open</b><span>slides up from the bottom</span></div></div>
+  <div class="box pad stack">
+    <div class="box"><b>Sheet: System chips</b><span>one chip per system; multi-select</span></div>
+    <div class="box"><b>Sheet: Measured-by chips</b><span>"Measured by us" · "Published by Open Code Review"</span></div>
+    <div class="box"><b>Live row count</b><span>"N of M rows" updates as chips toggle</span></div>
+    <div class="row"><div class="box grow"><b>Reset</b></div><div class="box grow"><b>Show rows</b><span>closes the sheet</span></div></div>
+  </div>
+  <p class="note" style="padding:0 16px 12px">Trade on the phone: the table stays the page, but only position, system, model and F1 show without a swipe. Precision, recall, cost and conditions cost a sideways swipe or a tap.</p>
+</div>
+</div>
+
+<!-- ============================ LINKS ============================ -->
+<h2 class="vp">Links in and out (journey J2 and the screen links)</h2>
+<table class="legend" style="border-collapse:collapse;max-width:1440px">
+  <tr><td><b>In</b></td><td>Home · nav "Benchmark" (J2.1 → J2.2): lands at the page top, where the table already starts.</td></tr>
+  <tr><td><b>In</b></td><td>Home · teaser "every row →": same landing; the table is the first thing below the caveat line.</td></tr>
+  <tr><td><b>Same page</b></td><td>F1 header (J2.2) · Measured-by chips in the control bar (J2.3) · row expand, whole row or chevron, right edge (J2.4).</td></tr>
+  <tr><td><b>Out</b></td><td>Row detail · "Downloads" box, bottom right of the band: the judge-log files (J2.4 → J2.5). Also the Downloads section and the control bar's "Download all judge logs".</td></tr>
+  <tr><td><b>Out</b></td><td>Row detail · "The paper →", bottom right of the band; and nav "Paper", top (J2.5 → J2.6).</td></tr>
+  <tr><td><b>Out</b></td><td>Wordmark and nav, top: Home and every other page. Row "Src" cell: the row's source, external.</td></tr>
+</table>
+
+<script>
+  // draws the empty row boxes only (no data)
+  function rows(id, n, cells) {
+    var el = document.getElementById(id), h = '';
+    for (var i = 1; i <= n; i++) {
+      h += '<div class="tr">';
+      cells.forEach(function (c) { h += '<div class="cell ' + c[0] + '" style="' + (c[1] || '') + '">' + (c[2] ? c[2].replace('{i}', i) : '') + '</div>'; });
+      h += '</div>';
+    }
+    el.innerHTML = h;
+  }
+  rows('desk-rows', 10, [['w-rank','', '{i}'],['w-sys','', 'system name / model name'],['w-by','', 'measured-by marker'],['w-f1','', 'F1'],['w-p','', 'P'],['w-r','', 'R'],['w-t','', 'time'],['w-k','', 'tokens'],['w-n','', 'scored'],['w-v','', 'version'],['w-j','', 'judge · rounds'],['w-s','', '↗'],['w-x','', '▸']]);
+  var more = document.createElement('div');
+  more.style.cssText = 'height:104px;border-top:1px dashed #888;font-size:12px;color:#555;padding:8px';
+  more.innerHTML = '<b>Rows 11 to M</b>: below the fold, same anatomy; the table grows here as new runs land. No pagination.';
+  document.getElementById('desk-rows').appendChild(more);
+  rows('ph-fixed', 6, [['','width:30px','{i}'],['','width:110px;white-space:normal;line-height:1.2','system / model · tag'],['','width:50px','F1']]);
+  rows('ph-scroll', 6, [['','width:130px','marker'],['','width:80px','P'],['','width:80px','R'],['','width:90px','time'],['','width:100px','tokens'],['','width:90px','scored'],['','width:110px','version'],['','width:130px','judge'],['','width:50px','↗']]);
+</script>
+</body>
+</html>

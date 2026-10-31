@@ -1,0 +1,10 @@
+[
+ {
+  "id": "C",
+  "rung": "layout",
+  "title": "Method first",
+  "axis": "what leads the page: two condition cards (measured by us; published by Open Code Review) and the caveat first, with the bridge pair (our 29.02 against the published 25.10); the table follows as evidence",
+  "entry": "index.html",
+  "worse_at": "the table header starts at 616 px on a 1440 by 900 screen, so 5 of 16 rows show above the fold against the goal of 10; a reader who came for the ranking scrolls past three cards each visit; the conditions are stated twice; a third judge regime needs a fourth card"
+ }
+]

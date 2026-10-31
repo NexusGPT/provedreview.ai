@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Benchmark layout 1c: method first</title>
+<style>
+  body { margin: 24px; background: #fff; color: #222; }
+  .board-head { width: 1440px; margin-bottom: 20px; }
+  .badge { display: inline-block; border: 2px solid #444; padding: 2px 10px; font-weight: bold; font-size: 22px; margin-right: 10px; }
+  .board-head h1 { display: inline; font-size: 22px; }
+  .board-head p { margin: 6px 0; font-size: 14px; max-width: 1100px; }
+  .frame-label { font-size: 13px; font-weight: bold; margin: 28px 0 6px; }
+  .frame { position: relative; border: 2px solid #666; background: #fff; box-sizing: border-box; }
+  .desk { width: 1440px; }
+  .phone { width: 390px; }
+  .box { border: 1px solid #999; background: #fafafa; box-sizing: border-box; padding: 6px 8px; overflow: hidden; }
+  .box.inner { background: #fff; }
+  .box.lead { border: 2px solid #555; }
+  .box b { display: block; font-size: 13px; }
+  .box span { display: block; font-size: 11px; color: #555; margin-top: 2px; }
+  .row { display: flex; gap: 12px; }
+  .col { display: flex; flex-direction: column; gap: 0; }
+  .fold { position: absolute; left: 0; right: 0; border-top: 2px dashed #777; z-index: 2; }
+  .fold i { position: absolute; right: 6px; top: -18px; font-size: 11px; background: #fff; padding: 0 4px; font-style: normal; }
+  .section-tag { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: #666; margin: 0 0 4px; }
+  .trow { height: 44px; border-left: 1px solid #999; border-right: 1px solid #999; border-bottom: 1px solid #ccc; box-sizing: border-box; display: flex; align-items: center; font-size: 11px; color: #555; }
+  .trow div { padding: 0 8px; border-right: 1px dotted #ccc; height: 100%; display: flex; align-items: center; box-sizing: border-box; }
+  .states { width: 1440px; display: flex; gap: 24px; }
+  .notes { width: 1440px; font-size: 13px; margin-top: 28px; }
+  .notes li { margin: 3px 0; }
+</style>
+</head>
+<body>
+
+<div class="board-head">
+  <span class="badge">1c</span><h1>Benchmark, layout rung, lane C: method first</h1>
+  <p><b>Axis:</b> what leads the page. Here the measurement conditions and the caveat lead; the table follows as the evidence for them. The two measurement regimes ("Measured by us", "Published by Open Code Review") are cards at the top, and the table's "Measured by" filter is driven from those cards.</p>
+  <p><b>Rank choice:</b> rank numbers, no medals. The rank is the position in the current sort and filter, recomputed on every change; the regime tag sits in the cell next to it, so no rank reads without its regime.</p>
+  <p><b>Reading:</b> grey boxes are zones; bold is the zone name, the grey line is what it holds. Dashed lines mark the first screen (1440 by 900 desktop, 390 by 844 phone). Boards drawn at 1:1 scale. No data, no styling.</p>
+  <p><b>First screen, measured on this board:</b> desktop shows the conditions, the caveat and 5 of 16 rows (the table header starts at 616 px); the phone shows the caveat and both regime summaries, and the table begins at the bottom edge.</p>
+</div>
+
+<!-- ============ DESKTOP 1440 ============ -->
+<div class="frame-label">Desktop, 1440 wide (primary), state at rest: sorted by F1, no filter, no row open</div>
+<div class="frame desk">
+  <div class="fold" style="top:900px"><i>900 px: end of first screen (5 of 16 rows fully visible; the table header starts at 616 px)</i></div>
+
+  <div class="box" style="height:64px; border-width:0 0 1px 0;">
+    <b>Shared nav (owned by the home lane)</b>
+    <span>wordmark "provedreview" to Home · Benchmark (current page marked) · Quick start · Docs · Paper · GitHub</span>
+  </div>
+
+  <div style="padding:32px 80px 0 80px;">
+
+    <div class="row" style="height:88px;">
+      <div class="box" style="flex:1;">
+        <b>Page head: title and scope line</b>
+        <span>page title; the benchmark name, the PR count and the human-note count it scores against; the date the data was read and the build pin</span>
+      </div>
+      <div class="box" style="width:300px;">
+        <b>Jump links</b>
+        <span>"the table ↓" (for the reader who wants the ranking first) · "full method ↓" · "downloads ↓"</span>
+      </div>
+    </div>
+
+    <div class="section-tag" style="margin-top:24px;">Conditions: leads the page</div>
+    <div class="row" style="height:208px;">
+      <div class="box lead" style="flex:1;">
+        <b>Card: What is scored</b>
+        <span>the benchmark and its human notes; the judge's matching rule (a comment counts when it matches a human note); what F1, precision and recall mean in percent; what time per PR and tokens per PR count</span>
+        <div class="box inner" style="margin-top:10px; height:70px;"><b>Metric key</b><span>one line per column of the table below, in the same order as the columns</span></div>
+      </div>
+      <div class="box lead" style="flex:1;">
+        <b>Card: Regime "Measured by us"</b>
+        <span>instances scored of total and why the rest are unscored; judge model; judge rounds; reader model and its filter; version (DA commit and lean version)</span>
+        <div class="row" style="margin-top:10px; gap:8px;">
+          <div class="box inner" style="flex:1; height:56px;"><b>Control: show these rows</b><span>sets the "Measured by us" chip below</span></div>
+          <div class="box inner" style="flex:1; height:56px;"><b>Link: judge logs ↓</b><span>jumps to the downloads</span></div>
+        </div>
+      </div>
+      <div class="box lead" style="flex:1;">
+        <b>Card: Regime "Published by Open Code Review"</b>
+        <span>PRs and notes; their version; their judge as they publish it; source link and the date we read it</span>
+        <div class="row" style="margin-top:10px; gap:8px;">
+          <div class="box inner" style="flex:1; height:56px;"><b>Control: show these rows</b><span>sets the "Published by Open Code Review" chip below</span></div>
+          <div class="box inner" style="flex:1; height:56px;"><b>Link: source ↗</b><span>their published leaderboard</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row" style="height:64px; margin-top:16px;">
+      <div class="box lead" style="flex:2;">
+        <b>Caveat strip (one statement)</b>
+        <span>the two regimes were not judged in one run, so a rank across them compares two different runs; the "Measured by" tag on every row says which run it comes from</span>
+      </div>
+      <div class="box lead" style="flex:1;">
+        <b>Bridge pair</b>
+        <span>the one system measured both ways (our run, their published row), its two F1 values side by side · control "show both rows"</span>
+      </div>
+    </div>
+
+    <div class="section-tag" style="margin-top:32px;">Evidence: the table</div>
+    <div class="box" style="height:48px; display:flex; gap:10px; align-items:center;">
+      <div style="width:160px;"><b>Filter bar</b></div>
+      <div class="box inner" style="flex:2; height:34px; padding:4px 8px;"><b>Chips: System</b><span>one chip per system; several may be on</span></div>
+      <div class="box inner" style="flex:1.4; height:34px; padding:4px 8px;"><b>Chips: Measured by</b><span>two chips, mirrored by the regime cards</span></div>
+      <div class="box inner" style="width:150px; height:34px; padding:4px 8px;"><b>Row count</b><span>"N of M rows"</span></div>
+      <div class="box inner" style="width:130px; height:34px; padding:4px 8px;"><b>Reset filters</b></div>
+    </div>
+
+    <div style="margin-top:8px;">
+      <div class="trow" style="height:40px; border-top:1px solid #999; background:#f0f0f0; font-weight:bold; color:#333;">
+        <div style="width:56px;">rank</div><div style="width:230px;">system + model</div><div style="width:150px;">measured by (tag)</div><div style="width:86px;">F1 ▼ default</div><div style="width:86px;">precision</div><div style="width:76px;">recall</div><div style="width:86px;">time / PR</div><div style="width:96px;">tokens / PR</div><div style="width:86px;">instances</div><div style="width:110px;">version</div><div style="width:120px;">judge + rounds</div><div style="width:60px;">source</div><div style="flex:1; border-right:0;">expand</div>
+      </div>
+      <div class="trow" style="font-size:10px; color:#777; height:20px; border-bottom:1px solid #ccc;"><div style="flex:1; border-right:0;">table header: every column header sorts on click; the active one shows its direction; the regime tag column cannot be hidden</div></div>
+      <div class="trow"><div style="width:56px;">row 1</div><div style="flex:1; border-right:0;">one entry, collapsed: every column above; the system name and the model name both shown; click anywhere on the row or the expand control to open its conditions in place</div></div>
+      <div class="trow"><div style="width:56px;">row 2</div><div style="flex:1; border-right:0;">one entry, collapsed</div></div>
+      <div class="trow"><div style="width:56px;">row 3</div><div style="flex:1; border-right:0;">one entry, collapsed</div></div>
+      <div class="trow"><div style="width:56px;">row 4</div><div style="flex:1; border-right:0;">one entry, collapsed</div></div>
+      <div class="trow"><div style="width:56px;">row 5</div><div style="flex:1; border-right:0;">one entry, collapsed</div></div>
+      <div class="trow"><div style="width:56px;">row 6</div><div style="flex:1; border-right:0;">one entry, collapsed</div></div>
+      <div class="trow"><div style="width:56px;">row 7</div><div style="flex:1; border-right:0;">one entry, collapsed</div></div>
+      <div class="trow"><div style="width:56px;">row 8</div><div style="flex:1; border-right:0;">one entry, collapsed</div></div>
+      <div class="trow"><div style="width:56px;">row 9</div><div style="flex:1; border-right:0;">one entry, collapsed</div></div>
+      <div class="trow"><div style="width:56px;">row 10</div><div style="flex:1; border-right:0;">one entry, collapsed</div></div>
+      <div class="trow" style="height:56px; border-bottom:1px solid #999;"><div style="width:56px;">rows 11+</div><div style="flex:1; border-right:0;">the remaining rows, and the later rows as new runs land; the table grows, the page above it does not change</div></div>
+    </div>
+
+    <div class="section-tag" style="margin-top:48px;">After the evidence</div>
+    <div class="row" style="height:150px;">
+      <div class="box" style="width:300px;">
+        <b>Escaped defects: heading line</b>
+        <span>what an escaped defect is, in one line; the shared denominator of defects</span>
+      </div>
+      <div class="box" style="flex:1;"><b>Count: lean</b><span>defects caught out of the shared set, as a count and a bar</span></div>
+      <div class="box" style="flex:1;"><b>Count: the comparison</b><span>defects caught out of the same set, same scale, beside it</span></div>
+    </div>
+
+    <div class="box" style="height:420px; margin-top:48px;" id="method">
+      <b>Full method (anchor "full method ↓")</b>
+      <span>the long form of the conditions cards above; the cards stay the summary, this is the reference</span>
+      <div class="row" style="margin-top:10px; height:360px;">
+        <div class="col" style="flex:1; gap:10px;">
+          <div class="box inner" style="height:110px;"><b>The benchmark</b><span>what it is, who built it, how many PRs and notes</span></div>
+          <div class="box inner" style="height:110px;"><b>The judge</b><span>model, prompt, rounds, the matching rule in full</span></div>
+          <div class="box inner" style="height:120px;"><b>How our rows were measured</b><span>the run conditions, the reader model and its filter, the pins</span></div>
+        </div>
+        <div class="box inner" style="flex:1.3;"><b>The pipeline: figure slot</b><span>one diagram of the pipeline from PR to judged comment, with a caption</span></div>
+        <div class="box inner" style="flex:0.9;"><b>The unscored instances</b><span>the list of unscored instances with the reason for each (commits no longer served, one reader failure)</span></div>
+      </div>
+    </div>
+
+    <div class="row" style="height:130px; margin-top:48px;" id="downloads">
+      <div class="box" style="width:300px;"><b>Downloads: heading line</b><span>what each file holds, in one line each</span></div>
+      <div class="box" style="flex:1;"><b>Judge logs</b><span>one file per our row and per round (composed, floor)</span></div>
+      <div class="box" style="flex:1;"><b>Leaderboard data</b><span>the data file behind this table, with its schema</span></div>
+      <div class="box" style="flex:1;"><b>Cite it</b><span>link "the paper →" to Paper; the citation lives there</span></div>
+    </div>
+
+    <div style="height:80px;"></div>
+  </div>
+
+  <div class="box" style="height:80px; border-width:1px 0 0 0;">
+    <b>Shared footer (owned by the home lane)</b>
+    <span>the five pages, the repositories, the build pin</span>
+  </div>
+</div>
+
+<!-- ============ STATES ============ -->
+<div class="frame-label">Desktop states: a row expanded in place, and an empty filter</div>
+<div class="states">
+  <div class="frame" style="width:1100px; padding:16px;">
+    <div class="trow" style="border-top:1px solid #999;"><div style="width:56px;">row 2</div><div style="flex:1; border-right:0;">one entry, collapsed</div></div>
+    <div class="trow" style="background:#f0f0f0;"><div style="width:56px;">row 3 ▲</div><div style="flex:1; border-right:0;">the clicked row stays in place, marked open; a second click closes it</div></div>
+    <div class="box lead" style="height:250px; border-top:0;">
+      <b>Row detail, in place under its row</b>
+      <span>the conditions of THIS row only, in the same order as the conditions cards so the reader can match them</span>
+      <div class="row" style="margin-top:10px; height:120px;">
+        <div class="box inner" style="flex:1;"><b>Who and what</b><span>measured by · system · model · version</span></div>
+        <div class="box inner" style="flex:1;"><b>Coverage</b><span>instances scored of total · unscored and why · notes matched against</span></div>
+        <div class="box inner" style="flex:1;"><b>Judge</b><span>judge model · rounds · reader model and filter · date of the run</span></div>
+        <div class="box inner" style="flex:1;"><b>Source</b><span>source link and the date we read it</span></div>
+      </div>
+      <div class="row" style="margin-top:10px; height:52px; gap:8px;">
+        <div class="box inner" style="width:220px;"><b>Download: judge logs ↓</b><span>our rows only; one per round</span></div>
+        <div class="box inner" style="width:220px;"><b>Link: the paper →</b><span>out to Paper</span></div>
+        <div class="box inner" style="flex:1;"><b>Regime reminder</b><span>one line: which regime card this row belongs to, linked back up to it</span></div>
+      </div>
+    </div>
+    <div class="trow" style="border-bottom:1px solid #999;"><div style="width:56px;">row 4</div><div style="flex:1; border-right:0;">one entry, collapsed</div></div>
+  </div>
+  <div class="frame" style="width:316px; padding:16px;">
+    <div class="box" style="height:40px;"><b>Filter bar (chips set to a combination with no row)</b></div>
+    <div class="box lead" style="height:120px; margin-top:8px;">
+      <b>Empty filter result</b>
+      <span>"No row matches", the active chips named, and the "Reset filters" control; the conditions cards above stay as they are</span>
+    </div>
+  </div>
+</div>
+
+<!-- ============ PHONE 390 ============ -->
+<div class="frame-label">Phone, 390 wide (secondary), state at rest</div>
+<div class="frame phone">
+  <div class="fold" style="top:844px"><i style="top:4px">844 px: end of first screen</i></div>
+
+  <div class="box" style="height:56px; border-width:0 0 1px 0;">
+    <b>Shared nav, compact (home lane)</b>
+    <span>wordmark to Home · menu button holding the five entries</span>
+  </div>
+  <div style="padding:24px 16px 0 16px;">
+    <div class="box" style="height:96px;">
+      <b>Page head</b>
+      <span>title; benchmark name, PR count, note count; data read date</span>
+    </div>
+    <div class="box" style="height:40px; margin-top:8px;"><b>Jump links</b><span>the table ↓ · full method ↓ · downloads ↓</span></div>
+
+    <div class="section-tag" style="margin-top:20px;">Conditions</div>
+    <div class="box lead" style="height:92px;">
+      <b>Caveat strip (moved first on the phone)</b>
+      <span>not judged in one run; the tag on every row says which run</span>
+    </div>
+    <div class="box lead" style="height:64px; margin-top:8px;">
+      <b>Regime: Measured by us (collapsed)</b>
+      <span>one summary line; tap to open the full card · "show these rows"</span>
+    </div>
+    <div class="box lead" style="height:64px; margin-top:8px;">
+      <b>Regime: Published by Open Code Review (collapsed)</b>
+      <span>one summary line; tap to open · "show these rows"</span>
+    </div>
+    <div class="box lead" style="height:56px; margin-top:8px;">
+      <b>What is scored (collapsed)</b>
+      <span>tap to open the metric key</span>
+    </div>
+    <div class="box lead" style="height:72px; margin-top:8px;">
+      <b>Bridge pair</b>
+      <span>the system measured both ways, two F1 values stacked · "show both rows"</span>
+    </div>
+
+    <div class="section-tag" style="margin-top:24px;">Evidence: the table</div>
+    <div class="box" style="height:76px;">
+      <b>Filter chips, one line, scroll sideways</b>
+      <span>System chips, then Measured by chips · row count "N of M rows" · Reset filters</span>
+    </div>
+    <div class="box" style="height:40px; margin-top:8px; background:#f0f0f0;">
+      <b>Table header</b><span>sticky first column: rank + system + model + tag · then F1 · rest scroll sideways</span>
+    </div>
+    <div class="trow" style="height:56px;"><div style="flex:1; border-right:0;">row 1: sticky cell (rank, system, model, regime tag) and F1; the other columns sideways in the table frame</div></div>
+    <div class="trow" style="height:56px;"><div style="flex:1; border-right:0;">row 2</div></div>
+    <div class="trow" style="height:56px; background:#f0f0f0;"><div style="flex:1; border-right:0;">row 3 ▲ open</div></div>
+    <div class="box lead" style="height:210px; border-top:0;">
+      <b>Row detail, full width, stacked</b>
+      <span>who and what · coverage · judge · source, one group under the other; never inside the sideways scroll</span>
+      <div class="box inner" style="height:44px; margin-top:8px;"><b>Download: judge logs ↓</b><span>our rows only</span></div>
+      <div class="box inner" style="height:44px; margin-top:6px;"><b>Link: the paper →</b></div>
+    </div>
+    <div class="trow" style="height:56px;"><div style="flex:1; border-right:0;">row 4</div></div>
+    <div class="trow" style="height:56px; border-bottom:1px solid #999;"><div style="flex:1; border-right:0;">rows 5+</div></div>
+
+    <div class="section-tag" style="margin-top:32px;">After the evidence</div>
+    <div class="box" style="height:64px;"><b>Escaped defects: heading line</b><span>definition, shared denominator</span></div>
+    <div class="box" style="height:64px; margin-top:8px;"><b>Count: lean</b><span>count and bar</span></div>
+    <div class="box" style="height:64px; margin-top:8px;"><b>Count: the comparison</b><span>same scale, under it</span></div>
+
+    <div class="box" style="height:200px; margin-top:32px;">
+      <b>Full method, as an accordion</b>
+      <span>one closed section per part; open one at a time</span>
+      <div class="box inner" style="height:28px; margin-top:6px;"><b>The benchmark</b></div>
+      <div class="box inner" style="height:28px; margin-top:4px;"><b>The pipeline (figure, full width)</b></div>
+      <div class="box inner" style="height:28px; margin-top:4px;"><b>The judge</b></div>
+      <div class="box inner" style="height:28px; margin-top:4px;"><b>How our rows were measured · unscored instances</b></div>
+    </div>
+
+    <div class="box" style="height:130px; margin-top:32px;">
+      <b>Downloads, as a list</b>
+      <span>judge logs per our row and round · leaderboard data · "the paper →"</span>
+    </div>
+    <div style="height:48px;"></div>
+  </div>
+  <div class="box" style="height:96px; border-width:1px 0 0 0;"><b>Shared footer (home lane)</b><span>the five pages, repositories, build pin</span></div>
+</div>
+
+<div class="notes">
+  <b>Links carried on this board</b>
+  <ul>
+    <li>In from Home: the shared nav "Benchmark" and the home teaser "every row →" land at the page head.</li>
+    <li>J2.2 sort: any column header; F1 is the default sort.</li>
+    <li>J2.3 filter: the chips in the filter bar, or "show these rows" on a regime card, which sets the same chip.</li>
+    <li>J2.4 expand: the row itself or its expand control; the detail opens under the row.</li>
+    <li>J2.5 download: "judge logs ↓" in the row detail; the same files in Downloads.</li>
+    <li>J2.6 out to Paper: "the paper →" in the row detail and in Downloads; the shared nav "Paper".</li>
+    <li>Out to Home: the shared nav wordmark.</li>
+  </ul>
+</div>
+
+</body>
+</html>

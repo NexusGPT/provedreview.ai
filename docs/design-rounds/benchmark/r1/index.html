@@ -1,0 +1,57 @@
+<!doctype html>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Benchmark page: three layouts (rung 1, labelled boxes)</title>
+<style>
+  :root{color-scheme:light dark}
+  body{margin:0;font:14px/1.5 system-ui,sans-serif;display:grid;grid-template-columns:220px 1fr}
+  nav{position:sticky;top:0;align-self:start;height:100vh;overflow:auto;padding:20px 16px;border-right:1px solid #8883}
+  nav h1{font-size:13px;text-transform:uppercase;letter-spacing:.08em;opacity:.6;margin:0 0 12px}
+  nav a{display:flex;justify-content:space-between;gap:8px;padding:6px 8px;border-radius:6px;text-decoration:none;color:inherit}
+  nav a:hover{background:#8882} nav a span{opacity:.5}
+  main{padding:24px 28px;min-width:0}
+  section{margin:0 0 44px} h2{margin:0 0 16px;font-size:20px}
+  article{margin:0 0 28px;border:1px solid #8883;border-radius:10px;padding:14px;min-width:0}
+  h3{margin:0 0 4px;font-size:15px} h3 em{font-weight:400;opacity:.55;font-style:normal;margin-left:8px}
+  .worse{margin:0 0 10px;opacity:.7;font-size:12.5px}
+  iframe{width:100%;height:760px;border:1px solid #8883;border-radius:8px;background:#fff}
+  .open{margin:8px 0 0;font-size:12.5px}
+  @media(max-width:900px){body{grid-template-columns:1fr}nav{position:static;height:auto;border-right:0;border-bottom:1px solid #8883}}
+</style>
+<nav>
+  <h1>Benchmark page: three layouts (rung 1, labelled boxes)</h1>
+      <a href="#a">a <span>1</span></a>
+      <a href="#b">b <span>1</span></a>
+      <a href="#c">c <span>1</span></a>
+</nav>
+<main>
+    <section id="a">
+      <h2>a</h2>
+      
+      <article>
+        <h3>Scoreboard first <em>what is dominant: the leaderboard fills the first screen; one thin bar of filters above; method, escaped defects and downloads below</em></h3>
+        <p class="worse">Worse at: the caveat is one sentence and one column, so sixteen interleaved rows read as one contest; comparing two rows means two expansions and vertical travel; the method sits below every row; on the phone precision, recall, time and tokens hide behind a sideways swipe</p>
+        <iframe src="a/index.html" loading="lazy" title="Scoreboard first"></iframe>
+        <p class="open"><a href="a/index.html" target="_blank">open standalone &rarr;</a></p>
+      </article>
+    </section>
+    <section id="b">
+      <h2>b</h2>
+      
+      <article>
+        <h3>Dossier <em>one row's conditions held beside a compact ranked list; one row always selected</em></h3>
+        <p class="worse">Worse at: the list takes about 60 percent of the width, the least scannable across rows; version, judge, rounds, source are not columns; cross-row comparison needs one click per row; opens on our own row under the default sort; the pane exists on desktop only; it changes J2.4's expand-in-place contract</p>
+        <iframe src="b/index.html" loading="lazy" title="Dossier"></iframe>
+        <p class="open"><a href="b/index.html" target="_blank">open standalone &rarr;</a></p>
+      </article>
+    </section>
+    <section id="c">
+      <h2>c</h2>
+      
+      <article>
+        <h3>Method first <em>what leads the page: two condition cards (measured by us; published by Open Code Review) and the caveat first, with the bridge pair (our 29.02 against the published 25.10); the table follows as evidence</em></h3>
+        <p class="worse">Worse at: the table header starts at 616 px on a 1440 by 900 screen, so 5 of 16 rows show above the fold against the goal of 10; a reader who came for the ranking scrolls past three cards each visit; the conditions are stated twice; a third judge regime needs a fourth card</p>
+        <iframe src="c/index.html" loading="lazy" title="Method first"></iframe>
+        <p class="open"><a href="c/index.html" target="_blank">open standalone &rarr;</a></p>
+      </article>
+    </section>
+</main>
