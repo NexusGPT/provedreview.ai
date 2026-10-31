@@ -1,0 +1,45 @@
+{
+ "roots": [
+  "docs/DESIGN.md",
+  "docs/JOURNEYS.md",
+  "docs/DATA-MAP.md",
+  "docs/SUBSCREEN-OBJECTIVES.md",
+  "docs/lanes/benchmark-r1.brief.md"
+ ],
+ "lanes": [
+  {
+   "id": "bench-r1-a",
+   "owns": [
+    "docs/design-rounds/benchmark/r1/a/**"
+   ],
+   "depends_on": [],
+   "surfaces": [
+    "benchmark"
+   ],
+   "unsplittable_reason": "one layout alternative (axis: scoreboard first) of one surface at rung 1; the desktop and phone frames are one labelled-box board of the same alternative, no code"
+  },
+  {
+   "id": "bench-r1-b",
+   "owns": [
+    "docs/design-rounds/benchmark/r1/b/**"
+   ],
+   "depends_on": [],
+   "surfaces": [
+    "benchmark"
+   ],
+   "unsplittable_reason": "one layout alternative (axis: dossier, persistent detail pane) of one surface at rung 1; both viewport frames are one board of the same alternative, no code"
+  },
+  {
+   "id": "bench-r1-c",
+   "owns": [
+    "docs/design-rounds/benchmark/r1/c/**"
+   ],
+   "depends_on": [],
+   "surfaces": [
+    "benchmark"
+   ],
+   "unsplittable_reason": "one layout alternative (axis: method first) of one surface at rung 1; both viewport frames are one board of the same alternative, no code"
+  }
+ ],
+ "note": "Design-round lanes of the site build. Build lanes (one per page: home, benchmark, quick-start, docs, paper; the build script and the data file as roots) are added when the plan is accepted in plan mode."
+}
