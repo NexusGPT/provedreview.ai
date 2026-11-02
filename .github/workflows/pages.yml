@@ -1,3 +1,5 @@
+# Builds the site and deploys it to GitHub Pages on every push to main.
+# SITE_BASE: "/" once the custom domain is attached (docs/DEPLOY.md); "/<repository>/" on the plain Pages URL before it.
 name: pages
 on:
   push:
@@ -9,10 +11,12 @@ permissions:
   id-token: write
 concurrency:
   group: pages
-  cancel-in-progress: true
+  cancel-in-progress: false
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      SITE_BASE: ${{ vars.SITE_BASE || '/' }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
@@ -21,6 +25,9 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run build
+      - run: node scripts/build.mjs --check
+      - run: node scripts/links.mjs dist --base "$SITE_BASE"
+      - run: node scripts/validate.mjs dist
       - run: npm test
       - uses: actions/upload-pages-artifact@v3
         with:
