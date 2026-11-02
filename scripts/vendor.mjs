@@ -1,12 +1,12 @@
 // Copies the pinned source files into content/, byte for byte, from a local clone of each repository.
-// node scripts/vendor.mjs [name]   (LEAN_GIT=<path to a lean clone>, default /root/lean)
+// node scripts/vendor.mjs [name]   (LEAN_GIT=<path to a lean clone>, default /root/lean; DA_GIT=<path to a DA clone>, default /root/da-lead)
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
 
 const root = path.resolve(import.meta.dirname, '..');
 const pins = JSON.parse(fs.readFileSync(path.join(root, 'content/PINS.json'), 'utf8'));
-const clones = { lean: process.env.LEAN_GIT || '/root/lean' };
+const clones = { lean: process.env.LEAN_GIT || '/root/lean', da: process.env.DA_GIT || '/root/da-lead' };
 const only = process.argv[2];
 
 for (const [name, pin] of Object.entries(pins)) {

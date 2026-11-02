@@ -103,8 +103,8 @@ test('the owner\'s voice: no em or en dashes in any page\'s visible text', () =>
   }
 });
 
-test('benchmark and docs carry the shell with the review placeholder', () => {
-  for (const r of ['benchmark/index.html', 'docs/index.html']) assert.match(read(r), /layout and style under review/i, r);
+test('benchmark carries the shell with the review placeholder', () => {
+  for (const r of ['benchmark/index.html']) assert.match(read(r), /layout and style under review/i, r);
 });
 
 test('the 404 page names the missing path and links all five pages', () => {

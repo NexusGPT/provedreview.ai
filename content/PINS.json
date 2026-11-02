@@ -3,6 +3,43 @@
     "repo": "https://github.com/NexusGPT/lean",
     "tag": "v0.1.3",
     "commit": "dbe9a32fbed3628bcd9859f3a9c20baedd94be18",
-    "files": ["README.md"]
+    "date": "2026-10-31",
+    "files": [
+      "README.md",
+      "CHANGELOG.md",
+      "langs/ts/README.md",
+      "docs/how-it-works.md",
+      "docs/known-values.md",
+      "docs/writing-provable-code.md",
+      "docs/pull-requests.md",
+      "docs/front-end.md",
+      "docs/editor-and-agents.md",
+      "docs/around-lean.md",
+      "docs/limits.md",
+      "docs/ASSURANCE.md"
+    ]
+  },
+  "da": {
+    "repo": "https://github.com/NexusGPT/differential-attestation",
+    "commit": "25b7ab20c945270c28251d48851e6d844565fc56",
+    "date": "2026-11-02",
+    "files": [
+      "README.md",
+      "results.md",
+      "soundness.md",
+      "docs/architecture/README.md",
+      "docs/architecture/assurance-case.md",
+      "docs/architecture/benchmark-funnel.md",
+      "docs/architecture/ocr-advice.md",
+      "docs/architecture/pixel-diff-lane.md",
+      "docs/architecture/predicate-registry.md",
+      "docs/architecture/preview.md",
+      "docs/architecture/producer-tools.md",
+      "docs/architecture/run-record.md",
+      "docs/architecture/sandbox-allow-list.md",
+      "benchmark/README.md",
+      "research/open-code-review/d3/RESULT.md",
+      "research/open-code-review/d3/bench/README.md"
+    ]
   }
 }
