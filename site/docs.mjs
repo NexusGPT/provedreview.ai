@@ -157,7 +157,7 @@ function landing(sections, pages) {
       + (show.length < mine.length ? `<li class="mo"><span class="gl" aria-hidden="true">└─</span>+${mine.length - show.length} more</li>` : '');
     return `<a class="dsec" href="${hrefOf(mine[0])}"><span class="sk"><span class="ix">${two(i + 1)}</span><b>${esc(s.title)}</b><u>${mine.length} page${mine.length === 1 ? '' : 's'}</u></span><span class="sp">${esc(s.blurb)}</span><ul>${li}</ul></a>`;
   }).join('');
-  return `<article class="col land" data-pagefind-body data-pagefind-filter="area:docs" data-pagefind-meta="section:docs">
+  return `<article class="col land">
 <div class="crumb"><b>docs</b><em>${pages.length} pages · ${sections.length} sections</em></div>
 <h1>Docs</h1>
 <p class="lede">lean, differential attestation, the benchmark. First run: <a class="qs" href="/quick-start/">Quick start →</a></p>
@@ -182,7 +182,7 @@ export async function pages() {
     const [repo] = p.sources[0].split(':');
     const pin = PINS[repo];
     const main = `<article class="col" data-pagefind-body data-pagefind-filter="area:docs" data-pagefind-meta="section:${esc(p.section.slug)}">
-<div class="crumb"><a href="/docs/">docs</a><span>/</span><a href="${hrefOf(all.find((q) => q.section === p.section))}">${p.section.slug}</a><span>/</span><b>${p.slug}</b><em>${two(i + 1)} of ${all.length}</em></div>
+<div class="crumb" data-pagefind-ignore><a href="/docs/">docs</a><span>/</span><a href="${hrefOf(all.find((q) => q.section === p.section))}">${p.section.slug}</a><span>/</span><b>${p.slug}</b><em>${two(i + 1)} of ${all.length}</em></div>
 <h1>${esc(p.title)}</h1>
 <div class="srcl" data-pagefind-ignore><span>src</span><a href="${srcUrl(p.sources[0])}" rel="noopener">${REPO[repo]}@${esc(pin.tag || pin.commit.slice(0, 7))}</a><span>${esc(fileOf(p.sources[0]))}</span>${p.sources.length > 1 ? `<span>+${p.sources.length - 1} more</span>` : ''}<span>pinned ${esc(pin.date)}</span></div>
 <p class="lede">${esc(p.lede)}</p>

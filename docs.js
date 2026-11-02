@@ -88,7 +88,7 @@
   if (toc.length) {
     const heads = toc.map((a) => document.getElementById(a.hash.slice(1))).filter(Boolean);
     const spot = () => {
-      const y = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--navh')) || 61) + 40;
+      const y = (parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--navh')) || 61) + innerHeight * 0.25;
       let i = 0;
       heads.forEach((h, j) => { if (h.getBoundingClientRect().top <= y) i = j; });
       toc.forEach((a, j) => { a.classList.toggle('cur', j === i); a.classList.toggle('path', j < i); });

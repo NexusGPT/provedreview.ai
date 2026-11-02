@@ -4,6 +4,9 @@
 .docs{--dim:#5d6272;--glyph:#3a3e4b;--hair:rgba(255,255,255,.05);--line2:rgba(255,255,255,.08);--panel:#0d0e13;--code:#0c0d12;--dbarh:0px}
 :root{--navh:61px}
 .docs [hidden]{display:none!important}
+/* styles.css hides horizontal overflow on html and body, which makes body a scroll box and breaks every sticky part;
+   clip keeps the page from scrolling sideways without making a scroll box */
+html:has(body.docs),body.docs{overflow-x:clip;overflow-y:visible}
 .docs .gl{font-family:var(--mono);color:var(--glyph);white-space:pre}
 .docs button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
 .docs ul{list-style:none;margin:0;padding:0}
@@ -21,18 +24,18 @@
 .sf .kbd{font-size:11px;color:var(--mut);border:1px solid var(--line2);border-radius:4px;padding:0 5px;line-height:18px}
 .sf:focus-within{border-color:rgba(240,160,140,.55);box-shadow:0 0 0 3px rgba(240,160,140,.08)}
 .rmeta{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:10px}
-.tree{padding:0 12px 0 20px}
-.sh{display:flex;align-items:center;gap:8px;height:28px;margin-top:10px;color:var(--cream)}
+.tree{padding:0 0 0 20px}
+.sh{display:flex;align-items:center;gap:8px;height:28px;margin-top:10px;padding-right:14px;color:var(--cream)}
 .sh:first-child{margin-top:0}
 .sh b{font-weight:500;flex:1}
 .sh u{text-decoration:none;color:var(--dim);font-size:11px}
 .sh.on .gl{color:var(--wit)}
-.tree li{display:flex;align-items:center;height:26px;color:var(--mut);position:relative;padding-left:2px}
+.tree li{display:flex;align-items:center;height:26px;color:var(--mut);position:relative;padding:0 12px 0 2px}
 .tree li .gl{margin-right:8px}
 .tree li a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .15s}
 .tree li:hover,.tree li:hover .gl{color:var(--fg)}
 .tree li.cur{color:var(--fg)}
-.tree li.cur::before{content:"";position:absolute;left:-20px;right:-12px;top:1px;bottom:1px;background:linear-gradient(90deg,rgba(240,160,140,.10),rgba(240,160,140,.02) 70%,transparent);border-left:2px solid var(--wit);pointer-events:none}
+.tree li.cur::before{content:"";position:absolute;left:-20px;right:0;top:1px;bottom:1px;background:linear-gradient(90deg,rgba(240,160,140,.10),rgba(240,160,140,.02) 70%,transparent);border-left:2px solid var(--wit);pointer-events:none}
 .tree li.cur .gl{color:var(--wit)}
 .spark{width:6px;height:6px;background:var(--wit);transform:rotate(45deg);margin-left:10px;flex:0 0 auto;box-shadow:0 0 8px rgba(240,160,140,.6)}
 
@@ -56,7 +59,7 @@
 .col li{margin:5px 0 0;letter-spacing:-.006em}
 .col li>p{margin:6px 0 0}
 .col strong{font-weight:600;color:var(--fg)}
-.col :not(pre)>code,.col p code,.col li code,.col td code{font-family:var(--mono);font-size:.84em;color:var(--cream);background:rgba(255,255,255,.05);border:1px solid var(--hair);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+.col :is(p,li,td,h2,h3,h4,blockquote) code{font-family:var(--mono);font-size:.84em;color:var(--cream);background:rgba(255,255,255,.05);border:1px solid var(--hair);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
 .col code.v{font-size:.8em;letter-spacing:.02em}
 .col code.vw,.vw{color:var(--wit)}.col code.vo,.vo{color:var(--ok)}.col code.va,.va{color:var(--ask)}
 .col p a,.col li a,.col td a,.note a{color:var(--steel);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(159,179,200,.35)}
@@ -69,7 +72,7 @@
 .col h2 .hash{font-size:20px;top:2px}.col h3 .hash{font-size:15px;top:3px}.col h4 .hash{font-size:13px;top:3px}
 .col :is(h2,h3,h4):hover .hash{color:var(--steel)}
 .col :is(h2,h3,h4):target .hash{color:var(--wit)}
-.col :is(h2,h3,h4):target::before{content:"";position:absolute;left:-60px;right:-40px;top:-10px;bottom:-10px;background:linear-gradient(90deg,transparent,rgba(240,160,140,.06) 12%,transparent 85%);z-index:-1}
+.col :is(h2,h3,h4):target::before{content:"";position:absolute;left:-60px;right:0;top:-10px;bottom:-10px;background:linear-gradient(90deg,transparent,rgba(240,160,140,.06) 12%,transparent 85%);z-index:-1}
 .col blockquote{margin:18px 0 0;padding:2px 0 2px 16px;border-left:2px solid var(--line2);color:#c7ccd6}
 .col blockquote p{margin:8px 0 0}
 
@@ -84,7 +87,7 @@
 .cp:hover{background:rgba(255,255,255,.09)!important}
 .cp.ok{color:var(--ok)!important;border-color:rgba(143,211,180,.35)!important}
 .cbody{padding:12px 0;overflow-x:auto;position:relative;scrollbar-width:thin;scrollbar-color:#22252e transparent}
-.ln{display:flex;font-family:var(--mono);font-size:13.5px;line-height:23px;white-space:pre;min-width:max-content}
+.ln{display:flex;font-family:var(--mono);font-variant-ligatures:none;font-size:13.5px;line-height:23px;white-space:pre;min-width:max-content}
 .ln .no{flex:0 0 48px;text-align:right;padding-right:14px;color:var(--glyph);user-select:none;-webkit-user-select:none;border-right:1px solid var(--hair);margin-right:16px;position:sticky;left:0;background:var(--code);z-index:1}
 .ln code{color:#c7ccd6;padding-right:48px;font-family:inherit}
 .cb.out{background:#08090c;border-style:dashed;border-color:rgba(255,255,255,.1)}
@@ -134,6 +137,8 @@
 .tf{display:flex;gap:18px;margin-top:18px;padding-top:12px;border-top:1px solid var(--hair);font-size:11.5px;color:var(--dim)}
 .tf a:hover{color:var(--fg)}
 
+/* the sticky nav reads over code and tables here: near opaque */
+.docs .nav{background:rgba(7,8,11,.97)}
 .docs .wrapf{border-top:1px solid var(--line2)}
 .docs .wrapf .foot{border-top:0}
 
@@ -193,7 +198,7 @@
 @media (max-width:1023px){
   .docs{--dbarh:57px}
   .g3{grid-template-columns:minmax(0,1fr);min-height:0}
-  .dbar{display:flex;gap:8px;padding:8px 16px;border-bottom:1px solid var(--line2);background:rgba(10,11,15,.96);font-family:var(--mono);font-size:13px;position:sticky;top:var(--navh);z-index:6;height:57px}
+  .dbar{display:flex;gap:8px;padding:8px 16px;border-bottom:1px solid var(--line2);background:#0a0b0f;font-family:var(--mono);font-size:13px;position:sticky;top:var(--navh);z-index:6;height:57px}
   .dbar .mb{flex:1;display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:1px solid var(--line2);border-radius:6px;min-width:0;text-align:left}
   .dbar .mb[aria-expanded="true"]{border-color:rgba(240,160,140,.5)}
   .dbar .mb .gl{color:var(--wit)}
@@ -211,10 +216,11 @@
   @keyframes dslide{from{transform:translateY(-12px);opacity:0}to{transform:none;opacity:1}}
   .rh{padding:0 16px 12px;margin-bottom:10px}
   .rmeta{display:none}
-  .tree{padding:0 16px}
+  .tree{padding:0 0 0 16px}
+  .tree li{padding-right:16px}
   .tree li{height:40px}
   .sh{height:34px;margin-top:6px}
-  .tree li.cur::before{left:-16px;right:-16px}
+  .tree li.cur::before{left:-16px;right:0}
   .col{width:auto;margin:0;padding:28px 16px 48px}
   .col h1{font-size:34px;margin:10px 0 10px}
   .land h1{font-size:40px}
