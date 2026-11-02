@@ -1,0 +1,8 @@
+[
+  { "slug": "getting-started", "title": "Getting started", "blurb": "Install lean, run a first check, read the certificate." },
+  { "slug": "lean", "title": "Lean", "blurb": "The proof instrument: two versions of one function in, a theorem or a separating input out." },
+  { "slug": "differential-attestation", "title": "Differential attestation", "blurb": "The gate around lean: parent against candidate, recordings, relations, the run record." },
+  { "slug": "benchmark", "title": "The benchmark", "blurb": "DA-Bench: the instances, the truth, the slice, the hard set, the scoring." },
+  { "slug": "reference", "title": "Reference", "blurb": "Every command, flag, record field, environment variable and exit code." },
+  { "slug": "faq", "title": "FAQ", "blurb": "Scope, models, and what a PASS covers." }
+]

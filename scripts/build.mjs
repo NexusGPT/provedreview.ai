@@ -15,7 +15,8 @@ const BASE = process.env.SITE_BASE || '/';
 if (!/^\/([^/]+\/)*$/.test(BASE)) throw new Error(`SITE_BASE must start and end with "/": ${BASE}`);
 
 const PAGES = ['quick-start', 'paper', 'benchmark', 'docs', 'not-found'];
-const SOURCES = { 'index.html': 'index.html', ...Object.fromEntries(await Promise.all(PAGES.map(async (p) => [(await import(`../site/${p}.mjs`)).route, `site/${p}.mjs`]))) };
+// a page module writes one route (`route`), or several (`routes()` and `pages()`: the docs, one per content file)
+const SOURCES = { 'index.html': 'index.html', ...Object.fromEntries((await Promise.all(PAGES.map(async (p) => { const m = await import(`../site/${p}.mjs`); return (m.routes ? m.routes() : [m.route]).map((r) => [r, `site/${p}.mjs`]); }))).flat()) };
 
 if (args.includes('--check')) {
   const walk = (d) => fs.readdirSync(d, { withFileTypes: true }).flatMap((e) => (e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]));
@@ -41,7 +42,7 @@ fs.mkdirSync(out, { recursive: true });
 
 // static files: the public folder whole, the engine and the stylesheets with their paths rebased
 copy('public');
-for (const f of ['styles.css', 'site.css', 'engine.js', 'site.js']) write(f, rebase(fs.readFileSync(path.join(root, f), 'utf8')));
+for (const f of ['styles.css', 'site.css', 'engine.js', 'site.js', 'docs.css', 'docs.js']) write(f, rebase(fs.readFileSync(path.join(root, f), 'utf8')));
 write('.nojekyll', '');
 
 // the data the pages read
@@ -63,6 +64,7 @@ write('index.html', rebase(home));
 // the other pages
 for (const p of PAGES) {
   const m = await import(`../site/${p}.mjs`);
+  if (m.pages) { for (const { route, html } of await m.pages(ctx)) write(route, rebase(html)); continue; }
   const html = page({ title: m.title, description: m.description, active: m.active, index: m.index !== false, body: await m.body(ctx) });
   write(m.route, rebase(html));
 }

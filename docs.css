@@ -1,0 +1,247 @@
+/* The docs pages: layout A "rail" (docs/design-rounds/docs/r1/a) in look B "terminal manual" (docs/design-rounds/docs/r2/b).
+   Navigation in JetBrains Mono 13 with tree glyphs, the reading column in Inter 16 set tight, code blocks dominate with a
+   line gutter, the active path in the spark. Loaded after styles.css and site.css on the docs pages only. */
+.docs{--dim:#5d6272;--glyph:#3a3e4b;--hair:rgba(255,255,255,.05);--line2:rgba(255,255,255,.08);--panel:#0d0e13;--code:#0c0d12;--dbarh:0px}
+:root{--navh:61px}
+.docs [hidden]{display:none!important}
+/* styles.css hides horizontal overflow on html and body, which makes body a scroll box and breaks every sticky part;
+   clip keeps the page from scrolling sideways without making a scroll box */
+html:has(body.docs),body.docs{overflow-x:clip;overflow-y:visible}
+.docs .gl{font-family:var(--mono);color:var(--glyph);white-space:pre}
+.docs button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+.docs ul{list-style:none;margin:0;padding:0}
+
+.g3{display:grid;grid-template-columns:280px minmax(0,1fr) 240px;align-items:start;min-height:calc(100vh - var(--navh))}
+
+/* ---- the rail: search in the head, every section open ---- */
+.rail{position:sticky;top:var(--navh);height:calc(100vh - var(--navh));overflow-y:auto;overscroll-behavior:contain;scrollbar-width:thin;scrollbar-color:#22252e transparent;border-right:1px solid var(--line2);padding:18px 0 40px;font-family:var(--mono);font-size:13px}
+.rh{padding:0 20px 14px;border-bottom:1px solid var(--hair);margin-bottom:12px}
+.sf{display:flex;align-items:center;gap:10px;height:36px;padding:0 10px;border:1px solid var(--line2);border-radius:6px;background:var(--panel);font-family:var(--mono);font-size:13px;color:var(--dim);cursor:text}
+.sf .pr{color:var(--wit)}
+.sf input{flex:1;min-width:0;height:100%;font:inherit;color:var(--fg);background:transparent;border:0;outline:0;padding:0;caret-color:var(--wit)}
+.sf input::placeholder{color:var(--dim)}
+.sf input::-webkit-search-cancel-button{display:none}
+.sf .kbd{font-size:11px;color:var(--mut);border:1px solid var(--line2);border-radius:4px;padding:0 5px;line-height:18px}
+.sf:focus-within{border-color:rgba(240,160,140,.55);box-shadow:0 0 0 3px rgba(240,160,140,.08)}
+.rmeta{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:10px}
+.tree{padding:0 0 0 20px}
+.sh{display:flex;align-items:center;gap:8px;height:28px;margin-top:10px;padding-right:14px;color:var(--cream)}
+.sh:first-child{margin-top:0}
+.sh b{font-weight:500;flex:1}
+.sh u{text-decoration:none;color:var(--dim);font-size:11px}
+.sh.on .gl{color:var(--wit)}
+.tree li{display:flex;align-items:center;height:26px;color:var(--mut);position:relative;padding:0 12px 0 2px}
+.tree li .gl{margin-right:8px}
+.tree li a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;transition:color .15s}
+.tree li:hover,.tree li:hover .gl{color:var(--fg)}
+.tree li.cur{color:var(--fg)}
+.tree li.cur::before{content:"";position:absolute;left:-20px;right:0;top:1px;bottom:1px;background:linear-gradient(90deg,rgba(240,160,140,.10),rgba(240,160,140,.02) 70%,transparent);border-left:2px solid var(--wit);pointer-events:none}
+.tree li.cur .gl{color:var(--wit)}
+.spark{width:6px;height:6px;background:var(--wit);transform:rotate(45deg);margin-left:10px;flex:0 0 auto;box-shadow:0 0 8px rgba(240,160,140,.6)}
+
+/* ---- the reading column: Inter 16 tight; headings hang a mono hash in the gutter ---- */
+.docs main{min-width:0}
+.col{width:min(720px,calc(100% - 160px));margin:0 0 0 96px;padding:40px 0 64px;font-size:16px;line-height:1.55}
+.crumb{font-family:var(--mono);font-size:12px;color:var(--dim);display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+.crumb a:hover{color:var(--fg)}
+.crumb b{color:var(--wit);font-weight:400}
+.crumb em{font-style:normal;margin-left:auto;color:var(--dim)}
+.col h1{font-size:44px;line-height:1.05;letter-spacing:-.035em;font-weight:500;margin:14px 0 14px;max-width:none}
+.srcl{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--mono);font-size:12px;color:var(--dim);padding-bottom:18px;border-bottom:1px solid var(--line2)}
+.srcl span:first-child{color:var(--bg);background:var(--dim);padding:0 5px;border-radius:2px}
+.srcl a{color:var(--steel)}
+.col .lede{font-size:18px;line-height:1.5;color:#c7ccd6;margin:22px 0 0;letter-spacing:-.01em}
+.col p{margin:12px 0 0;letter-spacing:-.006em;color:#d4d7de}
+.col ul,.col ol{margin:12px 0 0;padding:0 0 0 22px;color:#d4d7de}
+.col ul{list-style:none;padding-left:18px}
+.col ul>li{position:relative}
+.col ul>li::before{content:"";position:absolute;left:-16px;top:.78em;width:7px;height:1px;background:var(--steel)}
+.col li{margin:5px 0 0;letter-spacing:-.006em}
+.col li>p{margin:6px 0 0}
+.col strong{font-weight:600;color:var(--fg)}
+.col :is(p,li,td,h2,h3,h4,blockquote) code{font-family:var(--mono);font-size:.84em;color:var(--cream);background:rgba(255,255,255,.05);border:1px solid var(--hair);padding:1px 5px;border-radius:4px;overflow-wrap:anywhere}
+.col code.v{font-size:.8em;letter-spacing:.02em}
+.col code.vw,.vw{color:var(--wit)}.col code.vo,.vo{color:var(--ok)}.col code.va,.va{color:var(--ask)}
+.col p a,.col li a,.col td a,.note a{color:var(--steel);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(159,179,200,.35)}
+.col p a:hover,.col li a:hover,.col td a:hover{color:var(--fg)}
+.col h2,.col h3,.col h4{position:relative;font-weight:500;letter-spacing:-.02em;margin:52px 0 0;scroll-margin-top:calc(var(--navh) + var(--dbarh) + 20px)}
+.col h2{font-size:26px;line-height:1.2}
+.col h3{font-size:19px;line-height:1.3;margin-top:36px}
+.col h4{font-size:16px;margin-top:28px}
+.hash{position:absolute;right:calc(100% + 14px);font-family:var(--mono);font-weight:400;color:var(--glyph);letter-spacing:0;white-space:nowrap;transition:color .15s}
+.col h2 .hash{font-size:20px;top:2px}.col h3 .hash{font-size:15px;top:3px}.col h4 .hash{font-size:13px;top:3px}
+.col :is(h2,h3,h4):hover .hash{color:var(--steel)}
+.col :is(h2,h3,h4):target .hash{color:var(--wit)}
+.col :is(h2,h3,h4):target::before{content:"";position:absolute;left:-60px;right:0;top:-10px;bottom:-10px;background:linear-gradient(90deg,transparent,rgba(240,160,140,.06) 12%,transparent 85%);z-index:-1}
+.col blockquote{margin:18px 0 0;padding:2px 0 2px 16px;border-left:2px solid var(--line2);color:#c7ccd6}
+.col blockquote p{margin:8px 0 0}
+
+/* ---- code blocks dominate: the gutter hangs left of the text edge, the block runs 48 px wider on the left, 64 on the right ---- */
+.cb{margin:20px 0 0 -48px;width:calc(100% + 48px + 64px);border:1px solid rgba(255,255,255,.09);border-radius:8px;background:var(--code);overflow:hidden}
+.cb figcaption{display:flex;align-items:center;gap:14px;height:36px;padding:0 8px 0 14px;border-bottom:1px solid var(--hair);background:rgba(255,255,255,.02);font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+.cb .lang{color:var(--cream);letter-spacing:.06em}
+.cb a.src{flex:1;min-width:0;overflow:hidden;white-space:nowrap;text-overflow:ellipsis;color:var(--dim)}
+.cb a.src:hover{color:var(--steel)}
+.cb .cp{margin-left:auto}
+.cp{font-family:var(--mono);font-size:12px;color:var(--fg)!important;border:1px solid var(--line2)!important;border-radius:5px;padding:0 10px!important;height:24px;background:rgba(255,255,255,.04)!important;transition:background .15s}
+.cp:hover{background:rgba(255,255,255,.09)!important}
+.cp.ok{color:var(--ok)!important;border-color:rgba(143,211,180,.35)!important}
+.cbody{padding:12px 0;overflow-x:auto;position:relative;scrollbar-width:thin;scrollbar-color:#22252e transparent}
+.ln{display:flex;font-family:var(--mono);font-variant-ligatures:none;font-size:13.5px;line-height:23px;white-space:pre;min-width:max-content}
+.ln .no{flex:0 0 48px;text-align:right;padding-right:14px;color:var(--glyph);user-select:none;-webkit-user-select:none;border-right:1px solid var(--hair);margin-right:16px;position:sticky;left:0;background:var(--code);z-index:1}
+.ln code{color:#c7ccd6;padding-right:48px;font-family:inherit}
+.cb.out{background:#08090c;border-style:dashed;border-color:rgba(255,255,255,.1)}
+.cb.out .lang{color:var(--mut)}
+.cb.out .no{color:var(--dim);background:#08090c}
+.cb.out .ln code{color:var(--cream)}
+
+/* ---- tables: a mono head, hairlines ---- */
+.tw{margin:20px 0 0;overflow-x:auto;border-top:1px solid var(--line2);scrollbar-width:thin;scrollbar-color:#22252e transparent}
+.col table{width:100%;border-collapse:collapse;font-size:14.5px;line-height:1.5}
+.col th{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:400;text-align:left;padding:10px 14px 9px 0;border-bottom:1px solid var(--line2);white-space:nowrap}
+.col td{padding:9px 14px 9px 0;border-bottom:1px solid var(--hair);color:#d4d7de;vertical-align:top}
+.col td:first-child{min-width:7em}
+.col th.a-right,.col td.a-right{text-align:right}.col th.a-center,.col td.a-center{text-align:center}
+
+/* ---- the note ---- */
+.note{margin:24px 0 0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;padding:14px 16px;border:1px solid rgba(159,179,200,.18);border-left:2px solid var(--steel);border-radius:0 6px 6px 0;background:rgba(159,179,200,.04)}
+.nl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);line-height:23px}
+.note p{margin:0!important;font-size:15px;color:#d4d7de}
+.note p+p{margin-top:8px!important}
+
+/* ---- prev / next ---- */
+.pn{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:64px;padding-top:24px;border-top:1px solid var(--line2)}
+.pn a{display:flex;flex-direction:column;gap:3px;padding:14px 16px;border:1px solid var(--line2);border-radius:7px;transition:border-color .15s,background .15s}
+.pn a:hover{background:rgba(255,255,255,.02);border-color:rgba(255,255,255,.16)}
+.pn .nx{text-align:right;border-color:rgba(240,160,140,.3);grid-column:2}
+.pn .nx:hover{border-color:rgba(240,160,140,.55)}
+.pn span{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.pn .nx span{color:var(--wit)}
+.pn small{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.pn b{font-weight:500;font-size:16px}
+
+/* ---- the right contents: mono 13, the same tree ---- */
+.dtoc{position:sticky;top:var(--navh);max-height:calc(100vh - var(--navh));overflow-y:auto;scrollbar-width:none;padding:44px 20px 24px 22px;border-left:1px solid var(--line2);font-family:var(--mono);font-size:13px;align-self:stretch}
+.dtoc.empty{border-left-color:transparent}
+.th{display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.th u{text-decoration:none;letter-spacing:0}
+.troot{min-height:26px;display:flex;align-items:center;color:var(--cream);gap:8px}
+.tt a{display:flex;align-items:flex-start;min-height:26px;padding:3px 0;color:var(--mut);position:relative;transition:color .15s}
+.tt a:hover{color:var(--fg)}
+.tt a .gl{margin-right:8px;line-height:20px}
+.tt a .tx{line-height:20px}
+.tt a.cur{color:var(--fg)}
+.tt a.cur .gl{color:var(--wit)}
+.tt a.cur::before{content:"";position:absolute;left:-15px;top:10px;width:6px;height:6px;background:var(--wit);transform:rotate(45deg);box-shadow:0 0 8px rgba(240,160,140,.6)}
+.tt a.path .gl{color:rgba(240,160,140,.45)}
+.tf{display:flex;gap:18px;margin-top:18px;padding-top:12px;border-top:1px solid var(--hair);font-size:11.5px;color:var(--dim)}
+.tf a:hover{color:var(--fg)}
+
+/* the sticky nav reads over code and tables here: near opaque */
+.docs .nav{background:rgba(7,8,11,.97)}
+.docs .wrapf{border-top:1px solid var(--line2)}
+.docs .wrapf .foot{border-top:0}
+
+/* ---- search: the panel over the column, the page under a scrim ---- */
+.scrim{position:fixed;left:280px;right:0;top:var(--navh);bottom:0;background:rgba(5,6,8,.72);z-index:8;animation:dfade .12s ease-out}
+.res{position:fixed;left:296px;top:calc(var(--navh) + 11px);width:min(780px,calc(100vw - 320px));max-height:calc(100vh - var(--navh) - 32px);overflow-y:auto;z-index:9;background:var(--panel);border:1px solid rgba(255,255,255,.12);border-radius:10px;box-shadow:0 40px 90px -40px rgba(0,0,0,.95);animation:dfade .12s ease-out}
+@keyframes dfade{from{opacity:0}to{opacity:1}}
+.rc{display:flex;gap:14px;align-items:center;padding:12px 18px;border-bottom:1px solid var(--line2);font-family:var(--mono);font-size:12px;color:var(--mut)}
+.rc b{color:var(--fg);font-weight:400}
+.rc .qq{color:var(--cream);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.keys{margin-left:auto;color:var(--dim);display:flex;gap:5px;align-items:center;white-space:nowrap}
+.docs kbd{font-family:var(--mono);font-size:10.5px;border:1px solid var(--line2);border-radius:3px;padding:0 4px;color:var(--mut)}
+.hit{display:block;padding:12px 18px 13px 20px;border-bottom:1px solid var(--hair);position:relative}
+.hit:hover{background:rgba(255,255,255,.02)}
+.hit.sel{background:rgba(240,160,140,.06)}
+.hit.sel::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--wit)}
+.hp{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.hp span{color:var(--dim)}
+.hit b{display:block;font-weight:500;font-size:16px;margin:2px 0 3px}
+.hit.sel b{color:var(--cream)}
+.hit p{margin:0;font-size:14px;color:var(--mut);line-height:1.5}
+.hit mark{background:none;color:var(--fg);box-shadow:inset 0 -2px 0 rgba(240,160,140,.7)}
+.rempty{display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(255,255,255,.015);font-family:var(--mono);font-size:12.5px;color:var(--mut);border-top:1px dashed rgba(255,255,255,.12)}
+.rempty .nl{color:var(--dim)}
+.rempty b{color:var(--fg);font-weight:400}
+.rempty .cp{margin-left:auto}
+
+/* ---- the landing: six sections as directory listings ---- */
+.land h1{font-size:56px}
+.land .lede{margin-top:6px}
+.col a.qs{color:var(--wit);font-family:var(--mono);font-size:15px;text-decoration:none}
+.secs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px}
+.dsec{display:block;border:1px solid var(--line2);border-radius:8px;padding:16px 18px 14px;background:rgba(255,255,255,.012);transition:border-color .15s,background .15s}
+.dsec:hover{border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.025)}
+.sk{display:flex;gap:10px;align-items:baseline;font-family:var(--mono)}
+.sk .ix{color:var(--wit);font-size:12px}
+.sk b{font-family:var(--sans);font-weight:500;font-size:18px;letter-spacing:-.015em;flex:1}
+.sk u{text-decoration:none;font-size:11px;color:var(--dim)}
+.dsec .sp{display:block;margin:6px 0 10px;font-size:14.5px;line-height:1.5;color:var(--mut)}
+.dsec ul{font-family:var(--mono);font-size:13px;color:#c7ccd6;border-top:1px solid var(--hair);padding:8px 0 0!important;margin:0!important}
+.dsec li{min-height:23px;display:flex;align-items:center;margin:0!important}
+.dsec li::before{display:none}
+.dsec li .gl{margin-right:8px}
+.dsec li.mo{color:var(--dim)}
+
+/* ---- the phone bar: hidden until the rail goes ---- */
+.dbar{display:none}
+
+/* between 1024 and 1279: the contents drop, the column keeps its measure */
+@media (max-width:1279px){
+  .g3{grid-template-columns:280px minmax(0,1fr)}
+  .dtoc{display:none}
+  .col{margin-left:72px;width:min(720px,calc(100% - 136px))}
+}
+
+/* the phone and the tablet: the rail becomes a sheet behind the menu, search takes the screen */
+@media (max-width:1023px){
+  .docs{--dbarh:57px}
+  .g3{grid-template-columns:minmax(0,1fr);min-height:0}
+  .dbar{display:flex;gap:8px;padding:8px 16px;border-bottom:1px solid var(--line2);background:#0a0b0f;font-family:var(--mono);font-size:13px;position:sticky;top:var(--navh);z-index:6;height:57px}
+  .dbar .mb{flex:1;display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:1px solid var(--line2);border-radius:6px;min-width:0;text-align:left}
+  .dbar .mb[aria-expanded="true"]{border-color:rgba(240,160,140,.5)}
+  .dbar .mb .gl{color:var(--wit)}
+  .dp{color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dp b{color:var(--fg);font-weight:400}
+  .dbar .sb{height:40px;padding:0 12px;border:1px solid var(--line2);border-radius:6px;color:var(--mut);display:flex;gap:8px;align-items:center}
+  .dbar .sb .pr{color:var(--wit)}
+  .dbar .sf.ph,.dbar .cn{display:none}
+  .srch .dbar .mb,.srch .dbar .sb{display:none}
+  .srch .dbar .sf.ph{display:flex;flex:1;height:40px}
+  .srch .dbar .cn{display:block;color:var(--steel);padding:0 4px}
+  .rail{display:none;position:fixed;left:0;right:0;top:calc(var(--navh) + 57px);bottom:0;height:auto;z-index:7;background:var(--bg);border-right:0;border-top:1px solid var(--hair);padding:14px 0 40px;font-size:14px;animation:dslide .16s ease-out}
+  .menu .rail{display:block}
+  .menu{overflow:hidden}
+  @keyframes dslide{from{transform:translateY(-12px);opacity:0}to{transform:none;opacity:1}}
+  .rh{padding:0 16px 12px;margin-bottom:10px}
+  .rmeta{display:none}
+  .tree{padding:0 0 0 16px}
+  .tree li{padding-right:16px}
+  .tree li{height:40px}
+  .sh{height:34px;margin-top:6px}
+  .tree li.cur::before{left:-16px;right:0}
+  .col{width:auto;margin:0;padding:28px 16px 48px}
+  .col h1{font-size:34px;margin:10px 0 10px}
+  .land h1{font-size:40px}
+  .srcl{font-size:11.5px;gap:4px 10px}
+  .col .lede{font-size:17px;margin-top:16px}
+  .col h2{font-size:23px;margin-top:40px}
+  .col h3{font-size:18px}
+  .hash{position:static;margin-right:10px;font-size:.8em!important}
+  .col :is(h2,h3,h4):target::before{display:none}
+  .cb{margin:16px -16px 0;width:auto;border-radius:0;border-left:0;border-right:0}
+  .ln{font-size:12.5px;line-height:21px}
+  .ln .no{flex-basis:34px;padding-right:9px;margin-right:12px}
+  .tw{margin-right:-16px}
+  .col td{min-width:9em}
+  .pn{grid-template-columns:minmax(0,1fr);gap:10px;margin-top:48px}
+  .pn .nx{grid-column:1}
+  .secs{grid-template-columns:minmax(0,1fr)}
+  .scrim{left:0;top:calc(var(--navh) + 57px);background:var(--bg)}
+  .res{left:0;right:0;top:calc(var(--navh) + 57px);bottom:0;width:auto;max-height:none;border:0;border-radius:0;box-shadow:none;background:var(--bg)}
+  .rc{padding:12px 16px}.keys{display:none}
+  .hit{padding:12px 16px 13px}
+  .rempty{padding:14px 16px}
+}
+@media (prefers-reduced-motion:reduce){.scrim,.res,.rail{animation:none}.tree li a,.tt a,.pn a,.dsec,.hash,.cp{transition:none}}
