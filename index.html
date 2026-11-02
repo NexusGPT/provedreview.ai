@@ -5,7 +5,7 @@
 </head><body>
 <canvas id="far" aria-hidden="true"></canvas><canvas id="glow" aria-hidden="true"></canvas><canvas id="ascii" aria-hidden="true"></canvas><canvas id="near" aria-hidden="true"></canvas><canvas id="glass" aria-hidden="true"></canvas>
 <!--#nav: the shared nav (scripts/layout.mjs)-->
-<div id="scrim2"></div><main class="hero"><div><!-- src: lean@dbe9a32 CHANGELOG.md "## v0.1.3, 2026-10-31" (content/PINS.json) --><span class="kicker reveal"><i></i>differential attestation · built on lean 0.1.3</span><h1 class="reveal">Deterministic <span class="g">code review</span>.</h1><p class="sub reveal">A proof that the change did only what you asked. Or the input that breaks it, with the line to fix. Same change, same verdict, every time.</p><div style="display:flex;gap:10px;flex-wrap:wrap" class="reveal"><a class="btn p" href="/quick-start/">Quick start →</a><a class="btn" href="https://github.com/NexusGPT/differential-attestation">Differential attestation on GitHub</a></div></div>
+<div id="scrim2"></div><main class="hero"><div data-koi-avoid><!-- src: lean@dbe9a32 CHANGELOG.md "## v0.1.3, 2026-10-31" (content/PINS.json) --><span class="kicker reveal"><i></i>differential attestation · built on lean 0.1.3</span><h1 class="reveal">Deterministic <span class="g">code review</span>.</h1><p class="sub reveal">A proof that the change did only what you asked. Or the input that breaks it, with the line to fix. Same change, same verdict, every time.</p><div style="display:flex;gap:10px;flex-wrap:wrap" class="reveal"><a class="btn p" href="/quick-start/">Quick start →</a><a class="btn" href="https://github.com/NexusGPT/differential-attestation">Differential attestation on GitHub</a></div></div>
 <!-- src: lean@fe06326 README.md "## Three runs": {"input":17,"floor":-1,"parent":1,"candidate":0}, --n 60 --seed 3. "candidate.ts:15" is [pending source]: the slip sits at langs/ts/tests/pairs/readme_ledger/candidate.ts:15 (lean@d0d88fc); the hero is kept verbatim, the lead decides --><div class="cert reveal"><div class="hd"><span>ledger.json · certificate</span><span class="w">witness</span></div><pre>{
   <span class="k">"unit"</span>: "applyAll",
   <span class="k">"verdict"</span>: <span class="w">"WITNESS"</span>,
@@ -239,9 +239,7 @@
 <script src="/public/figures.js"></script>
 <script>
 (() => {
-  // the koi draw only while the hero is on screen; below it the sections cover them
-  const hero = document.querySelector('main.hero');
-  if ('IntersectionObserver' in window) new IntersectionObserver((es) => { window.__koiIdle = !es[0].isIntersecting; }).observe(hero);
+  // the koi engine pauses itself while the hero is off screen or the tab is hidden (window.__koiIdle); the copy block it swims around is [data-koi-avoid]
   // section reveal: on scroll, and on any jump (anchor, full-page capture) since every element checks its own position
   const els = [...document.querySelectorAll('.rv')];
   const show = () => { const line = innerHeight * 0.92; for (const el of els) if (!el.classList.contains('in') && el.getBoundingClientRect().top < line) el.classList.add('in'); };
