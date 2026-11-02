@@ -41,7 +41,7 @@ function benchView(DATA, opt) {
   const newState = () => ({ sys: new Set(), by: new Set(), sort: { key: 'f1', dir: 'desc' }, open: new Set(), sheet: false });
 
   function gauge(v, cls) {
-    if (v == null) return '<span class="g none">—</span>';
+    if (v == null) return '<span class="g none">n/a</span>';
     const pct = Math.min(100, v / SCALE * 100);
     const mark = cls.startsWith('bar-k') ? `width:${pct}%` : `left:${pct}%`;
     return `<span class="g ${cls}"><b class="gv">${dec(v)}</b><span class="gt"><i style="${mark}"></i></span></span>`;
@@ -86,7 +86,7 @@ function benchView(DATA, opt) {
         : `<span class="off">${r.rounds ? r.rounds + ' rounds, ' : ''}kept in the DA repository</span><small>not copied to this site yet</small>`)
       : `<span class="off">${esc(r.judge_logs)}</span><small>the source publishes scores, not verdicts</small>`;
     const c = cite(r);
-    const ro = (lab, v, cls, frac) => `<div><div class="k">${lab}<span>0 – ${SCALE} %</span></div>${gauge(v, cls)}${frac ? `<div class="frac">${esc(frac)}</div>` : ''}</div>`;
+    const ro = (lab, v, cls, frac) => `<div><div class="k">${lab}<span>0 to ${SCALE} %</span></div>${gauge(v, cls)}${frac ? `<div class="frac">${esc(frac)}</div>` : ''}</div>`;
     const src = /^https?:/.test(r.source) ? `<a href="${esc(r.source.split(' ')[0])}">${esc(r.source)}</a>` : esc(r.source);
     return `<div class="det" id="det-${esc(r.id)}"${open ? '' : ' inert'}><div><div class="dbox">
     <div class="ro">${ro('F1', r.f1, 'bar-k', '')}${ro('Precision', r.precision, 'ndl', r.precision_fraction ? r.precision_fraction + ' comments matched' : '')}${ro('Recall', r.recall, 'ndl', r.recall_fraction ? r.recall_fraction + ' notes matched' : '')}</div>
@@ -97,7 +97,7 @@ function benchView(DATA, opt) {
       <div><dt>Notes · comments</dt><dd>${thou(r.notes)} human notes<small>${thou(r.comments)} tool comments</small></dd></div>
       <div><dt>Judge</dt><dd>${esc(r.judge)}${r.rounds ? `<small>${r.rounds} rounds, mean reported</small>` : ''}</dd></div>
       <div class="w2"><dt>Source</dt><dd>${src}<small>read ${esc(r.read)}</small></dd></div>
-      <div><dt>Time · tokens per PR</dt><dd>${r.avg_time ? esc(r.avg_time) + ' · ' + esc(r.avg_tokens) : '—'}<small>${r.avg_tokens_in_out ? 'in / out ' + esc(r.avg_tokens_in_out) : 'no figure in the source'}</small></dd></div>
+      <div><dt>Time · tokens per PR</dt><dd>${r.avg_time ? esc(r.avg_time) + ' · ' + esc(r.avg_tokens) : 'n/a'}<small>${r.avg_tokens_in_out ? 'in / out ' + esc(r.avg_tokens_in_out) : 'no figure in the source'}</small></dd></div>
       <div class="w2"><dt>Judge logs</dt><dd>${logs}</dd></div>
       <div><dt>Model · vendor</dt><dd>${esc(r.model)}<small>${esc(r.vendor)}</small></dd></div>
     </dl>
@@ -107,9 +107,9 @@ function benchView(DATA, opt) {
 
   function rowHtml(o, st) {
     const r = o.r, k = kind(r), open = st.open.has(r.id);
-    const pos = o.pos == null ? '—' : String(o.pos).padStart(2, '0');
+    const pos = o.pos == null ? 'n/a' : String(o.pos).padStart(2, '0');
     const tag = k === 'own' ? 'by us' : 'by Open Code Review';
-    const n = (key, v) => `<span class="r n${v ? '' : ' none'}" data-k="${key}">${v ? esc(v) : '—'}</span><!--/${key}-->`;
+    const n = (key, v) => `<span class="r n${v ? '' : ' none'}" data-k="${key}">${v ? esc(v) : 'n/a'}</span><!--/${key}-->`;
     return `<div class="tr ${k}${open ? ' open' : ''}" data-id="${esc(r.id)}">
     <button type="button" class="row" aria-expanded="${open}" aria-controls="det-${esc(r.id)}">
       <span class="rail"></span><span class="pos">${pos}</span>
@@ -184,7 +184,7 @@ function benchView(DATA, opt) {
 
   function tfootHtml(state) {
     if (state === 'error') return '';
-    return `<span>scale 0 – ${SCALE} % on F1, precision, recall</span><span>— no figure in the source</span><span>published rows read ${esc(pub[0].read)}</span><span>our rows: ${esc(own[0].version.split(' (')[0])}</span><a href="#method">Method ↓</a>`;
+    return `<span>scale 0 to ${SCALE} % on F1, precision, recall</span><span>n/a: no figure in the source</span><span>published rows read ${esc(pub[0].read)}</span><span>our rows: ${esc(own[0].version.split(' (')[0])}</span><a href="#method">Method ↓</a>`;
   }
 
   function pheadHtml() {

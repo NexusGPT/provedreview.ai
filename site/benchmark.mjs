@@ -1,4 +1,11 @@
-// /benchmark/: the shell only. The layout and style rounds (docs/design-rounds/benchmark) pick the body; data/leaderboard.json wires in after.
+// /benchmark/: the page scripts/build-benchmark.mjs builds into benchmark/index.html (look B, picked by the owner), served whole; `body` below is the
+// placeholder the build falls back to only when that file is missing.
+import fs from 'node:fs';
+export async function raw() {
+  const built = new URL('../benchmark/index.html', import.meta.url);
+  if (!fs.existsSync(built)) return null;
+  return fs.readFileSync(built, 'utf8');
+}
 export const route = 'benchmark/index.html';
 export const active = 'Benchmark';
 export const title = 'Benchmark · provedreview';

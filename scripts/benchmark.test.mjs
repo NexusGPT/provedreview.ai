@@ -7,10 +7,20 @@ import { execFileSync, spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
 import fs from 'node:fs'; import os from 'node:os'; import path from 'node:path'; import http from 'node:http';
 import { fileURLToPath } from 'node:url';
+import { NAV } from './layout.mjs';
+const SITE_ROUTES = new Set(['/', ...NAV.map(([, h]) => h)]); // the shared nav and footer link the site's own routes
 
 const require = createRequire(import.meta.url);
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const TOOLS = path.join(os.homedir(), '.nexus-tools/node_modules');
+// the browser and the validator: PW=<dir> / HV=<dir>, else the project's own node_modules, else ~/.nexus-tools, else /root/gate-full
+function tool(name, env) {
+  for (const c of [process.env[env], name, path.join(os.homedir(), '.nexus-tools/node_modules', name), path.join('/root/gate-full/node_modules', name)]) {
+    if (!c) continue;
+    try { return require(c); } catch (e) { if (e.code !== 'MODULE_NOT_FOUND') throw e; }
+  }
+  return null;
+}
 const BUILD = path.join(ROOT, 'scripts/build-benchmark.mjs');
 const PAGE = path.join(ROOT, 'benchmark/index.html');
 const SHOTS = path.join(ROOT, 'docs/shots/bench-build');
@@ -43,8 +53,8 @@ test('values: every number and condition in a row matches the data file', () => 
     const seg = rowSeg(h, r.id), t = text(seg);
     for (const k of ['f1', 'precision', 'recall']) assert.equal(cell(seg, k), fmt(r[k]), `${r.id} ${k}`);
     assert.equal(cell(seg, 'instances'), String(r.instances), `${r.id} instances`);
-    assert.equal(cell(seg, 'avg_time'), r.avg_time ?? '—', `${r.id} time`);
-    assert.equal(cell(seg, 'avg_tokens'), r.avg_tokens ?? '—', `${r.id} tokens`);
+    assert.equal(cell(seg, 'avg_time'), r.avg_time ?? 'n/a', `${r.id} time`);
+    assert.equal(cell(seg, 'avg_tokens'), r.avg_tokens ?? 'n/a', `${r.id} tokens`);
     for (const k of ['system', 'model', 'vendor', 'measured_by', 'version', 'judge', 'source', 'read']) assert.ok(t.includes(r[k]), `${r.id} ${k}: ${r[k]}`);
     assert.ok(t.includes(`${thou(r.notes)} human notes`), `${r.id} notes`);
     assert.ok(t.includes(`${thou(r.comments)} tool comments`), `${r.id} comments`);
@@ -71,7 +81,7 @@ test('no external request in the markup', () => {
 });
 
 test('HTML validity (html-validate:standard)', async () => {
-  const { HtmlValidate } = require(process.env.HV || path.join(TOOLS, 'html-validate'));
+  const { HtmlValidate } = tool('html-validate', 'HV') || (() => { throw new Error('html-validate not installed: HV=<dir>, or npm install (devDependencies)'); })();
   const report = await new HtmlValidate({ extends: ['html-validate:standard'] }).validateFile(PAGE);
   const msgs = report.results.flatMap((r) => r.messages.map((m) => `${m.line}:${m.column} ${m.ruleId} ${m.message}`));
   assert.deepEqual(msgs, []);
@@ -85,7 +95,8 @@ test('links: every href resolves', () => {
   for (const href of hrefs) {
     if (href.startsWith('#')) { assert.ok(ids.has(href.slice(1)), `anchor ${href}`); continue; }
     if (/^https:\/\//.test(href)) { assert.ok(new URL(href).hostname.includes('.'), href); continue; }
-    assert.doesNotMatch(href, /^(\/|[a-z]+:)/i, `${href}: relative links only, the site may be served under a path`);
+    if (href.startsWith('/')) { assert.ok(SITE_ROUTES.has(href), `${href}: a root link must be one of the site's routes (scripts/build.mjs rebases them under SITE_BASE)`); continue; }
+    assert.doesNotMatch(href, /^[a-z]+:/i, `${href}: relative or site-root links only`);
     const u = new URL(href, 'http://x/benchmark/'), p = path.join(ROOT, decodeURIComponent(u.pathname));
     if (u.hash) assert.ok(ids.has(u.hash.slice(1)) || !u.pathname.startsWith('/benchmark/'), `anchor ${href}`);
     if (fs.existsSync(p) && (fs.statSync(p).isFile() || fs.existsSync(path.join(p, 'index.html')))) continue;
@@ -107,7 +118,8 @@ before(async () => {
   });
   await new Promise((r) => server.listen(0, '127.0.0.1', r));
   base = `http://127.0.0.1:${server.address().port}`;
-  const pw = require(process.env.PW || path.join(TOOLS, 'playwright'));
+  const pw = tool('playwright', 'PW');
+  if (!pw) throw new Error('Playwright not installed: PW=<dir>, or npm install (devDependencies)');
   browser = await pw.chromium.launch();
   fs.mkdirSync(SHOTS, { recursive: true });
 });

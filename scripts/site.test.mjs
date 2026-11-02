@@ -103,8 +103,11 @@ test('the owner\'s voice: no em or en dashes in any page\'s visible text', () =>
   }
 });
 
-test('benchmark carries the shell with the review placeholder', () => {
-  for (const r of ['benchmark/index.html']) assert.match(read(r), /layout and style under review/i, r);
+test('benchmark serves the built table page: one row per data row, no placeholder', () => {
+  const html = read('benchmark/index.html');
+  assert.doesNotMatch(html, /layout and style under review/i);
+  const rows = JSON.parse(fs.readFileSync(path.join(repo, 'data/leaderboard.json'), 'utf8')).rows.length;
+  assert.equal((html.match(/<!--\/avg_time-->/g) || []).length, rows, 'one avg_time cell per row');
 });
 
 test('the 404 page names the missing path and links all five pages', () => {

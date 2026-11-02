@@ -125,7 +125,10 @@ test('the search index holds every docs page', () => {
 // search, in a browser: a term from each section finds a page of that section
 const require = createRequire(import.meta.url);
 let pw = null;
-try { pw = require(process.env.PW || '/root/gate-full/node_modules/playwright'); } catch { pw = null; }
+for (const c of [process.env.PW, 'playwright', path.join(os.homedir(), '.nexus-tools/node_modules/playwright'), '/root/gate-full/node_modules/playwright']) {
+  if (!c || pw) continue;
+  try { pw = require(c); } catch (e) { if (e.code !== 'MODULE_NOT_FOUND') throw e; }
+}
 const TERMS = { 'getting-started': 'container image', lean: 'verdicts', 'differential-attestation': 'predicate registry', benchmark: 'hard set', reference: 'LEAN_NET', faq: 'jail' };
 let server;
 after(() => server?.kill());

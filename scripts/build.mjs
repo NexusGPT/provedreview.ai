@@ -64,10 +64,13 @@ write('index.html', rebase(home));
 // the other pages
 for (const p of PAGES) {
   const m = await import(`../site/${p}.mjs`);
+  const raw = m.raw && await m.raw(ctx);
+  if (raw) { write(m.route, rebase(raw)); continue; } // a complete document of its own (the benchmark page, built by scripts/build-benchmark.mjs)
   if (m.pages) { for (const { route, html } of await m.pages(ctx)) write(route, rebase(html)); continue; }
   const html = page({ title: m.title, description: m.description, active: m.active, index: m.index !== false, body: await m.body(ctx) });
   write(m.route, rebase(html));
 }
+if (fs.existsSync(path.join(root, 'benchmark/leaderboard.json'))) copy('benchmark/leaderboard.json'); // the benchmark page fetches it beside itself
 console.log(`built ${Object.keys(SOURCES).length} pages into ${path.relative(root, out) || '.'} (base ${BASE})`);
 
 // search: Pagefind over the built pages (only what sits inside data-pagefind-body)

@@ -229,25 +229,20 @@ button,select{font:inherit;color:inherit}
 .logo{font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
 .logo .mark{display:grid;grid-template-columns:repeat(3,7px);gap:1px}.logo .mark i{display:block;width:7px;height:7px;background:var(--steel);border-radius:1px;opacity:.9}.logo .mark i:nth-child(2),.logo .mark i:nth-child(4),.logo .mark i:nth-child(9){opacity:.35}
 .links{display:flex;gap:28px;color:var(--mut);align-items:center}.links a:hover{color:var(--fg)}
-.links a.cur{color:var(--fg);position:relative}.links a.cur::after{content:"";position:absolute;left:0;right:0;bottom:-21px;height:2px;background:var(--fg)}
-.menu{display:none;position:relative}
-.menu summary{list-style:none}.menu summary::-webkit-details-marker{display:none}
-.menu nav{position:absolute;right:0;top:calc(100% + 8px);display:flex;flex-direction:column;min-width:180px;background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:6px;font-size:14px}
-.menu nav a{padding:10px 12px;border-radius:5px;color:var(--mut)}.menu nav a:hover,.menu nav a.cur{color:var(--fg);background:rgba(255,255,255,.04)}
+.links a[aria-current="page"]{color:var(--fg);position:relative}.links a[aria-current="page"]::after{content:"";position:absolute;left:0;right:0;bottom:-21px;height:2px;background:var(--fg)}
+.nav-r{display:flex;gap:10px}
 .foot{border-top:1px solid var(--line);font-size:13.5px;color:var(--mut)}
-.foot .fw{padding-top:40px;padding-bottom:56px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
+.foot{padding:40px 48px 56px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap}
 .foot .wm{display:flex;flex-direction:column;gap:10px}
 .foot .fl{display:flex;gap:22px;flex-wrap:wrap;font-family:var(--mono);font-size:12px}
 .foot .fl a:hover{color:var(--fg)}
-@media (max-width:760px){.nav{padding:14px 16px}.links{display:none}.menu{display:block}}
+@media (max-width:960px){.nav{flex-wrap:wrap;row-gap:12px}.links{order:3;width:100%;gap:22px;font-size:13.5px;overflow-x:auto}.links a[aria-current="page"]::after{bottom:-6px;height:1px}}
+@media (max-width:760px){.nav{padding:14px 16px}.foot{padding:32px 16px 40px}}
 :root{--step:25%}
 </style>
 </head>
 <body>
-<header class="nav" id="top"><a class="logo" href="../"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a>
-  <nav class="links" aria-label="Site"><a class="cur" href="./" aria-current="page">Benchmark</a><a href="../quick-start/">Quick start</a><a href="../docs/">Docs</a><a href="../paper/">Paper</a><a class="btn" href="https://github.com/NexusGPT/lean">GitHub</a></nav>
-  <details class="menu"><summary class="btn">Menu</summary><nav aria-label="Site, menu"><a class="cur" href="./" aria-current="page">Benchmark</a><a href="../quick-start/">Quick start</a><a href="../docs/">Docs</a><a href="../paper/">Paper</a><a href="https://github.com/NexusGPT/lean">GitHub</a></nav></details>
-</header>
+<header class="nav" id="top"><a class="logo" href="/" aria-label="provedreview, home"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><nav class="links" aria-label="Site"><a href="/benchmark/" aria-current="page">Benchmark</a><a href="/quick-start/">Quick start</a><a href="/docs/">Docs</a><a href="/paper/">Paper</a></nav><div class="nav-r"><a class="btn" href="https://github.com/NexusGPT/lean">GitHub</a></div></header>
 <main class="wrap">
 <div class="phead"><div><h1>Benchmark</h1><div class="scope">AACR-Bench (200 pull requests, 50 repositories, 10 languages, 1,505 verified comments; arXiv 2601.19494)</div></div>
     <div class="caveat"><span><i class="sw own"></i><span><b>Measured by us</b> · 2 rows, one judge run, 184 instances</span></span><span><i class="sw pub"></i><span><b>Published by Open Code Review</b> · 14 rows, their run, 200 instances. The two runs were not judged together.</span></span></div></div>
@@ -276,12 +271,12 @@ button,select{font:inherit;color:inherit}
       <span class="f1c" data-k="f1"><span class="g bar-k f1"><b class="gv"><span class="i">31</span>.<span class="f">61</span></b><span class="gt"><i style="width:79.025%"></i></span></span></span><!--/f1-->
       <span class="pc" data-k="precision"><span class="g ndl"><b class="gv"><span class="i">34</span>.<span class="f">09</span></b><span class="gt"><i style="left:85.22500000000001%"></i></span></span></span><!--/precision-->
       <span class="rc" data-k="recall"><span class="g ndl"><b class="gv"><span class="i">29</span>.<span class="f">47</span></b><span class="gt"><i style="left:73.675%"></i></span></span></span><!--/recall-->
-      <span class="r n none" data-k="avg_time">—</span><!--/avg_time-->
-      <span class="r n none" data-k="avg_tokens">—</span><!--/avg_tokens-->
+      <span class="r n none" data-k="avg_time">n/a</span><!--/avg_time-->
+      <span class="r n none" data-k="avg_tokens">n/a</span><!--/avg_tokens-->
       <span class="r n" data-k="instances">184</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-da-lean-opus" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">31</span>.<span class="f">61</span></b><span class="gt"><i style="width:79.025%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">34</span>.<span class="f">09</span></b><span class="gt"><i style="left:85.22500000000001%"></i></span></span></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">29</span>.<span class="f">47</span></b><span class="gt"><i style="left:73.675%"></i></span></span></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">31</span>.<span class="f">61</span></b><span class="gt"><i style="width:79.025%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">34</span>.<span class="f">09</span></b><span class="gt"><i style="left:85.22500000000001%"></i></span></span></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">29</span>.<span class="f">47</span></b><span class="gt"><i style="left:73.675%"></i></span></span></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>DA d3 (composed entry: d2-reader + gate + C4), lean v0.1.2 findings</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw own"></i> Measured by us</dd></div>
@@ -289,7 +284,7 @@ button,select{font:inherit;color:inherit}
       <div><dt>Notes · comments</dt><dd>1,414 human notes<small>1,059 tool comments</small></dd></div>
       <div><dt>Judge</dt><dd>claude-opus-5-5<small>3 rounds, mean reported</small></dd></div>
       <div class="w2"><dt>Source</dt><dd>research/open-code-review/d3/RESULT.md '## Same instances' (DA repository)<small>read 2026-10-31</small></dd></div>
-      <div><dt>Time · tokens per PR</dt><dd>—<small>no figure in the source</small></dd></div>
+      <div><dt>Time · tokens per PR</dt><dd>n/a<small>no figure in the source</small></dd></div>
       <div class="w2"><dt>Judge logs</dt><dd><span class="off">3 rounds, kept in the DA repository</span><small>not copied to this site yet</small></dd></div>
       <div><dt>Model · vendor</dt><dd>claude-opus-5-5 (reader) with a claude-opus-4-8 filter<small>Nexus</small></dd></div>
     </dl>
@@ -302,12 +297,12 @@ button,select{font:inherit;color:inherit}
       <span class="f1c" data-k="f1"><span class="g bar-k f1"><b class="gv"><span class="i">29</span>.<span class="f">02</span></b><span class="gt"><i style="width:72.55%"></i></span></span></span><!--/f1-->
       <span class="pc" data-k="precision"><span class="g ndl"><b class="gv"><span class="i">27</span>.<span class="f">72</span></b><span class="gt"><i style="left:69.3%"></i></span></span></span><!--/precision-->
       <span class="rc" data-k="recall"><span class="g ndl"><b class="gv"><span class="i">30</span>.<span class="f">43</span></b><span class="gt"><i style="left:76.075%"></i></span></span></span><!--/recall-->
-      <span class="r n none" data-k="avg_time">—</span><!--/avg_time-->
-      <span class="r n none" data-k="avg_tokens">—</span><!--/avg_tokens-->
+      <span class="r n none" data-k="avg_time">n/a</span><!--/avg_time-->
+      <span class="r n none" data-k="avg_tokens">n/a</span><!--/avg_tokens-->
       <span class="r n" data-k="instances">184</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-ocr-floor-opus46" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">29</span>.<span class="f">02</span></b><span class="gt"><i style="width:72.55%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">27</span>.<span class="f">72</span></b><span class="gt"><i style="left:69.3%"></i></span></span></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">30</span>.<span class="f">43</span></b><span class="gt"><i style="left:76.075%"></i></span></span></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">29</span>.<span class="f">02</span></b><span class="gt"><i style="width:72.55%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">27</span>.<span class="f">72</span></b><span class="gt"><i style="left:69.3%"></i></span></span></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">30</span>.<span class="f">43</span></b><span class="gt"><i style="left:76.075%"></i></span></span></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>OCR 375f64c (the published reader, our run through the official pipeline)</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw own"></i> Measured by us</dd></div>
@@ -315,7 +310,7 @@ button,select{font:inherit;color:inherit}
       <div><dt>Notes · comments</dt><dd>1,414 human notes<small>1,426 tool comments</small></dd></div>
       <div><dt>Judge</dt><dd>claude-opus-5-5<small>3 rounds, mean reported</small></dd></div>
       <div class="w2"><dt>Source</dt><dd>research/open-code-review/d3/RESULT.md '## Same instances' (DA repository)<small>read 2026-10-31</small></dd></div>
-      <div><dt>Time · tokens per PR</dt><dd>—<small>no figure in the source</small></dd></div>
+      <div><dt>Time · tokens per PR</dt><dd>n/a<small>no figure in the source</small></dd></div>
       <div class="w2"><dt>Judge logs</dt><dd><span class="off">3 rounds, kept in the DA repository</span><small>not copied to this site yet</small></dd></div>
       <div><dt>Model · vendor</dt><dd>claude-opus-4-6<small>Alibaba</small></dd></div>
     </dl>
@@ -333,7 +328,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-01" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">25</span>.<span class="f">1</span></b><span class="gt"><i style="width:62.75000000000001%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">33</span>.<span class="f">9</span></b><span class="gt"><i style="left:84.74999999999999%"></i></span></span><div class="frac">301/889 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">20</span>.<span class="f">0</span></b><span class="gt"><i style="left:50%"></i></span></span><div class="frac">301/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">25</span>.<span class="f">1</span></b><span class="gt"><i style="width:62.75000000000001%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">33</span>.<span class="f">9</span></b><span class="gt"><i style="left:84.74999999999999%"></i></span></span><div class="frac">301/889 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">20</span>.<span class="f">0</span></b><span class="gt"><i style="left:50%"></i></span></span><div class="frac">301/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Open Code Review v1.3.1</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -359,7 +354,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-02" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">23</span>.<span class="f">0</span></b><span class="gt"><i style="width:57.49999999999999%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">33</span>.<span class="f">9</span></b><span class="gt"><i style="left:84.74999999999999%"></i></span></span><div class="frac">262/774 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">17</span>.<span class="f">4</span></b><span class="gt"><i style="left:43.49999999999999%"></i></span></span><div class="frac">262/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">23</span>.<span class="f">0</span></b><span class="gt"><i style="width:57.49999999999999%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">33</span>.<span class="f">9</span></b><span class="gt"><i style="left:84.74999999999999%"></i></span></span><div class="frac">262/774 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">17</span>.<span class="f">4</span></b><span class="gt"><i style="left:43.49999999999999%"></i></span></span><div class="frac">262/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Open Code Review v1.8.7</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -385,7 +380,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-03" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">21</span>.<span class="f">3</span></b><span class="gt"><i style="width:53.25%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">32</span>.<span class="f">3</span></b><span class="gt"><i style="left:80.74999999999999%"></i></span></span><div class="frac">239/741 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">15</span>.<span class="f">9</span></b><span class="gt"><i style="left:39.75%"></i></span></span><div class="frac">239/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">21</span>.<span class="f">3</span></b><span class="gt"><i style="width:53.25%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">32</span>.<span class="f">3</span></b><span class="gt"><i style="left:80.74999999999999%"></i></span></span><div class="frac">239/741 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">15</span>.<span class="f">9</span></b><span class="gt"><i style="left:39.75%"></i></span></span><div class="frac">239/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Open Code Review v1.3.1</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -411,7 +406,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-04" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">21</span>.<span class="f">2</span></b><span class="gt"><i style="width:53%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">25</span>.<span class="f">2</span></b><span class="gt"><i style="left:63%"></i></span></span><div class="frac">276/1096 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">18</span>.<span class="f">3</span></b><span class="gt"><i style="left:45.75%"></i></span></span><div class="frac">276/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">21</span>.<span class="f">2</span></b><span class="gt"><i style="width:53%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">25</span>.<span class="f">2</span></b><span class="gt"><i style="left:63%"></i></span></span><div class="frac">276/1096 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">18</span>.<span class="f">3</span></b><span class="gt"><i style="left:45.75%"></i></span></span><div class="frac">276/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Open Code Review v1.3.1</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -437,7 +432,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-05" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">21</span>.<span class="f">0</span></b><span class="gt"><i style="width:52.5%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">32</span>.<span class="f">1</span></b><span class="gt"><i style="left:80.25%"></i></span></span><div class="frac">234/728 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">15</span>.<span class="f">5</span></b><span class="gt"><i style="left:38.75%"></i></span></span><div class="frac">234/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">21</span>.<span class="f">0</span></b><span class="gt"><i style="width:52.5%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">32</span>.<span class="f">1</span></b><span class="gt"><i style="left:80.25%"></i></span></span><div class="frac">234/728 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">15</span>.<span class="f">5</span></b><span class="gt"><i style="left:38.75%"></i></span></span><div class="frac">234/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Open Code Review v1.3.1</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -463,7 +458,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-06" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">20</span>.<span class="f">4</span></b><span class="gt"><i style="width:51%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">28</span>.<span class="f">9</span></b><span class="gt"><i style="left:72.24999999999999%"></i></span></span><div class="frac">237/820 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">15</span>.<span class="f">7</span></b><span class="gt"><i style="left:39.24999999999999%"></i></span></span><div class="frac">237/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">20</span>.<span class="f">4</span></b><span class="gt"><i style="width:51%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">28</span>.<span class="f">9</span></b><span class="gt"><i style="left:72.24999999999999%"></i></span></span><div class="frac">237/820 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">15</span>.<span class="f">7</span></b><span class="gt"><i style="left:39.24999999999999%"></i></span></span><div class="frac">237/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Open Code Review v1.3.1</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -489,7 +484,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-07" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">17</span>.<span class="f">9</span></b><span class="gt"><i style="width:44.74999999999999%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">37</span>.<span class="f">8</span></b><span class="gt"><i style="left:94.5%"></i></span></span><div class="frac">176/465 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">11</span>.<span class="f">7</span></b><span class="gt"><i style="left:29.25%"></i></span></span><div class="frac">176/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">17</span>.<span class="f">9</span></b><span class="gt"><i style="width:44.74999999999999%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">37</span>.<span class="f">8</span></b><span class="gt"><i style="left:94.5%"></i></span></span><div class="frac">176/465 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">11</span>.<span class="f">7</span></b><span class="gt"><i style="left:29.25%"></i></span></span><div class="frac">176/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Open Code Review v1.3.1</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -515,7 +510,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-08" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">17</span>.<span class="f">9</span></b><span class="gt"><i style="width:44.74999999999999%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">30</span>.<span class="f">6</span></b><span class="gt"><i style="left:76.5%"></i></span></span><div class="frac">191/624 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">12</span>.<span class="f">7</span></b><span class="gt"><i style="left:31.75%"></i></span></span><div class="frac">191/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">17</span>.<span class="f">9</span></b><span class="gt"><i style="width:44.74999999999999%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">30</span>.<span class="f">6</span></b><span class="gt"><i style="left:76.5%"></i></span></span><div class="frac">191/624 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">12</span>.<span class="f">7</span></b><span class="gt"><i style="left:31.75%"></i></span></span><div class="frac">191/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Open Code Review v1.3.1</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -541,7 +536,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-09" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">14</span>.<span class="f">13</span></b><span class="gt"><i style="width:35.325%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">15</span>.<span class="f">93</span></b><span class="gt"><i style="left:39.825%"></i></span></span><div class="frac">191/1200 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">12</span>.<span class="f">7</span></b><span class="gt"><i style="left:31.75%"></i></span></span><div class="frac">191/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">14</span>.<span class="f">13</span></b><span class="gt"><i style="width:35.325%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">15</span>.<span class="f">93</span></b><span class="gt"><i style="left:39.825%"></i></span></span><div class="frac">191/1200 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">12</span>.<span class="f">7</span></b><span class="gt"><i style="left:31.75%"></i></span></span><div class="frac">191/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Claude Code v2.1.169</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -567,7 +562,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-10" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">12</span>.<span class="f">17</span></b><span class="gt"><i style="width:30.425%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">8</span>.<span class="f">23</span></b><span class="gt"><i style="left:20.575000000000003%"></i></span></span><div class="frac">351/4260 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">23</span>.<span class="f">37</span></b><span class="gt"><i style="left:58.425000000000004%"></i></span></span><div class="frac">351/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">12</span>.<span class="f">17</span></b><span class="gt"><i style="width:30.425%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">8</span>.<span class="f">23</span></b><span class="gt"><i style="left:20.575000000000003%"></i></span></span><div class="frac">351/4260 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">23</span>.<span class="f">37</span></b><span class="gt"><i style="left:58.425000000000004%"></i></span></span><div class="frac">351/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Claude Code v2.1.169</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -593,7 +588,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-11" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">11</span>.<span class="f">93</span></b><span class="gt"><i style="width:29.825000000000003%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">8</span>.<span class="f">37</span></b><span class="gt"><i style="left:20.925%"></i></span></span><div class="frac">313/3742 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">20</span>.<span class="f">8</span></b><span class="gt"><i style="left:52%"></i></span></span><div class="frac">313/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">11</span>.<span class="f">93</span></b><span class="gt"><i style="width:29.825000000000003%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">8</span>.<span class="f">37</span></b><span class="gt"><i style="left:20.925%"></i></span></span><div class="frac">313/3742 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">20</span>.<span class="f">8</span></b><span class="gt"><i style="left:52%"></i></span></span><div class="frac">313/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Claude Code v2.1.169</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -619,7 +614,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-12" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">11</span>.<span class="f">57</span></b><span class="gt"><i style="width:28.925%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">7</span>.<span class="f">23</span></b><span class="gt"><i style="left:18.075000000000003%"></i></span></span><div class="frac">435/5980 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">28</span>.<span class="f">9</span></b><span class="gt"><i style="left:72.24999999999999%"></i></span></span><div class="frac">435/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">11</span>.<span class="f">57</span></b><span class="gt"><i style="width:28.925%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">7</span>.<span class="f">23</span></b><span class="gt"><i style="left:18.075000000000003%"></i></span></span><div class="frac">435/5980 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">28</span>.<span class="f">9</span></b><span class="gt"><i style="left:72.24999999999999%"></i></span></span><div class="frac">435/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Claude Code v2.1.169</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -645,7 +640,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-13" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">10</span>.<span class="f">93</span></b><span class="gt"><i style="width:27.325%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">8</span>.<span class="f">27</span></b><span class="gt"><i style="left:20.674999999999997%"></i></span></span><div class="frac">243/2945 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">16</span>.<span class="f">13</span></b><span class="gt"><i style="left:40.325%"></i></span></span><div class="frac">243/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">10</span>.<span class="f">93</span></b><span class="gt"><i style="width:27.325%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">8</span>.<span class="f">27</span></b><span class="gt"><i style="left:20.674999999999997%"></i></span></span><div class="frac">243/2945 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">16</span>.<span class="f">13</span></b><span class="gt"><i style="left:40.325%"></i></span></span><div class="frac">243/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Claude Code v2.1.169</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -671,7 +666,7 @@ button,select{font:inherit;color:inherit}
       <span class="r n" data-k="instances">200</span><!--/instances-->
       <span class="chev"><i>›</i></span>
     </button><div class="det" id="det-pub-14" inert><div><div class="dbox">
-    <div class="ro"><div><div class="k">F1<span>0 – 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">8</span>.<span class="f">36</span></b><span class="gt"><i style="width:20.9%"></i></span></span></div><div><div class="k">Precision<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">27</span>.<span class="f">82</span></b><span class="gt"><i style="left:69.55%"></i></span></span><div class="frac">74/266 comments matched</div></div><div><div class="k">Recall<span>0 – 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">4</span>.<span class="f">92</span></b><span class="gt"><i style="left:12.3%"></i></span></span><div class="frac">74/1505 notes matched</div></div></div>
+    <div class="ro"><div><div class="k">F1<span>0 to 40 %</span></div><span class="g bar-k"><b class="gv"><span class="i">8</span>.<span class="f">36</span></b><span class="gt"><i style="width:20.9%"></i></span></span></div><div><div class="k">Precision<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">27</span>.<span class="f">82</span></b><span class="gt"><i style="left:69.55%"></i></span></span><div class="frac">74/266 comments matched</div></div><div><div class="k">Recall<span>0 to 40 %</span></div><span class="g ndl"><b class="gv"><span class="i">4</span>.<span class="f">92</span></b><span class="gt"><i style="left:12.3%"></i></span></span><div class="frac">74/1505 notes matched</div></div></div>
     <dl class="spec">
       <div class="w2"><dt>Version</dt><dd>Codex v0.140.0</dd></div>
       <div><dt>Measured by</dt><dd><i class="sw pub"></i> Published by Open Code Review</dd></div>
@@ -685,7 +680,7 @@ button,select{font:inherit;color:inherit}
     </dl>
     <div class="cite"><code>Codex · GPT-5.5: F1 8.36 %, precision 27.82 %, recall 4.92 %; AACR-Bench, 200 instances; judge not published; published by open code review; read 2026-10-31.</code><button type="button" class="btn m" data-copy="Codex · GPT-5.5: F1 8.36 %, precision 27.82 %, recall 4.92 %; AACR-Bench, 200 instances; judge not published; published by open code review; read 2026-10-31.">Copy</button><a class="pp" href="../paper/">The paper →</a></div>
   </div></div></div></div><!--/rows--></div></div>
-<div class="tfoot"><span>scale 0 – 40 % on F1, precision, recall</span><span>— no figure in the source</span><span>published rows read 2026-10-31</span><span>our rows: DA d3</span><a href="#method">Method ↓</a></div>
+<div class="tfoot"><span>scale 0 to 40 % on F1, precision, recall</span><span>n/a: no figure in the source</span><span>published rows read 2026-10-31</span><span>our rows: DA d3</span><a href="#method">Method ↓</a></div>
 <section class="sec rv" id="method"><span class="eyebrow">Method</span><h2>How each row was measured</h2>
     <div class="mgrid">
       <div class="mc"><span class="id">M1</span><h3>The benchmark</h3><dl><dt>Set</dt><dd>AACR-Bench (200 pull requests, 50 repositories, 10 languages, 1,505 verified comments; arXiv 2601.19494)</dd><dt>Instance</dt><dd>one pull request and its human review notes</dd></dl></div>
@@ -711,8 +706,13 @@ button,select{font:inherit;color:inherit}
     </div>
   </section>
 </main>
-<footer class="foot"><div class="wrap fw"><div class="wm"><a class="logo" href="../"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><span>Differential attestation is built by Nexus. lean is the checker inside it.</span></div>
-  <nav class="fl" aria-label="Footer"><a href="https://github.com/NexusGPT/lean">lean</a><a href="https://github.com/NexusGPT/differential-attestation">differential-attestation</a><a href="./">benchmark</a><a href="../paper/">paper</a><a href="https://gpt.nexus">Nexus</a></nav></div></footer>
+<footer class="foot" data-pagefind-ignore>
+  <div class="wm">
+    <a class="logo" href="/"><span class="mark" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a>
+    <span>Differential attestation is built by Nexus. lean is the checker inside it.</span>
+  </div>
+  <nav class="fl" aria-label="Footer"><a href="/benchmark/">benchmark</a><a href="/quick-start/">quick start</a><a href="/docs/">docs</a><a href="/paper/">paper</a><a href="https://github.com/NexusGPT/lean">lean</a><a href="https://github.com/NexusGPT/differential-attestation">differential-attestation</a><a href="https://gpt.nexus">Nexus</a></nav>
+</footer>
 <script type="application/json" id="lb-data">{"benchmark":"AACR-Bench (200 pull requests, 50 repositories, 10 languages, 1,505 verified comments; arXiv 2601.19494)","columns":{"f1":"percent; the harmonic mean of precision and recall over the judge's matches","precision":"tool comments matched / tool comments","recall":"human notes matched / human notes","avg_time":"wall time per pull request as published","avg_tokens":"tokens per pull request as published","measured_by":"who ran the judge: our run of the official pipeline, or the numbers Open Code Review publishes; rows of the two were not judged in one run"},"rows":[{"id":"da-lean-opus","system":"DA + lean","model":"claude-opus-5-5 (reader) with a claude-opus-4-8 filter","vendor":"Nexus","measured_by":"Measured by us","version":"DA d3 (composed entry: d2-reader + gate + C4), lean v0.1.2 findings","f1":31.61,"precision":34.09,"recall":29.47,"avg_time":null,"avg_tokens":null,"instances":184,"notes":1414,"judge":"claude-opus-5-5","rounds":3,"comments":1059,"source":"research/open-code-review/d3/RESULT.md '## Same instances' (DA repository)","read":"2026-10-31","judge_logs":"available"},{"id":"ocr-floor-opus46","system":"Open Code Review","model":"claude-opus-4-6","vendor":"Alibaba","measured_by":"Measured by us","version":"OCR 375f64c (the published reader, our run through the official pipeline)","f1":29.02,"precision":27.72,"recall":30.43,"avg_time":null,"avg_tokens":null,"instances":184,"notes":1414,"judge":"claude-opus-5-5","rounds":3,"comments":1426,"source":"research/open-code-review/d3/RESULT.md '## Same instances' (DA repository)","read":"2026-10-31","judge_logs":"available"},{"id":"pub-01","system":"Open Code Review","model":"Claude-4.6-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":25.1,"precision":33.9,"precision_fraction":"301/889","recall":20,"recall_fraction":"301/1505","avg_time":"1m23s","avg_tokens":"385K","avg_tokens_in_out":"375K / 10K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":889,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-02","system":"Open Code Review","model":"Qwen3.8-Max","vendor":"Alibaba","measured_by":"Published by Open Code Review","version":"Open Code Review v1.8.7","f1":23,"precision":33.9,"precision_fraction":"262/774","recall":17.4,"recall_fraction":"262/1505","avg_time":"5m14s","avg_tokens":"334K","avg_tokens_in_out":"303K / 32K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":774,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-03","system":"Open Code Review","model":"GLM-5.2","vendor":"Zhipu AI","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":21.3,"precision":32.3,"precision_fraction":"239/741","recall":15.9,"recall_fraction":"239/1505","avg_time":"7m58s","avg_tokens":"682K","avg_tokens_in_out":"624K / 58K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":741,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-04","system":"Open Code Review","model":"Qwen3.7-Max","vendor":"Alibaba","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":21.2,"precision":25.2,"precision_fraction":"276/1096","recall":18.3,"recall_fraction":"276/1505","avg_time":"4m41s","avg_tokens":"625K","avg_tokens_in_out":"587K / 38K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":1096,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-05","system":"Open Code Review","model":"GPT-5.5","vendor":"OpenAI","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":21,"precision":32.1,"precision_fraction":"234/728","recall":15.5,"recall_fraction":"234/1505","avg_time":"2m51s","avg_tokens":"422K","avg_tokens_in_out":"409K / 13K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":728,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-06","system":"Open Code Review","model":"GLM-5.1","vendor":"Zhipu AI","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":20.4,"precision":28.9,"precision_fraction":"237/820","recall":15.7,"recall_fraction":"237/1505","avg_time":"4m11s","avg_tokens":"743K","avg_tokens_in_out":"707K / 36K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":820,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-07","system":"Open Code Review","model":"Claude-4.8-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":17.9,"precision":37.8,"precision_fraction":"176/465","recall":11.7,"recall_fraction":"176/1505","avg_time":"1m6s","avg_tokens":"352K","avg_tokens_in_out":"342K / 11K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":465,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-08","system":"Open Code Review","model":"Deepseek-V4-Pro","vendor":"DeepSeek","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":17.9,"precision":30.6,"precision_fraction":"191/624","recall":12.7,"recall_fraction":"191/1505","avg_time":"6m28s","avg_tokens":"394K","avg_tokens_in_out":"350K / 44K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":624,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-09","system":"Claude Code","model":"Claude-4.8-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":14.13,"precision":15.93,"precision_fraction":"191/1200","recall":12.7,"recall_fraction":"191/1505","avg_time":"5m38s","avg_tokens":"2,062K","avg_tokens_in_out":"2,039K / 23K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":1200,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-10","system":"Claude Code","model":"Qwen3.7-Max","vendor":"Alibaba","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":12.17,"precision":8.23,"precision_fraction":"351/4260","recall":23.37,"recall_fraction":"351/1505","avg_time":"8m6s","avg_tokens":"5,153K","avg_tokens_in_out":"5,108K / 44K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":4260,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-11","system":"Claude Code","model":"GLM-5.1","vendor":"Zhipu AI","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":11.93,"precision":8.37,"precision_fraction":"313/3742","recall":20.8,"recall_fraction":"313/1505","avg_time":"14m10s","avg_tokens":"4,038K","avg_tokens_in_out":"3,998K / 39K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":3742,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-12","system":"Claude Code","model":"Claude-4.6-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":11.57,"precision":7.23,"precision_fraction":"435/5980","recall":28.9,"recall_fraction":"435/1505","avg_time":"13m6s","avg_tokens":"5,664K","avg_tokens_in_out":"5,603K / 60K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":5980,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-13","system":"Claude Code","model":"Deepseek-V4-Pro","vendor":"DeepSeek","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":10.93,"precision":8.27,"precision_fraction":"243/2945","recall":16.13,"recall_fraction":"243/1505","avg_time":"14m24s","avg_tokens":"5,450K","avg_tokens_in_out":"5,389K / 60K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":2945,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-14","system":"Codex","model":"GPT-5.5","vendor":"OpenAI","measured_by":"Published by Open Code Review","version":"Codex v0.140.0","f1":8.36,"precision":27.82,"precision_fraction":"74/266","recall":4.92,"recall_fraction":"74/1505","avg_time":"2m58s","avg_tokens":"525K","avg_tokens_in_out":"520K / 5K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":266,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"}],"escaped_defects":{"strongest_reader":10,"recordings":22,"recordings_and_proof":31,"of":43,"clean_refused_reader":22,"clean_refused_recordings":4,"source":"the paper's abstract (paper v3)"},"unscored":{"count":12,"of":196,"reason":"11 commits GitHub no longer serves, 1 reader failure","source":"research/open-code-review/d3/RESULT.md"}}</script>
 <script type="application/json" id="lb-opt">{"logs":{},"paper":"../paper/"}</script>
 <script>
@@ -759,7 +759,7 @@ function benchView(DATA, opt) {
   const newState = () => ({ sys: new Set(), by: new Set(), sort: { key: 'f1', dir: 'desc' }, open: new Set(), sheet: false });
 
   function gauge(v, cls) {
-    if (v == null) return '<span class="g none">—</span>';
+    if (v == null) return '<span class="g none">n/a</span>';
     const pct = Math.min(100, v / SCALE * 100);
     const mark = cls.startsWith('bar-k') ? `width:${pct}%` : `left:${pct}%`;
     return `<span class="g ${cls}"><b class="gv">${dec(v)}</b><span class="gt"><i style="${mark}"></i></span></span>`;
@@ -804,7 +804,7 @@ function benchView(DATA, opt) {
         : `<span class="off">${r.rounds ? r.rounds + ' rounds, ' : ''}kept in the DA repository</span><small>not copied to this site yet</small>`)
       : `<span class="off">${esc(r.judge_logs)}</span><small>the source publishes scores, not verdicts</small>`;
     const c = cite(r);
-    const ro = (lab, v, cls, frac) => `<div><div class="k">${lab}<span>0 – ${SCALE} %</span></div>${gauge(v, cls)}${frac ? `<div class="frac">${esc(frac)}</div>` : ''}</div>`;
+    const ro = (lab, v, cls, frac) => `<div><div class="k">${lab}<span>0 to ${SCALE} %</span></div>${gauge(v, cls)}${frac ? `<div class="frac">${esc(frac)}</div>` : ''}</div>`;
     const src = /^https?:/.test(r.source) ? `<a href="${esc(r.source.split(' ')[0])}">${esc(r.source)}</a>` : esc(r.source);
     return `<div class="det" id="det-${esc(r.id)}"${open ? '' : ' inert'}><div><div class="dbox">
     <div class="ro">${ro('F1', r.f1, 'bar-k', '')}${ro('Precision', r.precision, 'ndl', r.precision_fraction ? r.precision_fraction + ' comments matched' : '')}${ro('Recall', r.recall, 'ndl', r.recall_fraction ? r.recall_fraction + ' notes matched' : '')}</div>
@@ -815,7 +815,7 @@ function benchView(DATA, opt) {
       <div><dt>Notes · comments</dt><dd>${thou(r.notes)} human notes<small>${thou(r.comments)} tool comments</small></dd></div>
       <div><dt>Judge</dt><dd>${esc(r.judge)}${r.rounds ? `<small>${r.rounds} rounds, mean reported</small>` : ''}</dd></div>
       <div class="w2"><dt>Source</dt><dd>${src}<small>read ${esc(r.read)}</small></dd></div>
-      <div><dt>Time · tokens per PR</dt><dd>${r.avg_time ? esc(r.avg_time) + ' · ' + esc(r.avg_tokens) : '—'}<small>${r.avg_tokens_in_out ? 'in / out ' + esc(r.avg_tokens_in_out) : 'no figure in the source'}</small></dd></div>
+      <div><dt>Time · tokens per PR</dt><dd>${r.avg_time ? esc(r.avg_time) + ' · ' + esc(r.avg_tokens) : 'n/a'}<small>${r.avg_tokens_in_out ? 'in / out ' + esc(r.avg_tokens_in_out) : 'no figure in the source'}</small></dd></div>
       <div class="w2"><dt>Judge logs</dt><dd>${logs}</dd></div>
       <div><dt>Model · vendor</dt><dd>${esc(r.model)}<small>${esc(r.vendor)}</small></dd></div>
     </dl>
@@ -825,9 +825,9 @@ function benchView(DATA, opt) {
 
   function rowHtml(o, st) {
     const r = o.r, k = kind(r), open = st.open.has(r.id);
-    const pos = o.pos == null ? '—' : String(o.pos).padStart(2, '0');
+    const pos = o.pos == null ? 'n/a' : String(o.pos).padStart(2, '0');
     const tag = k === 'own' ? 'by us' : 'by Open Code Review';
-    const n = (key, v) => `<span class="r n${v ? '' : ' none'}" data-k="${key}">${v ? esc(v) : '—'}</span><!--/${key}-->`;
+    const n = (key, v) => `<span class="r n${v ? '' : ' none'}" data-k="${key}">${v ? esc(v) : 'n/a'}</span><!--/${key}-->`;
     return `<div class="tr ${k}${open ? ' open' : ''}" data-id="${esc(r.id)}">
     <button type="button" class="row" aria-expanded="${open}" aria-controls="det-${esc(r.id)}">
       <span class="rail"></span><span class="pos">${pos}</span>
@@ -902,7 +902,7 @@ function benchView(DATA, opt) {
 
   function tfootHtml(state) {
     if (state === 'error') return '';
-    return `<span>scale 0 – ${SCALE} % on F1, precision, recall</span><span>— no figure in the source</span><span>published rows read ${esc(pub[0].read)}</span><span>our rows: ${esc(own[0].version.split(' (')[0])}</span><a href="#method">Method ↓</a>`;
+    return `<span>scale 0 to ${SCALE} % on F1, precision, recall</span><span>n/a: no figure in the source</span><span>published rows read ${esc(pub[0].read)}</span><span>our rows: ${esc(own[0].version.split(' (')[0])}</span><a href="#method">Method ↓</a>`;
   }
 
   function pheadHtml() {
