@@ -43,7 +43,9 @@
   let lit = null, seeds = null, buf = null, glowImg = null; const off = document.createElement('canvas'), octx = off.getContext('2d'); const gridCv = document.createElement('canvas');
   const avoid = { cx: 0, cy: 0, rx: 1, ry: 1 }, steerE = { rx: 1, ry: 1 }, patrol = { cx: 0, cy: 0, a: 1, b: 1, per: 1 };
   function measure() {
-    const r = avoidEl.getBoundingClientRect(); const y = r.top + scrollY; // at the top of the page, where the hero is read
+    // on a phone the copy block fills the top half and the koi vanished behind the card (strip-390.png); there the fish avoid the headline alone
+    const el = (innerWidth <= 760 && avoidEl.querySelector('h1')) || avoidEl;
+    const r = el.getBoundingClientRect(); const y = r.top + scrollY; // at the top of the page, where the hero is read
     // the ellipse through the corners of the copy block, with the block's own aspect
     avoid.cx = r.left + r.width / 2; avoid.cy = y + r.height / 2; avoid.rx = Math.max(1, r.width / Math.SQRT2); avoid.ry = Math.max(1, r.height / Math.SQRT2);
     // body length from the viewport, then shrunk until the free water holds a patrol at least 0.65 body lengths across its short radius

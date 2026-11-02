@@ -5,15 +5,15 @@
   "seeds": [
    {
     "seed": 1,
-    "minE2": 2.219
+    "minE2": 2.229
    },
    {
     "seed": 2,
-    "minE2": 2.899
+    "minE2": 2.816
    },
    {
     "seed": 3,
-    "minE2": 2.2
+    "minE2": 2.197
    }
   ],
   "rule": "min over all lit body samples of ((x-cx)/rx)^2+((y-cy)/ry)^2 >= 1"
@@ -24,15 +24,15 @@
   "seeds": [
    {
     "seed": 1,
-    "minE2": 1.81
+    "minE2": 8.674
    },
    {
     "seed": 2,
-    "minE2": 1.879
+    "minE2": 10.011
    },
    {
     "seed": 3,
-    "minE2": 1.842
+    "minE2": 8.714
    }
   ],
   "rule": "min over all lit body samples of ((x-cx)/rx)^2+((y-cy)/ry)^2 >= 1"
@@ -51,8 +51,8 @@
     "seed": 1,
     "koi": 2,
     "circuits": [
-     162.7,
-     149.4
+     162.6,
+     149.3
     ]
    },
    {
@@ -67,8 +67,8 @@
     "seed": 1,
     "koi": 0,
     "circuits": [
-     151.5,
-     149.7
+     152.2,
+     149.6
     ]
    },
    {
@@ -84,14 +84,14 @@
     "koi": 1,
     "circuits": [
      162.6,
-     148.8
+     148.7
     ]
    },
    {
     "seed": 2,
     "koi": 0,
     "circuits": [
-     158,
+     158.1,
      130.5
     ]
    },
@@ -99,7 +99,7 @@
     "seed": 3,
     "koi": 2,
     "circuits": [
-     139.7,
+     139.6,
      137.7
     ]
    },
@@ -127,80 +127,80 @@
    120,
    180
   ],
-  "min": 127.7,
-  "max": 166.5,
+  "min": 129.9,
+  "max": 164.9,
   "n": 18,
   "per": [
    {
     "seed": 1,
     "koi": 2,
     "circuits": [
-     154,
-     145.8
+     156.2,
+     143.1
     ]
    },
    {
     "seed": 1,
     "koi": 1,
     "circuits": [
-     149.5,
-     160.3
+     148.3,
+     162.8
     ]
    },
    {
     "seed": 1,
     "koi": 0,
     "circuits": [
-     148.7,
-     161.2
+     146.6,
+     158.8
     ]
    },
    {
     "seed": 2,
     "koi": 2,
     "circuits": [
-     163.3,
+     164.2,
+     142.3
+    ]
+   },
+   {
+    "seed": 2,
+    "koi": 1,
+    "circuits": [
+     136.4,
+     143.7
+    ]
+   },
+   {
+    "seed": 2,
+    "koi": 0,
+    "circuits": [
+     151.5,
+     129.9
+    ]
+   },
+   {
+    "seed": 3,
+    "koi": 2,
+    "circuits": [
+     157.4,
      141.5
     ]
    },
    {
-    "seed": 2,
-    "koi": 1,
-    "circuits": [
-     137.9,
-     142.6
-    ]
-   },
-   {
-    "seed": 2,
-    "koi": 0,
-    "circuits": [
-     157.9,
-     138.1
-    ]
-   },
-   {
-    "seed": 3,
-    "koi": 2,
-    "circuits": [
-     157.8,
-     143.3
-    ]
-   },
-   {
     "seed": 3,
     "koi": 1,
     "circuits": [
-     166.5,
-     127.7
+     164.9,
+     132.2
     ]
    },
    {
     "seed": 3,
     "koi": 0,
     "circuits": [
-     139.4,
-     137.3
+     139.6,
+     139.5
     ]
    }
   ]
@@ -208,7 +208,7 @@
  "budget 1440x900": {
   "ok": true,
   "frames": 600,
-  "avgMs": 3.437,
+  "avgMs": 0.426,
   "limitMs": 4
  },
  "guard hidden tab": {
@@ -220,13 +220,13 @@
   "hidden": {
    "idle": true,
    "running": false,
-   "frames": 45,
+   "frames": 290,
    "framesWhileHidden": 0
   },
   "back": {
    "idle": false,
    "running": true,
-   "frames": 67
+   "frames": 471
   }
  },
  "guard hero off screen": {
@@ -241,24 +241,24 @@
   }
  },
  "guard resize re-measures": {
-  "ok": true,
+  "ok": false,
   "at1440": {
-   "cx": 394,
+   "cx": 397.8203125,
    "cy": 352.015625,
-   "rx": 347.89653634378135,
+   "rx": 353.29927409378485,
    "ry": 236.2399561770431
   },
   "at390": {
    "cx": 195,
-   "cy": 293.4375,
+   "cy": 208.4375,
    "rx": 247.48737341529161,
-   "ry": 243.86345116171057
+   "ry": 52.94462024134274
   },
   "fromDom": {
    "cx": 195,
-   "cy": 293.4375,
+   "cy": 281.4375,
    "rx": 247.48737341529161,
-   "ry": 243.86345116171057
+   "ry": 226.8928884132334
   }
  },
  "no page errors": {

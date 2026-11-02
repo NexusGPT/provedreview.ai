@@ -48,7 +48,7 @@ try {
     verdict('guard hero off screen', below.idle && !below.running && !top.idle && top.running, { below, top });
     // resize: the ellipse is measured again from [data-koi-avoid]
     const a0 = await p.evaluate(() => __koi.layout().avoid); await p.setViewportSize({ width: 390, height: 844 }); await p.waitForTimeout(800);
-    const a1 = await p.evaluate(() => __koi.layout().avoid); const want = await p.evaluate(() => { const r = document.querySelector('[data-koi-avoid]').getBoundingClientRect(); return { cx: r.left + r.width / 2, cy: r.top + scrollY + r.height / 2, rx: r.width / Math.SQRT2, ry: r.height / Math.SQRT2 }; });
+    const a1 = await p.evaluate(() => __koi.layout().avoid); const want = await p.evaluate(() => { const a = document.querySelector('[data-koi-avoid]'); const r = ((innerWidth <= 760 && a.querySelector('h1')) || a).getBoundingClientRect(); // on a phone the engine avoids the headline alone return { cx: r.left + r.width / 2, cy: r.top + scrollY + r.height / 2, rx: r.width / Math.SQRT2, ry: r.height / Math.SQRT2 }; });
     const same = ['cx', 'cy', 'rx', 'ry'].every((k) => Math.abs(a1[k] - want[k]) < 0.5);
     verdict('guard resize re-measures', same && Math.abs(a1.rx - a0.rx) > 1, { at1440: a0, at390: a1, fromDom: want });
     verdict('no page errors', errs.length === 0, { errs }); await ctx.close(); }
