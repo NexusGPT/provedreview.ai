@@ -1,0 +1,26 @@
+{
+  "name": "provedreview-site",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "node scripts/build.mjs",
+    "check": "node scripts/build.mjs --check",
+    "preview": "node scripts/preview.mjs",
+    "links": "node scripts/links.mjs",
+    "validate": "node scripts/validate.mjs",
+    "shots": "node scripts/shots.mjs",
+    "test": "node --test scripts/*.test.mjs"
+  },
+  "dependencies": {
+    "@fontsource/inter": "5.3.0",
+    "@fontsource/jetbrains-mono": "5.3.0",
+    "@fontsource/source-serif-4": "5.3.1",
+    "html-validate": "11.18.0",
+    "marked": "18.1.2",
+    "pagefind": "1.6.0",
+    "shiki": "4.6.0"
+  }
+}

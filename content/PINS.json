@@ -1,0 +1,8 @@
+{
+  "lean": {
+    "repo": "https://github.com/NexusGPT/lean",
+    "tag": "v0.1.3",
+    "commit": "dbe9a32fbed3628bcd9859f3a9c20baedd94be18",
+    "files": ["README.md"]
+  }
+}
