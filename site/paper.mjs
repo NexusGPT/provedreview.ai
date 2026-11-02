@@ -24,8 +24,8 @@ export async function body() {
   <!-- src: paper@1c557a1 v3/main.tex:20 \\title; DA README "## The paper": "draft of 26 October 2026" -->
   <h1>${esc(TITLE)}</h1>
   <p class="meta"><span>Draft of 26 October 2026</span></p>
-  <!-- PDF and authors [pending source]: the paper repository (unreviewable-throughput/paper @1c557a1) is not on the build machine; the PDF ships under /paper/ once it is vendored -->
-  <div class="btns"><a class="btn p" href="#cite">Cite</a><a class="btn" href="${DA}">The DA repository →</a><a class="btn" href="${GITHUB}">lean on GitHub</a></div>
+  <!-- PDF: public/paper/differential-attestation.pdf = paper repository v3/main.pdf (commit a78f4ef, 31 Oct 2026, tectonic build). Authors and Figure 1 [pending source]: the PDF ships under /paper/ once it is vendored -->
+  <div class="btns"><a class="btn p" href="/public/paper/differential-attestation.pdf" download="differential-attestation.pdf" type="application/pdf">Download the PDF</a><a class="btn" href="#cite">Cite</a><a class="btn" href="${DA}">The DA repository →</a><a class="btn" href="${GITHUB}">lean on GitHub</a></div>
 </header>
 
 <section class="paper-sec" id="claim">
