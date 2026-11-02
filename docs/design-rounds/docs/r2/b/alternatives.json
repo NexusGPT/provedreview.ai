@@ -1,0 +1,10 @@
+[
+  {
+    "id": "B",
+    "rung": "style",
+    "title": "Terminal manual",
+    "axis": "mono-led: rail and contents in JetBrains Mono 13 with tree glyphs; Inter 16 tight column; code blocks dominate with a hanging line gutter and copy control; headings hang a mono anchor hash; the active path in the orange spark",
+    "entry": "index.html",
+    "worse_at": "mono navigation is about 20% wider and slower to scan, so long titles truncate and the 32-entry rail runs past the fold; long commands scroll sideways inside their blocks, mostly off-screen on the phone; the spark colour is also the WITNESS/REFUSE colour"
+  }
+]

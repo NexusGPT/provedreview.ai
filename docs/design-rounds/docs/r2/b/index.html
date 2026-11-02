@@ -1,0 +1,460 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Docs · style round 2 · B · terminal manual</title>
+<style>
+/* Font stacks: Inter → ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Liberation Sans", sans-serif
+   JetBrains Mono → ui-monospace, "SFMono-Regular", Menlo, Consolas, "DejaVu Sans Mono", monospace
+   Source Serif 4 → Georgia, "Times New Roman", serif (unused on this page: no paper text, no math) */
+:root{--sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI","Liberation Sans",sans-serif;--mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"DejaVu Sans Mono",monospace;--serif:"Source Serif 4",Georgia,"Times New Roman",serif;--bg:#0a0b0f;--fg:#e9eaee;--mut:#8b90a0;--dim:#5d6272;--glyph:#3a3e4b;--line:rgba(255,255,255,.08);--hair:rgba(255,255,255,.05);--steel:#9fb3c8;--cream:#f3efe6;--wit:#f0a08c;--ok:#8fd3b4;--ask:#e6c37a;--panel:#0d0e13;--code:#0c0d12}
+*{box-sizing:border-box}
+html,body{margin:0;background:#050608;color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+ul{list-style:none;margin:0;padding:0}
+
+/* ---------- the board around the frames (not the page) ---------- */
+.board{padding:32px 40px 80px;min-width:1520px}
+.bhead{display:flex;gap:18px;align-items:baseline;margin-bottom:6px;font-family:var(--mono);font-size:12px;color:var(--mut)}
+.badge{font-family:var(--mono);font-size:22px;font-weight:700;color:#050608;background:var(--cream);padding:2px 12px;border-radius:4px}
+.bhead h1{font-family:var(--sans);font-size:18px;font-weight:500;color:var(--fg);margin:0}
+.bnote{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--mut);max-width:150ch;margin:4px 0 0}
+.flabel{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);margin:44px 0 6px;display:flex;gap:12px;align-items:center}
+.flabel b{color:#050608;background:var(--cream);padding:1px 7px;border-radius:3px;letter-spacing:0}
+.fcap{font-family:var(--mono);font-size:11.5px;color:var(--mut);margin:0 0 10px;max-width:150ch;line-height:1.5}
+.frame{position:relative;outline:1px solid rgba(255,255,255,.14);background:var(--bg);overflow:hidden}
+.frame.d{width:1440px}.frame.p{width:390px}
+.phones{display:flex;gap:40px;align-items:flex-start}
+.phones>div{width:390px}
+.phones .fcap{min-height:52px}
+.fold{position:absolute;left:0;right:0;border-top:1px dashed var(--wit);z-index:30;pointer-events:none;opacity:.7}
+.fold span{position:absolute;right:10px;top:-19px;font-family:var(--mono);font-size:10.5px;color:var(--wit);background:var(--bg);padding:1px 6px}
+
+/* ---------- the page ---------- */
+.pg{background:var(--bg);font-size:16px;line-height:1.55;position:relative;min-height:100%}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 48px;font-size:14px;border-bottom:1px solid var(--line);height:61px}
+.p .nav{padding:14px 16px;height:57px}
+.logo{font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.logo .mark{display:grid;grid-template-columns:repeat(3,7px);gap:1px}.logo .mark i{display:block;width:7px;height:7px;background:var(--steel);border-radius:1px;opacity:.9}.logo .mark i:nth-child(2),.logo .mark i:nth-child(4),.logo .mark i:nth-child(9){opacity:.35}
+.links{display:flex;gap:28px;color:var(--mut);align-items:center}
+.links a.cur{color:var(--fg);position:relative}.links a.cur::after{content:"";position:absolute;left:0;right:0;bottom:-21px;height:2px;background:var(--fg)}
+.btn{font-size:13px;padding:8px 13px;border-radius:7px;display:inline-flex;align-items:center;gap:8px;font-weight:500;border:1px solid var(--line);background:rgba(255,255,255,.04);white-space:nowrap}
+.p .links{gap:8px}.p .links a:not(.btn){display:none}
+
+.g3{display:grid;grid-template-columns:280px minmax(0,1fr) 240px;align-items:start}
+.gl{font-family:var(--mono);color:var(--glyph);white-space:pre}
+
+/* rail: mono 13, tree glyphs, the active path in the spark */
+.rail{border-right:1px solid var(--line);padding:18px 0 40px;font-family:var(--mono);font-size:13px;position:sticky;top:0;align-self:stretch;min-height:839px}
+.rh{padding:0 20px 14px;border-bottom:1px solid var(--hair);margin-bottom:12px}
+.sf{display:flex;align-items:center;gap:10px;height:36px;padding:0 10px;border:1px solid var(--line);border-radius:6px;background:var(--panel);font-family:var(--mono);font-size:13px;color:var(--dim)}
+.sf .pr{color:var(--wit)}
+.sf .ph{flex:1}
+.sf .q{color:var(--fg)}
+.sf .caret{width:7px;height:16px;background:var(--wit);margin-left:-8px;margin-right:auto;opacity:.85}
+.sf .kbd{font-size:11px;color:var(--mut);border:1px solid var(--line);border-radius:4px;padding:0 5px;line-height:18px}
+.sf.focus{border-color:rgba(240,160,140,.55);box-shadow:0 0 0 3px rgba(240,160,140,.08)}
+.rmeta{display:flex;justify-content:space-between;font-size:11px;color:var(--dim);margin-top:10px}
+.tree{padding:0 12px 0 20px}
+.sh{display:flex;align-items:center;gap:8px;height:28px;margin-top:10px;color:var(--cream)}
+.sh:first-child{margin-top:0}
+.sh b{font-weight:500;flex:1}
+.sh u{text-decoration:none;color:var(--dim);font-size:11px}
+.sh.on .gl{color:var(--wit)}
+.tree li{display:flex;align-items:center;height:26px;color:var(--mut);position:relative;padding-left:2px}
+.tree li .gl{margin-right:8px}
+.tree li a{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tree li.path .gl{color:rgba(240,160,140,.45)}
+.tree li.cur{color:var(--fg)}
+.tree li.cur::before{content:"";position:absolute;left:-20px;right:-12px;top:1px;bottom:1px;background:linear-gradient(90deg,rgba(240,160,140,.10),rgba(240,160,140,.02) 70%,transparent);border-left:2px solid var(--wit)}
+.tree li.cur .gl{color:var(--wit)}
+.spark{width:6px;height:6px;background:var(--wit);transform:rotate(45deg);margin-left:10px;flex:0 0 auto;box-shadow:0 0 8px rgba(240,160,140,.6)}
+.rail.clip{height:839px;min-height:0;overflow:hidden}
+.more{position:absolute;left:0;right:0;bottom:0;height:54px;display:flex;justify-content:space-between;align-items:flex-end;padding:0 20px 12px;font-size:11px;color:var(--mut);background:linear-gradient(transparent,var(--bg) 55%)}
+.more span:first-child{color:var(--bg);background:var(--mut);padding:0 4px}
+
+/* reading column: Inter 16 tight; headings hang a mono hash in the gutter */
+main{min-width:0}
+.col{width:720px;margin:0 0 0 96px;padding:40px 0 64px}
+.crumb{font-family:var(--mono);font-size:12px;color:var(--dim);display:flex;gap:8px;align-items:baseline}
+.crumb b{color:var(--wit);font-weight:400}
+.crumb em{font-style:normal;margin-left:auto;color:var(--dim)}
+h1{font-size:44px;line-height:1.05;letter-spacing:-.035em;font-weight:500;margin:14px 0 14px}
+.srcl{display:flex;flex-wrap:wrap;gap:6px 14px;font-family:var(--mono);font-size:12px;color:var(--dim);padding-bottom:18px;border-bottom:1px solid var(--line)}
+.srcl span:first-child{color:var(--bg);background:var(--dim);padding:0 5px;border-radius:2px}
+.srcl a{color:var(--steel)}
+.lede{font-size:18px;line-height:1.5;color:#c7ccd6;margin:22px 0 0;letter-spacing:-.01em}
+.col p{margin:12px 0 0;letter-spacing:-.006em;color:#d4d7de}
+.col p code,.col td code,.col dd code{font-family:var(--mono);font-size:.84em;color:var(--cream);background:rgba(255,255,255,.05);border:1px solid var(--hair);padding:1px 5px;border-radius:4px}
+.col p a,.note a{color:var(--steel);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(159,179,200,.35)}
+h2,h3{position:relative;font-weight:500;letter-spacing:-.02em;margin:52px 0 0}
+h2{font-size:26px;line-height:1.2}
+h3{font-size:19px;margin-top:36px}
+.hash{position:absolute;right:calc(100% + 14px);font-family:var(--mono);font-weight:400;color:var(--glyph);letter-spacing:0;white-space:nowrap}
+h2 .hash{font-size:20px;top:2px}h3 .hash{font-size:15px;top:2px}
+.tgt .hash{color:var(--wit)}
+.tgt::before{content:"";position:absolute;left:-60px;right:-40px;top:-10px;bottom:-10px;background:linear-gradient(90deg,transparent,rgba(240,160,140,.06) 12%,transparent 85%);z-index:-1}
+
+/* code blocks dominate: the line gutter hangs left of the text edge, the block runs 48 px wider than the prose */
+.cb{margin:20px 0 0 -48px;width:calc(100% + 48px + 64px);border:1px solid rgba(255,255,255,.09);border-radius:8px;background:var(--code);overflow:hidden}
+.cb figcaption{display:flex;align-items:center;gap:14px;height:36px;padding:0 8px 0 14px;border-bottom:1px solid var(--hair);background:rgba(255,255,255,.02);font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+.cb .lang{color:var(--cream);letter-spacing:.06em}
+.cb .src{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.cp{font-family:var(--mono);font-size:12px;color:var(--fg);border:1px solid var(--line);border-radius:5px;padding:0 10px;height:24px;background:rgba(255,255,255,.04)}
+.cp.ok{color:var(--ok);border-color:rgba(143,211,180,.35)}
+.cbody{padding:12px 0;overflow-x:auto;position:relative}
+.ln{display:flex;font-family:var(--mono);font-size:13.5px;line-height:23px;white-space:pre;min-width:max-content}
+.ln .no{flex:0 0 48px;text-align:right;padding-right:14px;color:var(--glyph);user-select:none;border-right:1px solid var(--hair);margin-right:16px;position:sticky;left:0;background:var(--code)}
+.ln code{color:#c7ccd6;padding-right:24px}
+.cbody::after{content:"";position:absolute;top:0;bottom:0;right:0;width:48px;background:linear-gradient(90deg,transparent,var(--code))}
+.cm{color:#6c7183}.fl{color:var(--steel)}.st{color:var(--cream)}.cmd{color:var(--fg)}.ln .ph{color:var(--ask)}
+.cb.out{background:#08090c;border-style:dashed;border-color:rgba(255,255,255,.1)}
+.cb.out .lang{color:var(--mut)}
+.cb.out .no{color:var(--dim);background:#08090c}
+.cb.out .cbody::after{display:none}
+.vw{color:var(--wit)}.vo{color:var(--ok)}.va{color:var(--ask)}
+
+/* tables: mono head, hairlines */
+.tw{margin:20px 0 0;overflow-x:auto;border-top:1px solid var(--line)}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);font-weight:400;text-align:left;padding:10px 14px 9px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 14px 9px 0;border-bottom:1px solid var(--hair);color:#d4d7de;vertical-align:top}
+td.n{font-family:var(--mono);font-size:13px;color:var(--fg)}
+td .va,td .vw{font-family:var(--mono);font-size:13px}
+table.wide td{overflow-wrap:anywhere}
+.p table.wide td{white-space:nowrap;overflow-wrap:normal}
+
+/* verdicts and the note */
+.vd{margin:14px 0 0;display:grid;gap:0;border-top:1px solid var(--hair)}
+.vd>div{display:grid;grid-template-columns:96px minmax(0,1fr);border-bottom:1px solid var(--hair);padding:8px 0}
+.vd dt{font-family:var(--mono);font-size:13px;letter-spacing:.04em}
+.vd dd{margin:0;font-size:15px;color:#d4d7de}
+.note{margin:24px 0 0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:14px;padding:14px 16px;border:1px solid rgba(159,179,200,.18);border-left:2px solid var(--steel);border-radius:0 6px 6px 0;background:rgba(159,179,200,.04)}
+.nl{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);line-height:23px}
+.note p{margin:0!important;font-size:15px;color:#d4d7de}
+
+/* prev / next */
+.pn{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:64px;padding-top:24px;border-top:1px solid var(--line)}
+.pn a{display:flex;flex-direction:column;gap:3px;padding:14px 16px;border:1px solid var(--line);border-radius:7px}
+.pn .next{text-align:right;border-color:rgba(240,160,140,.3)}
+.pn span{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.pn .next span{color:var(--wit)}
+.pn small{font-family:var(--mono);font-size:11px;color:var(--dim)}
+.pn b{font-weight:500;font-size:16px}
+
+/* right contents: mono 13, the same tree */
+.toc{position:sticky;top:0;padding:44px 20px 0 22px;border-left:1px solid var(--line);font-family:var(--mono);font-size:13px;align-self:stretch;min-height:839px}
+.toc.empty{border-left-color:transparent}
+.th{display:flex;justify-content:space-between;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:12px}
+.th u{text-decoration:none;letter-spacing:0}
+.troot{height:26px;display:flex;align-items:center;color:var(--cream);gap:8px}
+.tt a{display:flex;align-items:center;min-height:26px;color:var(--mut);position:relative}
+.tt a .gl{margin-right:8px}
+.tt a.cur{color:var(--fg)}
+.tt a.cur .gl{color:var(--wit)}
+.tt a{align-items:flex-start;padding:3px 0}.tt a .tx{line-height:20px}
+.tt a.cur::before{content:"";position:absolute;left:-15px;top:10px;width:6px;height:6px;background:var(--wit);transform:rotate(45deg);box-shadow:0 0 8px rgba(240,160,140,.6)}
+.tt a.path .gl{color:rgba(240,160,140,.45)}
+.tf{display:flex;gap:18px;margin-top:18px;padding-top:12px;border-top:1px solid var(--hair);font-size:11.5px;color:var(--dim)}
+
+.wrapf{padding:0 48px}
+.p .wrapf{padding:0 16px}
+.foot{padding:40px 0 56px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;border-top:1px solid var(--line);font-size:13.5px;color:var(--mut)}
+.foot .wm{display:flex;flex-direction:column;gap:10px}
+.foot .fl{display:flex;gap:22px;flex-wrap:wrap;font-family:var(--mono);font-size:12px}
+
+/* search panel over the column */
+.scrim{position:absolute;left:280px;right:0;top:61px;bottom:0;background:rgba(5,6,8,.72);z-index:8}
+.res{position:absolute;left:296px;top:72px;width:780px;z-index:9;background:var(--panel);border:1px solid rgba(255,255,255,.12);border-radius:10px;box-shadow:0 40px 90px -40px rgba(0,0,0,.95);overflow:hidden}
+.rc{display:flex;gap:14px;align-items:center;padding:12px 18px;border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;color:var(--mut)}
+.rc b{color:var(--fg);font-weight:400}
+.rc .qq{color:var(--cream)}
+.keys{margin-left:auto;color:var(--dim);display:flex;gap:5px;align-items:center}
+kbd{font-family:var(--mono);font-size:10.5px;border:1px solid var(--line);border-radius:3px;padding:0 4px;color:var(--mut)}
+.hit{display:block;padding:12px 18px 13px 20px;border-bottom:1px solid var(--hair);position:relative}
+.hit.sel{background:rgba(240,160,140,.06)}
+.hit.sel::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--wit)}
+.hp{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.hp span{color:var(--dim)}
+.hit b{display:block;font-weight:500;font-size:16px;margin:2px 0 3px}
+.hit.sel b{color:var(--cream)}
+.hit p{margin:0;font-size:14px;color:var(--mut);line-height:1.5}
+.hit mark{background:none;color:var(--fg);box-shadow:inset 0 -2px 0 rgba(240,160,140,.7)}
+.hit code{font-family:var(--mono);font-size:12.5px}
+.rempty{display:flex;align-items:center;gap:14px;padding:14px 18px;background:rgba(255,255,255,.015);font-family:var(--mono);font-size:12.5px;color:var(--mut);border-top:1px dashed rgba(255,255,255,.12)}
+.rempty .nl{color:var(--dim)}
+.rempty b{color:var(--fg);font-weight:400}
+.rempty .cp{margin-left:auto}
+
+/* landing: six sections as directory listings */
+.land h1{font-size:56px}
+.land .lede{margin-top:6px}
+.col p a.qs{color:var(--wit);text-decoration:none}
+.qs{color:var(--wit);font-family:var(--mono);font-size:15px}
+.secs{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:36px}
+.sec{display:block;border:1px solid var(--line);border-radius:8px;padding:16px 18px 14px;background:rgba(255,255,255,.012)}
+.sk{display:flex;gap:10px;align-items:baseline;font-family:var(--mono)}
+.sk .ix{color:var(--wit);font-size:12px}
+.sk b{font-family:var(--sans);font-weight:500;font-size:18px;letter-spacing:-.015em;flex:1}
+.sk u{text-decoration:none;font-size:11px;color:var(--dim)}
+.sec p{margin:6px 0 10px!important;font-size:14.5px;color:var(--mut)!important}
+.sec ul{font-family:var(--mono);font-size:13px;color:#c7ccd6;border-top:1px solid var(--hair);padding-top:8px}
+.sec li{height:23px;display:flex;align-items:center}
+.sec li .gl{margin-right:8px}
+.sec li.mo{color:var(--dim)}
+
+/* ---------- phone ---------- */
+.dbar{display:flex;gap:8px;padding:8px 16px;border-bottom:1px solid var(--line);background:rgba(10,11,15,.96);font-family:var(--mono);font-size:13px;position:relative;z-index:5}
+.dbar .mb{flex:1;display:flex;align-items:center;gap:10px;height:40px;padding:0 12px;border:1px solid var(--line);border-radius:6px;min-width:0}
+.dbar .mb.on{border-color:rgba(240,160,140,.5)}
+.dbar .mb .gl{color:var(--wit)}
+.dp{color:var(--dim);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.dp b{color:var(--fg);font-weight:400}
+.dbar .sb{height:40px;padding:0 12px;border:1px solid var(--line);border-radius:6px;color:var(--mut);display:flex;gap:8px;align-items:center}
+.dbar .sb .pr{color:var(--wit)}
+.dbar.s .sf{flex:1;height:40px}
+.dbar .cn{color:var(--steel);padding:0 4px}
+.pw .col{width:auto;margin:0;padding:28px 16px 48px}
+.p h1{font-size:34px;margin:10px 0 10px}
+.p .srcl{font-size:11.5px;gap:4px 10px}
+.p .lede{font-size:17px;margin-top:16px}
+.tocd{display:flex;align-items:center;gap:10px;width:100%;height:44px;margin-top:16px;padding:0 12px;border:1px solid var(--line);border-radius:6px;font-family:var(--mono);font-size:13px;color:var(--fg)}
+.tocd u{text-decoration:none;color:var(--dim);font-size:11.5px;flex:1;text-align:left}
+.tocd i{font-style:normal;color:var(--wit)}
+.p h2{font-size:23px;margin-top:40px}
+.p h3{font-size:18px}
+.p .hash{position:static;margin-right:10px;font-size:.8em}
+.p .tgt::before{display:none}
+.p .cb{margin:16px -16px 0;width:auto;border-radius:0;border-left:0;border-right:0}
+.p .ln{font-size:12.5px;line-height:21px}
+.p .ln .no{flex-basis:34px;padding-right:9px;margin-right:12px}
+.p .tw{margin-right:-16px}
+.p .vd>div{grid-template-columns:80px minmax(0,1fr)}
+.p .pn{grid-template-columns:minmax(0,1fr);gap:10px;margin-top:48px}
+.p .foot{padding:32px 0 40px}
+.sheetm{position:absolute;left:0;right:0;top:113px;bottom:0;background:var(--bg);z-index:6;padding:14px 0 0;font-family:var(--mono);font-size:14px;overflow:hidden;border-top:1px solid var(--hair)}
+.sheetm>.sf{margin:0 16px 12px}
+.sheetm .tree{padding:0 16px}
+.sheetm .tree li{height:40px}
+.sheetm .sh{height:34px;margin-top:6px}
+.sheetm .tree li.cur::before{left:-16px;right:-16px}
+.res.ph{position:static;width:auto;border:0;border-radius:0;box-shadow:none;background:var(--bg)}
+.res.ph .rc{padding:12px 16px}
+.res.ph .hit{padding:12px 16px 13px}
+.res.ph .rempty{padding:14px 16px}
+</style>
+</head>
+<body>
+<div class="board">
+  <div class="bhead"><span class="badge">B</span><h1>Docs, rung 2 (style) on layout A "rail": terminal manual</h1><span>blind · inception</span></div>
+  <p class="bnote">Axis: mono-led. The rail and the contents in JetBrains Mono 13 with tree glyphs; the reading column Inter 16, tight; code blocks dominate, 48 px wider than the prose, with a line gutter and a copy control; every heading hangs a mono anchor hash in the gutter; the active path (section glyph, rail entry, contents entry, breadcrumb leaf) in the orange spark #f0a08c. Loaded page: Getting started / Run it, written from NexusGPT/differential-attestation README.md "## Run it" at 9b4243d. Rail titles are the real files of lean docs/ (b5c0745) and DA docs/architecture (9b4243d). Fonts: system stand-ins, stacks named in the CSS head.</p>
+  <div class="flabel"><b>B</b>B · 1440 · page at rest</div><p class="fcap">Arrived from the rail. First screen only (1440 × 900). The rail is cut at the fold: "-- more --" marks the 12 pages below.</p>
+<div class="frame d" style="height:900px"><div class="pg"><div class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a class="" href="#">Benchmark</a><a class="" href="#">Quick start</a><a class="cur" href="#">Docs</a><a class="" href="#">Paper</a><a class="btn" href="#">GitHub</a></div></div><div class="g3"><aside class="rail clip"><div class="rh"><label class="sf"><span class="pr">/</span><span class="ph">search docs</span><span class="kbd">/</span></label><div class="rmeta"><span>docs/</span><span>32 pages · 6 sections</span></div></div><div class="tree"><div class="sh on"><span class="gl">▾</span><b>Getting started</b><u>04</u></div><ul><li class="cur"><span class="gl">├─</span><a href="#">Run it</a><i class="spark"></i></li><li class=""><span class="gl">├─</span><a href="#">A real pull request</a></li><li class=""><span class="gl">├─</span><a href="#">Three instruments</a></li><li class=""><span class="gl">└─</span><a href="#">What it is not</a></li></ul><div class="sh"><span class="gl">▾</span><b>Lean</b><u>10</u></div><ul><li class=""><span class="gl">├─</span><a href="#">How it works</a></li><li class=""><span class="gl">├─</span><a href="#">Verdicts</a></li><li class=""><span class="gl">├─</span><a href="#">Writing provable code</a></li><li class=""><span class="gl">├─</span><a href="#">Pull requests</a></li><li class=""><span class="gl">├─</span><a href="#">Front end</a></li><li class=""><span class="gl">├─</span><a href="#">Editor and agents</a></li><li class=""><span class="gl">├─</span><a href="#">Around lean</a></li><li class=""><span class="gl">├─</span><a href="#">Known values</a></li><li class=""><span class="gl">├─</span><a href="#">Limits</a></li><li class=""><span class="gl">└─</span><a href="#">Assurance</a></li></ul><div class="sh"><span class="gl">▾</span><b>Differential attestation</b><u>09</u></div><ul><li class=""><span class="gl">├─</span><a href="#">Architecture</a></li><li class=""><span class="gl">├─</span><a href="#">Assurance case</a></li><li class=""><span class="gl">├─</span><a href="#">Run record</a></li><li class=""><span class="gl">├─</span><a href="#">Predicate registry</a></li><li class=""><span class="gl">├─</span><a href="#">Preview</a></li><li class=""><span class="gl">├─</span><a href="#">Pixel-diff lane</a></li><li class=""><span class="gl">├─</span><a href="#">Producer tools</a></li><li class=""><span class="gl">├─</span><a href="#">Sandbox allow-list</a></li><li class=""><span class="gl">└─</span><a href="#">OCR advice</a></li></ul><div class="sh"><span class="gl">▾</span><b>The benchmark</b><u>04</u></div><ul><li class=""><span class="gl">├─</span><a href="#">AACR-Bench</a></li><li class=""><span class="gl">├─</span><a href="#">Escaped defects</a></li><li class=""><span class="gl">├─</span><a href="#">The four lanes</a></li><li class=""><span class="gl">└─</span><a href="#">Benchmark funnel</a></li></ul><div class="sh"><span class="gl">▾</span><b>Reference</b><u>04</u></div><ul><li class=""><span class="gl">├─</span><a href="#">CLI</a></li><li class=""><span class="gl">├─</span><a href="#">Exit codes</a></li><li class=""><span class="gl">├─</span><a href="#">Certificate</a></li><li class=""><span class="gl">└─</span><a href="#">Regression table</a></li></ul><div class="sh"><span class="gl">▾</span><b>FAQ</b><u>01</u></div><ul><li class=""><span class="gl">└─</span><a href="#">FAQ</a></li></ul></div><div class="more"><span>-- more --</span><span>↓ 12 pages</span></div></aside><main><article class="col">
+  <div class="crumb"><a href="#">docs</a><span>/</span><a href="#">getting-started</a><span>/</span><b>run-it</b><em>01 of 32</em></div>
+  <h1>Run it</h1>
+  <div class="srcl"><span>src</span><a href="#">NexusGPT/differential-attestation@9b4243d</a><span>README.md § Run it</span><span>pinned 2026-11-01</span></div>
+  
+  <p class="lede">Clone differential attestation, pin lean, check one pull request. Node 24 runs the check; Python 3 and Dafny 4 add the proof lane.</p>
+
+  <h2 id="requirements" class=""><a class="hash" href="#requirements">#</a>Requirements</h2>
+  <div class="tw"><table>
+    <thead><tr><th>tool</th><th>version</th><th>used by</th><th>if missing</th></tr></thead>
+    <tbody>
+      <tr><td><code>node</code></td><td class="n">24</td><td>lean, <code>pr.mjs</code></td><td>required</td></tr>
+      <tr><td><code>python3</code></td><td class="n">3</td><td>the proof lane, <code>benchmark/*.py</code></td><td>proof lane answers <span class="va">ASK</span></td></tr>
+      <tr><td><code>dafny</code></td><td class="n">4</td><td>the proof lane</td><td>proof lane answers <span class="va">ASK</span></td></tr>
+      <tr><td><code>git</code></td><td class="n">—</td><td>the <code>lean</code> submodule</td><td>required</td></tr>
+    </tbody></table></div>
+
+  <h2 id="clone" class=""><a class="hash" href="#clone">#</a>Clone and pin lean</h2>
+  <p>lean is a submodule, pinned to the lean <code>master</code> that passed the regression table.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:122–123</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cmd">git</span> clone <span class="st">https://github.com/NexusGPT/differential-attestation</span> && <span class="cmd">cd</span> differential-attestation</code></div><div class="ln"><span class="no">2</span><code><span class="cmd">git</span> submodule update <span class="fl">--init</span> lean            <span class="cm"># the checker, pinned to the admitted lean master</span></code></div></div></figure>
+
+  <h2 id="check" class=""><a class="hash" href="#check">#</a>Check one pull request</h2>
+  <p><code>pr.mjs</code> checks every changed function in the range and its callers, and prints one table. <code>--scope</code> names the functions the change was meant to touch; every other function must come out equal.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:125–126</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># one pull request: every changed function and its callers, one table</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">node</span> lean/langs/ts/pr.mjs <span class="fl">--repo</span> <span class="ph">&lt;checkout&gt;</span> <span class="fl">--base</span> <span class="ph">&lt;base sha&gt;</span> <span class="fl">--head</span> <span class="ph">&lt;head sha&gt;</span> <span class="fl">--scope</span> <span class="ph">&lt;function,Class.method&gt;</span></code></div></div></figure>
+  <p>Replay the AACR-Bench example: check out <code>immich-app/immich</code> and run <code>pr.mjs</code> on its pull request #17879.</p>
+  <figure class="cb out "><figcaption><span class="lang">output</span><span class="src">immich-app/immich#17879 · --base d0014bdf --head b7a12558</span></figcaption><div class="cbody"><div class="ln"><span class="no">›</span><code>d0014bdf → b7a12558</code></div><div class="ln"><span class="no">›</span><code>5 changed function(s): <span class="vw">4 WITNESS</span> · <span class="vo">0 PASS-proved</span> · <span class="vo">1 PASS-bounded</span> · <span class="va">0 ASK</span></code></div></div></figure>
+  <div class="tw"><table class="wide">
+    <thead><tr><th>file</th><th>function</th><th>verdict</th><th>note</th></tr></thead>
+    <tbody><tr><td><code>server/src/services/notification.service.ts</code></td><td><code>NotificationService.handleAlbumUpdate</code></td><td><span class="vw">WITNESS</span></td><td><code>input 6: outcome; notification.service.ts:343</code></td></tr></tbody>
+  </table></div>
+
+  <h3 id="verdict" class=""><a class="hash" href="#verdict">##</a>Read the verdict</h3>
+  <dl class="vd">
+    <div><dt class="vo">PASS</dt><dd>Only the asked change.</dd></div>
+    <div><dt class="vw">REFUSE</dt><dd>The location, the input or the artifact, both outcomes, the lines.</dd></div>
+    <div><dt class="va">ASK</dt><dd>What could not be decided, by name.</dd></div>
+  </dl>
+  <aside class="note"><span class="nl">note</span><p>A newer lean can word a line differently. The verdict and the input are what the certificate fixes. The committed report: <a href="#">baseline/immich-app__immich-17879.md</a>.</p></aside>
+
+  <h2 id="admit" class=""><a class="hash" href="#admit">#</a>Admit a lean head</h2>
+  <p>A lean head reaches lean's <code>master</code> only with every row of the regression table at or above its floor. A floor moves only with a written reason.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:128–129</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># the regression table that admits a lean head (rows R1 to R11 against their floors)</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">harness/regress.sh</span> <span class="st">"$PWD/lean"</span></code></div></div></figure>
+
+  <h2 id="benchmark" class=""><a class="hash" href="#benchmark">#</a>Run the benchmark</h2>
+  <p>Run a slice of a lane, then score it. The recount rebuilds the AACR-Bench table from the committed judge logs, with no model call.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:131–136</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># the benchmark: run, then score</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">python3</span> <span class="fl">-I</span> benchmark/run.py <span class="fl">--lean</span> lean <span class="fl">--manifest</span> benchmark/manifests/lane2-clean.v1.json <span class="fl">--slice</span> 20 <span class="fl">--jobs</span> 4</code></div><div class="ln"><span class="no">3</span><code><span class="cmd">python3</span> <span class="fl">-I</span> benchmark/score.py <span class="fl">--manifest</span> benchmark/manifests/lane2-clean.v1.json <span class="fl">--results</span> <span class="ph">&lt;run dir&gt;</span> <span class="fl">--require-eligible</span></code></div><div class="ln"><span class="no">4</span><code> </code></div><div class="ln"><span class="no">5</span><code><span class="cm"># recount the AACR-Bench table from the committed records (no model call)</span></code></div><div class="ln"><span class="no">6</span><code><span class="cmd">python3</span> research/open-code-review/d3/harness/tables.py <span class="ph">&lt;floor dir&gt;</span> <span class="ph">&lt;composed dir&gt;</span> <span class="ph">&lt;floor judge.jsonl&gt;</span> <span class="ph">&lt;composed judge.jsonl&gt;</span> <span class="fl">--out</span> tables.json</code></div></div></figure>
+
+  <nav class="pn"><a class="prev" href="#"><span>← prev</span><small>docs/</small><b>Docs home</b></a><a class="next" href="#"><span>next →</span><small>getting-started/</small><b>A real pull request</b></a></nav>
+</article></main><nav class="toc"><div class="th"><span>on this page</span><u>6</u></div><div class="tt"><div class="troot"><span class="gl">┬</span>Run it</div><a class="h2 cur" href="#requirements"><span class="gl">├─</span><span class="tx">Requirements</span></a><a class="h2" href="#clone"><span class="gl">├─</span><span class="tx">Clone and pin lean</span></a><a class="h2" href="#check"><span class="gl">├─</span><span class="tx">Check one pull request</span></a><a class="h3" href="#verdict"><span class="gl">│  └─</span><span class="tx">Read the verdict</span></a><a class="h2" href="#admit"><span class="gl">├─</span><span class="tx">Admit a lean head</span></a><a class="h2" href="#benchmark"><span class="gl">└─</span><span class="tx">Run the benchmark</span></a></div><div class="tf"><a href="#">↑ top</a><a href="#">source ↗</a></div></nav></div></div></div>
+  <div class="flabel"><b>B</b>B · 1440 · long page with the right contents</div><p class="fcap">The same page, full length. Arrived by the contents entry "Check one pull request": its heading is the target (orange hash), the clone block shows "✓ copied". The dashed line is the end of the first screen.</p>
+<div class="frame d"><div class="pg"><div class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a class="" href="#">Benchmark</a><a class="" href="#">Quick start</a><a class="cur" href="#">Docs</a><a class="" href="#">Paper</a><a class="btn" href="#">GitHub</a></div></div><div class="g3"><aside class="rail"><div class="rh"><label class="sf"><span class="pr">/</span><span class="ph">search docs</span><span class="kbd">/</span></label><div class="rmeta"><span>docs/</span><span>32 pages · 6 sections</span></div></div><div class="tree"><div class="sh on"><span class="gl">▾</span><b>Getting started</b><u>04</u></div><ul><li class="cur"><span class="gl">├─</span><a href="#">Run it</a><i class="spark"></i></li><li class=""><span class="gl">├─</span><a href="#">A real pull request</a></li><li class=""><span class="gl">├─</span><a href="#">Three instruments</a></li><li class=""><span class="gl">└─</span><a href="#">What it is not</a></li></ul><div class="sh"><span class="gl">▾</span><b>Lean</b><u>10</u></div><ul><li class=""><span class="gl">├─</span><a href="#">How it works</a></li><li class=""><span class="gl">├─</span><a href="#">Verdicts</a></li><li class=""><span class="gl">├─</span><a href="#">Writing provable code</a></li><li class=""><span class="gl">├─</span><a href="#">Pull requests</a></li><li class=""><span class="gl">├─</span><a href="#">Front end</a></li><li class=""><span class="gl">├─</span><a href="#">Editor and agents</a></li><li class=""><span class="gl">├─</span><a href="#">Around lean</a></li><li class=""><span class="gl">├─</span><a href="#">Known values</a></li><li class=""><span class="gl">├─</span><a href="#">Limits</a></li><li class=""><span class="gl">└─</span><a href="#">Assurance</a></li></ul><div class="sh"><span class="gl">▾</span><b>Differential attestation</b><u>09</u></div><ul><li class=""><span class="gl">├─</span><a href="#">Architecture</a></li><li class=""><span class="gl">├─</span><a href="#">Assurance case</a></li><li class=""><span class="gl">├─</span><a href="#">Run record</a></li><li class=""><span class="gl">├─</span><a href="#">Predicate registry</a></li><li class=""><span class="gl">├─</span><a href="#">Preview</a></li><li class=""><span class="gl">├─</span><a href="#">Pixel-diff lane</a></li><li class=""><span class="gl">├─</span><a href="#">Producer tools</a></li><li class=""><span class="gl">├─</span><a href="#">Sandbox allow-list</a></li><li class=""><span class="gl">└─</span><a href="#">OCR advice</a></li></ul><div class="sh"><span class="gl">▾</span><b>The benchmark</b><u>04</u></div><ul><li class=""><span class="gl">├─</span><a href="#">AACR-Bench</a></li><li class=""><span class="gl">├─</span><a href="#">Escaped defects</a></li><li class=""><span class="gl">├─</span><a href="#">The four lanes</a></li><li class=""><span class="gl">└─</span><a href="#">Benchmark funnel</a></li></ul><div class="sh"><span class="gl">▾</span><b>Reference</b><u>04</u></div><ul><li class=""><span class="gl">├─</span><a href="#">CLI</a></li><li class=""><span class="gl">├─</span><a href="#">Exit codes</a></li><li class=""><span class="gl">├─</span><a href="#">Certificate</a></li><li class=""><span class="gl">└─</span><a href="#">Regression table</a></li></ul><div class="sh"><span class="gl">▾</span><b>FAQ</b><u>01</u></div><ul><li class=""><span class="gl">└─</span><a href="#">FAQ</a></li></ul></div></aside><main><article class="col">
+  <div class="crumb"><a href="#">docs</a><span>/</span><a href="#">getting-started</a><span>/</span><b>run-it</b><em>01 of 32</em></div>
+  <h1>Run it</h1>
+  <div class="srcl"><span>src</span><a href="#">NexusGPT/differential-attestation@9b4243d</a><span>README.md § Run it</span><span>pinned 2026-11-01</span></div>
+  
+  <p class="lede">Clone differential attestation, pin lean, check one pull request. Node 24 runs the check; Python 3 and Dafny 4 add the proof lane.</p>
+
+  <h2 id="requirements" class=""><a class="hash" href="#requirements">#</a>Requirements</h2>
+  <div class="tw"><table>
+    <thead><tr><th>tool</th><th>version</th><th>used by</th><th>if missing</th></tr></thead>
+    <tbody>
+      <tr><td><code>node</code></td><td class="n">24</td><td>lean, <code>pr.mjs</code></td><td>required</td></tr>
+      <tr><td><code>python3</code></td><td class="n">3</td><td>the proof lane, <code>benchmark/*.py</code></td><td>proof lane answers <span class="va">ASK</span></td></tr>
+      <tr><td><code>dafny</code></td><td class="n">4</td><td>the proof lane</td><td>proof lane answers <span class="va">ASK</span></td></tr>
+      <tr><td><code>git</code></td><td class="n">—</td><td>the <code>lean</code> submodule</td><td>required</td></tr>
+    </tbody></table></div>
+
+  <h2 id="clone" class=""><a class="hash" href="#clone">#</a>Clone and pin lean</h2>
+  <p>lean is a submodule, pinned to the lean <code>master</code> that passed the regression table.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:122–123</span><button class="cp ok">✓ copied</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cmd">git</span> clone <span class="st">https://github.com/NexusGPT/differential-attestation</span> && <span class="cmd">cd</span> differential-attestation</code></div><div class="ln"><span class="no">2</span><code><span class="cmd">git</span> submodule update <span class="fl">--init</span> lean            <span class="cm"># the checker, pinned to the admitted lean master</span></code></div></div></figure>
+
+  <h2 id="check" class="tgt"><a class="hash" href="#check">#</a>Check one pull request</h2>
+  <p><code>pr.mjs</code> checks every changed function in the range and its callers, and prints one table. <code>--scope</code> names the functions the change was meant to touch; every other function must come out equal.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:125–126</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># one pull request: every changed function and its callers, one table</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">node</span> lean/langs/ts/pr.mjs <span class="fl">--repo</span> <span class="ph">&lt;checkout&gt;</span> <span class="fl">--base</span> <span class="ph">&lt;base sha&gt;</span> <span class="fl">--head</span> <span class="ph">&lt;head sha&gt;</span> <span class="fl">--scope</span> <span class="ph">&lt;function,Class.method&gt;</span></code></div></div></figure>
+  <p>Replay the AACR-Bench example: check out <code>immich-app/immich</code> and run <code>pr.mjs</code> on its pull request #17879.</p>
+  <figure class="cb out "><figcaption><span class="lang">output</span><span class="src">immich-app/immich#17879 · --base d0014bdf --head b7a12558</span></figcaption><div class="cbody"><div class="ln"><span class="no">›</span><code>d0014bdf → b7a12558</code></div><div class="ln"><span class="no">›</span><code>5 changed function(s): <span class="vw">4 WITNESS</span> · <span class="vo">0 PASS-proved</span> · <span class="vo">1 PASS-bounded</span> · <span class="va">0 ASK</span></code></div></div></figure>
+  <div class="tw"><table class="wide">
+    <thead><tr><th>file</th><th>function</th><th>verdict</th><th>note</th></tr></thead>
+    <tbody><tr><td><code>server/src/services/notification.service.ts</code></td><td><code>NotificationService.handleAlbumUpdate</code></td><td><span class="vw">WITNESS</span></td><td><code>input 6: outcome; notification.service.ts:343</code></td></tr></tbody>
+  </table></div>
+
+  <h3 id="verdict" class=""><a class="hash" href="#verdict">##</a>Read the verdict</h3>
+  <dl class="vd">
+    <div><dt class="vo">PASS</dt><dd>Only the asked change.</dd></div>
+    <div><dt class="vw">REFUSE</dt><dd>The location, the input or the artifact, both outcomes, the lines.</dd></div>
+    <div><dt class="va">ASK</dt><dd>What could not be decided, by name.</dd></div>
+  </dl>
+  <aside class="note"><span class="nl">note</span><p>A newer lean can word a line differently. The verdict and the input are what the certificate fixes. The committed report: <a href="#">baseline/immich-app__immich-17879.md</a>.</p></aside>
+
+  <h2 id="admit" class=""><a class="hash" href="#admit">#</a>Admit a lean head</h2>
+  <p>A lean head reaches lean's <code>master</code> only with every row of the regression table at or above its floor. A floor moves only with a written reason.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:128–129</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># the regression table that admits a lean head (rows R1 to R11 against their floors)</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">harness/regress.sh</span> <span class="st">"$PWD/lean"</span></code></div></div></figure>
+
+  <h2 id="benchmark" class=""><a class="hash" href="#benchmark">#</a>Run the benchmark</h2>
+  <p>Run a slice of a lane, then score it. The recount rebuilds the AACR-Bench table from the committed judge logs, with no model call.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:131–136</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># the benchmark: run, then score</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">python3</span> <span class="fl">-I</span> benchmark/run.py <span class="fl">--lean</span> lean <span class="fl">--manifest</span> benchmark/manifests/lane2-clean.v1.json <span class="fl">--slice</span> 20 <span class="fl">--jobs</span> 4</code></div><div class="ln"><span class="no">3</span><code><span class="cmd">python3</span> <span class="fl">-I</span> benchmark/score.py <span class="fl">--manifest</span> benchmark/manifests/lane2-clean.v1.json <span class="fl">--results</span> <span class="ph">&lt;run dir&gt;</span> <span class="fl">--require-eligible</span></code></div><div class="ln"><span class="no">4</span><code> </code></div><div class="ln"><span class="no">5</span><code><span class="cm"># recount the AACR-Bench table from the committed records (no model call)</span></code></div><div class="ln"><span class="no">6</span><code><span class="cmd">python3</span> research/open-code-review/d3/harness/tables.py <span class="ph">&lt;floor dir&gt;</span> <span class="ph">&lt;composed dir&gt;</span> <span class="ph">&lt;floor judge.jsonl&gt;</span> <span class="ph">&lt;composed judge.jsonl&gt;</span> <span class="fl">--out</span> tables.json</code></div></div></figure>
+
+  <nav class="pn"><a class="prev" href="#"><span>← prev</span><small>docs/</small><b>Docs home</b></a><a class="next" href="#"><span>next →</span><small>getting-started/</small><b>A real pull request</b></a></nav>
+</article></main><nav class="toc"><div class="th"><span>on this page</span><u>6</u></div><div class="tt"><div class="troot"><span class="gl">┬</span>Run it</div><a class="h2 path" href="#requirements"><span class="gl">├─</span><span class="tx">Requirements</span></a><a class="h2 path" href="#clone"><span class="gl">├─</span><span class="tx">Clone and pin lean</span></a><a class="h2 cur" href="#check"><span class="gl">├─</span><span class="tx">Check one pull request</span></a><a class="h3" href="#verdict"><span class="gl">│  └─</span><span class="tx">Read the verdict</span></a><a class="h2" href="#admit"><span class="gl">├─</span><span class="tx">Admit a lean head</span></a><a class="h2" href="#benchmark"><span class="gl">└─</span><span class="tx">Run the benchmark</span></a></div><div class="tf"><a href="#">↑ top</a><a href="#">source ↗</a></div></nav></div><div class="wrapf"><footer class="foot"><div class="wm"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><span>Differential attestation is built by Nexus. lean is the checker inside it.</span></div><nav class="fl"><a href="#">lean</a><a href="#">differential-attestation</a><a href="#">benchmark</a><a href="#">paper</a><a href="#">Nexus</a></nav></footer></div><div class="fold" style="top:900px"><span>1440 × 900</span></div></div></div>
+  <div class="flabel"><b>B</b>B · 1440 · search open</div><p class="fcap">The rail's field holds the query (J3.4). Results drop over the column; the page stays under a scrim. The last row shows the empty result in place of the hits.</p>
+<div class="frame d" style="height:900px"><div class="pg"><div class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a class="" href="#">Benchmark</a><a class="" href="#">Quick start</a><a class="cur" href="#">Docs</a><a class="" href="#">Paper</a><a class="btn" href="#">GitHub</a></div></div><div class="g3"><aside class="rail"><div class="rh"><label class="sf focus"><span class="pr">/</span><span class="q">predicate registry</span><span class="caret"></span><span class="kbd">esc</span></label><div class="rmeta"><span>docs/</span><span>32 pages · 6 sections</span></div></div><div class="tree"><div class="sh on"><span class="gl">▾</span><b>Getting started</b><u>04</u></div><ul><li class="cur"><span class="gl">├─</span><a href="#">Run it</a><i class="spark"></i></li><li class=""><span class="gl">├─</span><a href="#">A real pull request</a></li><li class=""><span class="gl">├─</span><a href="#">Three instruments</a></li><li class=""><span class="gl">└─</span><a href="#">What it is not</a></li></ul><div class="sh"><span class="gl">▾</span><b>Lean</b><u>10</u></div><ul><li class=""><span class="gl">├─</span><a href="#">How it works</a></li><li class=""><span class="gl">├─</span><a href="#">Verdicts</a></li><li class=""><span class="gl">├─</span><a href="#">Writing provable code</a></li><li class=""><span class="gl">├─</span><a href="#">Pull requests</a></li><li class=""><span class="gl">├─</span><a href="#">Front end</a></li><li class=""><span class="gl">├─</span><a href="#">Editor and agents</a></li><li class=""><span class="gl">├─</span><a href="#">Around lean</a></li><li class=""><span class="gl">├─</span><a href="#">Known values</a></li><li class=""><span class="gl">├─</span><a href="#">Limits</a></li><li class=""><span class="gl">└─</span><a href="#">Assurance</a></li></ul><div class="sh"><span class="gl">▾</span><b>Differential attestation</b><u>09</u></div><ul><li class=""><span class="gl">├─</span><a href="#">Architecture</a></li><li class=""><span class="gl">├─</span><a href="#">Assurance case</a></li><li class=""><span class="gl">├─</span><a href="#">Run record</a></li><li class=""><span class="gl">├─</span><a href="#">Predicate registry</a></li><li class=""><span class="gl">├─</span><a href="#">Preview</a></li><li class=""><span class="gl">├─</span><a href="#">Pixel-diff lane</a></li><li class=""><span class="gl">├─</span><a href="#">Producer tools</a></li><li class=""><span class="gl">├─</span><a href="#">Sandbox allow-list</a></li><li class=""><span class="gl">└─</span><a href="#">OCR advice</a></li></ul><div class="sh"><span class="gl">▾</span><b>The benchmark</b><u>04</u></div><ul><li class=""><span class="gl">├─</span><a href="#">AACR-Bench</a></li><li class=""><span class="gl">├─</span><a href="#">Escaped defects</a></li><li class=""><span class="gl">├─</span><a href="#">The four lanes</a></li><li class=""><span class="gl">└─</span><a href="#">Benchmark funnel</a></li></ul><div class="sh"><span class="gl">▾</span><b>Reference</b><u>04</u></div><ul><li class=""><span class="gl">├─</span><a href="#">CLI</a></li><li class=""><span class="gl">├─</span><a href="#">Exit codes</a></li><li class=""><span class="gl">├─</span><a href="#">Certificate</a></li><li class=""><span class="gl">└─</span><a href="#">Regression table</a></li></ul><div class="sh"><span class="gl">▾</span><b>FAQ</b><u>01</u></div><ul><li class=""><span class="gl">└─</span><a href="#">FAQ</a></li></ul></div></aside><main><article class="col">
+  <div class="crumb"><a href="#">docs</a><span>/</span><a href="#">getting-started</a><span>/</span><b>run-it</b><em>01 of 32</em></div>
+  <h1>Run it</h1>
+  <div class="srcl"><span>src</span><a href="#">NexusGPT/differential-attestation@9b4243d</a><span>README.md § Run it</span><span>pinned 2026-11-01</span></div>
+  
+  <p class="lede">Clone differential attestation, pin lean, check one pull request. Node 24 runs the check; Python 3 and Dafny 4 add the proof lane.</p>
+
+  <h2 id="requirements" class=""><a class="hash" href="#requirements">#</a>Requirements</h2>
+  <div class="tw"><table>
+    <thead><tr><th>tool</th><th>version</th><th>used by</th><th>if missing</th></tr></thead>
+    <tbody>
+      <tr><td><code>node</code></td><td class="n">24</td><td>lean, <code>pr.mjs</code></td><td>required</td></tr>
+      <tr><td><code>python3</code></td><td class="n">3</td><td>the proof lane, <code>benchmark/*.py</code></td><td>proof lane answers <span class="va">ASK</span></td></tr>
+      <tr><td><code>dafny</code></td><td class="n">4</td><td>the proof lane</td><td>proof lane answers <span class="va">ASK</span></td></tr>
+      <tr><td><code>git</code></td><td class="n">—</td><td>the <code>lean</code> submodule</td><td>required</td></tr>
+    </tbody></table></div>
+
+  <h2 id="clone" class=""><a class="hash" href="#clone">#</a>Clone and pin lean</h2>
+  <p>lean is a submodule, pinned to the lean <code>master</code> that passed the regression table.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:122–123</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cmd">git</span> clone <span class="st">https://github.com/NexusGPT/differential-attestation</span> && <span class="cmd">cd</span> differential-attestation</code></div><div class="ln"><span class="no">2</span><code><span class="cmd">git</span> submodule update <span class="fl">--init</span> lean            <span class="cm"># the checker, pinned to the admitted lean master</span></code></div></div></figure>
+
+  <h2 id="check" class=""><a class="hash" href="#check">#</a>Check one pull request</h2>
+  <p><code>pr.mjs</code> checks every changed function in the range and its callers, and prints one table. <code>--scope</code> names the functions the change was meant to touch; every other function must come out equal.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:125–126</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># one pull request: every changed function and its callers, one table</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">node</span> lean/langs/ts/pr.mjs <span class="fl">--repo</span> <span class="ph">&lt;checkout&gt;</span> <span class="fl">--base</span> <span class="ph">&lt;base sha&gt;</span> <span class="fl">--head</span> <span class="ph">&lt;head sha&gt;</span> <span class="fl">--scope</span> <span class="ph">&lt;function,Class.method&gt;</span></code></div></div></figure>
+  <p>Replay the AACR-Bench example: check out <code>immich-app/immich</code> and run <code>pr.mjs</code> on its pull request #17879.</p>
+  <figure class="cb out "><figcaption><span class="lang">output</span><span class="src">immich-app/immich#17879 · --base d0014bdf --head b7a12558</span></figcaption><div class="cbody"><div class="ln"><span class="no">›</span><code>d0014bdf → b7a12558</code></div><div class="ln"><span class="no">›</span><code>5 changed function(s): <span class="vw">4 WITNESS</span> · <span class="vo">0 PASS-proved</span> · <span class="vo">1 PASS-bounded</span> · <span class="va">0 ASK</span></code></div></div></figure>
+  <div class="tw"><table class="wide">
+    <thead><tr><th>file</th><th>function</th><th>verdict</th><th>note</th></tr></thead>
+    <tbody><tr><td><code>server/src/services/notification.service.ts</code></td><td><code>NotificationService.handleAlbumUpdate</code></td><td><span class="vw">WITNESS</span></td><td><code>input 6: outcome; notification.service.ts:343</code></td></tr></tbody>
+  </table></div>
+
+  <h3 id="verdict" class=""><a class="hash" href="#verdict">##</a>Read the verdict</h3>
+  <dl class="vd">
+    <div><dt class="vo">PASS</dt><dd>Only the asked change.</dd></div>
+    <div><dt class="vw">REFUSE</dt><dd>The location, the input or the artifact, both outcomes, the lines.</dd></div>
+    <div><dt class="va">ASK</dt><dd>What could not be decided, by name.</dd></div>
+  </dl>
+  <aside class="note"><span class="nl">note</span><p>A newer lean can word a line differently. The verdict and the input are what the certificate fixes. The committed report: <a href="#">baseline/immich-app__immich-17879.md</a>.</p></aside>
+
+  <h2 id="admit" class=""><a class="hash" href="#admit">#</a>Admit a lean head</h2>
+  <p>A lean head reaches lean's <code>master</code> only with every row of the regression table at or above its floor. A floor moves only with a written reason.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:128–129</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># the regression table that admits a lean head (rows R1 to R11 against their floors)</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">harness/regress.sh</span> <span class="st">"$PWD/lean"</span></code></div></div></figure>
+
+  <h2 id="benchmark" class=""><a class="hash" href="#benchmark">#</a>Run the benchmark</h2>
+  <p>Run a slice of a lane, then score it. The recount rebuilds the AACR-Bench table from the committed judge logs, with no model call.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:131–136</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># the benchmark: run, then score</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">python3</span> <span class="fl">-I</span> benchmark/run.py <span class="fl">--lean</span> lean <span class="fl">--manifest</span> benchmark/manifests/lane2-clean.v1.json <span class="fl">--slice</span> 20 <span class="fl">--jobs</span> 4</code></div><div class="ln"><span class="no">3</span><code><span class="cmd">python3</span> <span class="fl">-I</span> benchmark/score.py <span class="fl">--manifest</span> benchmark/manifests/lane2-clean.v1.json <span class="fl">--results</span> <span class="ph">&lt;run dir&gt;</span> <span class="fl">--require-eligible</span></code></div><div class="ln"><span class="no">4</span><code> </code></div><div class="ln"><span class="no">5</span><code><span class="cm"># recount the AACR-Bench table from the committed records (no model call)</span></code></div><div class="ln"><span class="no">6</span><code><span class="cmd">python3</span> research/open-code-review/d3/harness/tables.py <span class="ph">&lt;floor dir&gt;</span> <span class="ph">&lt;composed dir&gt;</span> <span class="ph">&lt;floor judge.jsonl&gt;</span> <span class="ph">&lt;composed judge.jsonl&gt;</span> <span class="fl">--out</span> tables.json</code></div></div></figure>
+
+  <nav class="pn"><a class="prev" href="#"><span>← prev</span><small>docs/</small><b>Docs home</b></a><a class="next" href="#"><span>next →</span><small>getting-started/</small><b>A real pull request</b></a></nav>
+</article></main><nav class="toc"><div class="th"><span>on this page</span><u>6</u></div><div class="tt"><div class="troot"><span class="gl">┬</span>Run it</div><a class="h2 cur" href="#requirements"><span class="gl">├─</span><span class="tx">Requirements</span></a><a class="h2" href="#clone"><span class="gl">├─</span><span class="tx">Clone and pin lean</span></a><a class="h2" href="#check"><span class="gl">├─</span><span class="tx">Check one pull request</span></a><a class="h3" href="#verdict"><span class="gl">│  └─</span><span class="tx">Read the verdict</span></a><a class="h2" href="#admit"><span class="gl">├─</span><span class="tx">Admit a lean head</span></a><a class="h2" href="#benchmark"><span class="gl">└─</span><span class="tx">Run the benchmark</span></a></div><div class="tf"><a href="#">↑ top</a><a href="#">source ↗</a></div></nav></div><div class="scrim"></div><div class="res"><div class="rc"><span><b>4</b> results</span><span class="qq">"predicate registry"</span><span class="keys"><kbd>↑</kbd><kbd>↓</kbd> move <kbd>↵</kbd> open <kbd>esc</kbd> close</span></div>
+  <a class="hit sel" href="#"><div class="hp"><span>differential-attestation/</span>predicate-registry</div><b>Predicate registry</b><p>The registry says which <mark>predicates</mark> of the artifact lane a changed file must meet, keyed by the file's artifact kind.</p></a><a class="hit" href="#"><div class="hp"><span>differential-attestation/</span>architecture</div><b>Architecture</b><p>The <mark>predicate registry</mark> says which predicates a touched file meets. The advice …</p></a><a class="hit" href="#"><div class="hp"><span>differential-attestation/</span>run-record</div><b>Run record</b><p>… plus a <code>skipped:unregistered</code> row for each changed file no <mark>predicate</mark> covers.</p></a><a class="hit" href="#"><div class="hp"><span>getting-started/</span>three-instruments</div><b>Three instruments</b><p>For every file that is not a function, a <mark>predicate</mark> compares the two versions.</p></a>
+  <div class="rempty"><span class="nl">empty</span><span>No results for "<b>predicat regsitry</b>"</span><button class="cp">clear</button></div></div></div></div>
+  <div class="flabel"><b>B</b>B · 1440 · docs landing</div><p class="fcap">Arrived by the nav "Docs" (J3.2). No rail entry is marked and there is no contents column.</p>
+<div class="frame d"><div class="pg"><div class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a class="" href="#">Benchmark</a><a class="" href="#">Quick start</a><a class="cur" href="#">Docs</a><a class="" href="#">Paper</a><a class="btn" href="#">GitHub</a></div></div><div class="g3"><aside class="rail"><div class="rh"><label class="sf"><span class="pr">/</span><span class="ph">search docs</span><span class="kbd">/</span></label><div class="rmeta"><span>docs/</span><span>32 pages · 6 sections</span></div></div><div class="tree"><div class="sh"><span class="gl">▾</span><b>Getting started</b><u>04</u></div><ul><li class=""><span class="gl">├─</span><a href="#">Run it</a></li><li class=""><span class="gl">├─</span><a href="#">A real pull request</a></li><li class=""><span class="gl">├─</span><a href="#">Three instruments</a></li><li class=""><span class="gl">└─</span><a href="#">What it is not</a></li></ul><div class="sh"><span class="gl">▾</span><b>Lean</b><u>10</u></div><ul><li class=""><span class="gl">├─</span><a href="#">How it works</a></li><li class=""><span class="gl">├─</span><a href="#">Verdicts</a></li><li class=""><span class="gl">├─</span><a href="#">Writing provable code</a></li><li class=""><span class="gl">├─</span><a href="#">Pull requests</a></li><li class=""><span class="gl">├─</span><a href="#">Front end</a></li><li class=""><span class="gl">├─</span><a href="#">Editor and agents</a></li><li class=""><span class="gl">├─</span><a href="#">Around lean</a></li><li class=""><span class="gl">├─</span><a href="#">Known values</a></li><li class=""><span class="gl">├─</span><a href="#">Limits</a></li><li class=""><span class="gl">└─</span><a href="#">Assurance</a></li></ul><div class="sh"><span class="gl">▾</span><b>Differential attestation</b><u>09</u></div><ul><li class=""><span class="gl">├─</span><a href="#">Architecture</a></li><li class=""><span class="gl">├─</span><a href="#">Assurance case</a></li><li class=""><span class="gl">├─</span><a href="#">Run record</a></li><li class=""><span class="gl">├─</span><a href="#">Predicate registry</a></li><li class=""><span class="gl">├─</span><a href="#">Preview</a></li><li class=""><span class="gl">├─</span><a href="#">Pixel-diff lane</a></li><li class=""><span class="gl">├─</span><a href="#">Producer tools</a></li><li class=""><span class="gl">├─</span><a href="#">Sandbox allow-list</a></li><li class=""><span class="gl">└─</span><a href="#">OCR advice</a></li></ul><div class="sh"><span class="gl">▾</span><b>The benchmark</b><u>04</u></div><ul><li class=""><span class="gl">├─</span><a href="#">AACR-Bench</a></li><li class=""><span class="gl">├─</span><a href="#">Escaped defects</a></li><li class=""><span class="gl">├─</span><a href="#">The four lanes</a></li><li class=""><span class="gl">└─</span><a href="#">Benchmark funnel</a></li></ul><div class="sh"><span class="gl">▾</span><b>Reference</b><u>04</u></div><ul><li class=""><span class="gl">├─</span><a href="#">CLI</a></li><li class=""><span class="gl">├─</span><a href="#">Exit codes</a></li><li class=""><span class="gl">├─</span><a href="#">Certificate</a></li><li class=""><span class="gl">└─</span><a href="#">Regression table</a></li></ul><div class="sh"><span class="gl">▾</span><b>FAQ</b><u>01</u></div><ul><li class=""><span class="gl">└─</span><a href="#">FAQ</a></li></ul></div></aside><main><article class="col land"><div class="crumb"><b>docs</b><em>32 pages · 6 sections</em></div><h1>Docs</h1><p class="lede">lean, differential attestation, the benchmark. First run: <a class="qs" href="#">Quick start →</a></p><div class="secs"><a class="sec" href="#"><div class="sk"><span class="ix">01</span><b>Getting started</b><u>4 pages</u></div><p>Clone, pin lean, check one pull request, read the verdict.</p><ul><li><span class="gl">├─</span>Run it</li><li><span class="gl">├─</span>A real pull request</li><li><span class="gl">├─</span>Three instruments</li><li class="mo"><span class="gl">└─</span>+1 more</li></ul></a><a class="sec" href="#"><div class="sk"><span class="ix">02</span><b>Lean</b><u>10 pages</u></div><p>The proof instrument: two versions of one function in, a theorem or a separating input out.</p><ul><li><span class="gl">├─</span>How it works</li><li><span class="gl">├─</span>Verdicts</li><li><span class="gl">├─</span>Writing provable code</li><li class="mo"><span class="gl">└─</span>+7 more</li></ul></a><a class="sec" href="#"><div class="sk"><span class="ix">03</span><b>Differential attestation</b><u>9 pages</u></div><p>The gate around lean: recordings, relations, the run record, the assurance case.</p><ul><li><span class="gl">├─</span>Architecture</li><li><span class="gl">├─</span>Assurance case</li><li><span class="gl">├─</span>Run record</li><li class="mo"><span class="gl">└─</span>+6 more</li></ul></a><a class="sec" href="#"><div class="sk"><span class="ix">04</span><b>The benchmark</b><u>4 pages</u></div><p>AACR-Bench, the 43 escaped defects, the four lanes, the funnel.</p><ul><li><span class="gl">├─</span>AACR-Bench</li><li><span class="gl">├─</span>Escaped defects</li><li><span class="gl">├─</span>The four lanes</li><li class="mo"><span class="gl">└─</span>+1 more</li></ul></a><a class="sec" href="#"><div class="sk"><span class="ix">05</span><b>Reference</b><u>4 pages</u></div><p>Every command, flag, exit code and certificate field.</p><ul><li><span class="gl">├─</span>CLI</li><li><span class="gl">├─</span>Exit codes</li><li><span class="gl">├─</span>Certificate</li><li class="mo"><span class="gl">└─</span>+1 more</li></ul></a><a class="sec" href="#"><div class="sk"><span class="ix">06</span><b>FAQ</b><u>1 page</u></div><p>Scope, models, and what a PASS covers.</p><ul><li><span class="gl">└─</span>FAQ</li></ul></a></div></article></main><div class="toc empty"></div></div><div class="wrapf"><footer class="foot"><div class="wm"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><span>Differential attestation is built by Nexus. lean is the checker inside it.</span></div><nav class="fl"><a href="#">lean</a><a href="#">differential-attestation</a><a href="#">benchmark</a><a href="#">paper</a><a href="#">Nexus</a></nav></footer></div></div></div>
+  <div class="flabel"><b>B</b>390 · phone (adapted from the 1440 primary)</div>
+  <div class="phones"><div><p class="fcap"><b style="color:var(--fg);font-weight:500">390 · page at rest</b><br>Full length; the docs bar stays under the nav. Code blocks run to both edges and scroll inside; the wide table scrolls inside its frame.</p><div class="frame p"><div class="pg"><div class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a class="" href="#">Benchmark</a><a class="" href="#">Quick start</a><a class="cur" href="#">Docs</a><a class="" href="#">Paper</a><a class="btn" href="#">GitHub</a><button class="btn">Site</button></div></div><div class="dbar"><button class="mb"><span class="gl">☰</span><span class="dp">getting-started/<b>run-it</b></span></button><button class="sb"><span class="pr">/</span>search</button></div><div class="pw"><article class="col">
+  <div class="crumb"><a href="#">docs</a><span>/</span><a href="#">getting-started</a><span>/</span><b>run-it</b><em>01 of 32</em></div>
+  <h1>Run it</h1>
+  <div class="srcl"><span>src</span><a href="#">NexusGPT/differential-attestation@9b4243d</a><span>README.md § Run it</span><span>pinned 2026-11-01</span></div>
+  <button class="tocd"><span>on this page</span><u>6 headings</u><i>▾</i></button>
+  <p class="lede">Clone differential attestation, pin lean, check one pull request. Node 24 runs the check; Python 3 and Dafny 4 add the proof lane.</p>
+
+  <h2 id="requirements" class=""><a class="hash" href="#requirements">#</a>Requirements</h2>
+  <div class="tw"><table>
+    <thead><tr><th>tool</th><th>version</th><th>used by</th><th>if missing</th></tr></thead>
+    <tbody>
+      <tr><td><code>node</code></td><td class="n">24</td><td>lean, <code>pr.mjs</code></td><td>required</td></tr>
+      <tr><td><code>python3</code></td><td class="n">3</td><td>the proof lane, <code>benchmark/*.py</code></td><td>proof lane answers <span class="va">ASK</span></td></tr>
+      <tr><td><code>dafny</code></td><td class="n">4</td><td>the proof lane</td><td>proof lane answers <span class="va">ASK</span></td></tr>
+      <tr><td><code>git</code></td><td class="n">—</td><td>the <code>lean</code> submodule</td><td>required</td></tr>
+    </tbody></table></div>
+
+  <h2 id="clone" class=""><a class="hash" href="#clone">#</a>Clone and pin lean</h2>
+  <p>lean is a submodule, pinned to the lean <code>master</code> that passed the regression table.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:122–123</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cmd">git</span> clone <span class="st">https://github.com/NexusGPT/differential-attestation</span> && <span class="cmd">cd</span> differential-attestation</code></div><div class="ln"><span class="no">2</span><code><span class="cmd">git</span> submodule update <span class="fl">--init</span> lean            <span class="cm"># the checker, pinned to the admitted lean master</span></code></div></div></figure>
+
+  <h2 id="check" class=""><a class="hash" href="#check">#</a>Check one pull request</h2>
+  <p><code>pr.mjs</code> checks every changed function in the range and its callers, and prints one table. <code>--scope</code> names the functions the change was meant to touch; every other function must come out equal.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:125–126</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># one pull request: every changed function and its callers, one table</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">node</span> lean/langs/ts/pr.mjs <span class="fl">--repo</span> <span class="ph">&lt;checkout&gt;</span> <span class="fl">--base</span> <span class="ph">&lt;base sha&gt;</span> <span class="fl">--head</span> <span class="ph">&lt;head sha&gt;</span> <span class="fl">--scope</span> <span class="ph">&lt;function,Class.method&gt;</span></code></div></div></figure>
+  <p>Replay the AACR-Bench example: check out <code>immich-app/immich</code> and run <code>pr.mjs</code> on its pull request #17879.</p>
+  <figure class="cb out "><figcaption><span class="lang">output</span><span class="src">immich-app/immich#17879 · --base d0014bdf --head b7a12558</span></figcaption><div class="cbody"><div class="ln"><span class="no">›</span><code>d0014bdf → b7a12558</code></div><div class="ln"><span class="no">›</span><code>5 changed function(s): <span class="vw">4 WITNESS</span> · <span class="vo">0 PASS-proved</span> · <span class="vo">1 PASS-bounded</span> · <span class="va">0 ASK</span></code></div></div></figure>
+  <div class="tw"><table class="wide">
+    <thead><tr><th>file</th><th>function</th><th>verdict</th><th>note</th></tr></thead>
+    <tbody><tr><td><code>server/src/services/notification.service.ts</code></td><td><code>NotificationService.handleAlbumUpdate</code></td><td><span class="vw">WITNESS</span></td><td><code>input 6: outcome; notification.service.ts:343</code></td></tr></tbody>
+  </table></div>
+
+  <h3 id="verdict" class=""><a class="hash" href="#verdict">##</a>Read the verdict</h3>
+  <dl class="vd">
+    <div><dt class="vo">PASS</dt><dd>Only the asked change.</dd></div>
+    <div><dt class="vw">REFUSE</dt><dd>The location, the input or the artifact, both outcomes, the lines.</dd></div>
+    <div><dt class="va">ASK</dt><dd>What could not be decided, by name.</dd></div>
+  </dl>
+  <aside class="note"><span class="nl">note</span><p>A newer lean can word a line differently. The verdict and the input are what the certificate fixes. The committed report: <a href="#">baseline/immich-app__immich-17879.md</a>.</p></aside>
+
+  <h2 id="admit" class=""><a class="hash" href="#admit">#</a>Admit a lean head</h2>
+  <p>A lean head reaches lean's <code>master</code> only with every row of the regression table at or above its floor. A floor moves only with a written reason.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:128–129</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># the regression table that admits a lean head (rows R1 to R11 against their floors)</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">harness/regress.sh</span> <span class="st">"$PWD/lean"</span></code></div></div></figure>
+
+  <h2 id="benchmark" class=""><a class="hash" href="#benchmark">#</a>Run the benchmark</h2>
+  <p>Run a slice of a lane, then score it. The recount rebuilds the AACR-Bench table from the committed judge logs, with no model call.</p>
+  <figure class="cb "><figcaption><span class="lang">bash</span><span class="src">README.md:131–136</span><button class="cp">copy</button></figcaption><div class="cbody"><div class="ln"><span class="no">1</span><code><span class="cm"># the benchmark: run, then score</span></code></div><div class="ln"><span class="no">2</span><code><span class="cmd">python3</span> <span class="fl">-I</span> benchmark/run.py <span class="fl">--lean</span> lean <span class="fl">--manifest</span> benchmark/manifests/lane2-clean.v1.json <span class="fl">--slice</span> 20 <span class="fl">--jobs</span> 4</code></div><div class="ln"><span class="no">3</span><code><span class="cmd">python3</span> <span class="fl">-I</span> benchmark/score.py <span class="fl">--manifest</span> benchmark/manifests/lane2-clean.v1.json <span class="fl">--results</span> <span class="ph">&lt;run dir&gt;</span> <span class="fl">--require-eligible</span></code></div><div class="ln"><span class="no">4</span><code> </code></div><div class="ln"><span class="no">5</span><code><span class="cm"># recount the AACR-Bench table from the committed records (no model call)</span></code></div><div class="ln"><span class="no">6</span><code><span class="cmd">python3</span> research/open-code-review/d3/harness/tables.py <span class="ph">&lt;floor dir&gt;</span> <span class="ph">&lt;composed dir&gt;</span> <span class="ph">&lt;floor judge.jsonl&gt;</span> <span class="ph">&lt;composed judge.jsonl&gt;</span> <span class="fl">--out</span> tables.json</code></div></div></figure>
+
+  <nav class="pn"><a class="prev" href="#"><span>← prev</span><small>docs/</small><b>Docs home</b></a><a class="next" href="#"><span>next →</span><small>getting-started/</small><b>A real pull request</b></a></nav>
+</article></div><div class="wrapf"><footer class="foot"><div class="wm"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><span>Differential attestation is built by Nexus. lean is the checker inside it.</span></div><nav class="fl"><a href="#">lean</a><a href="#">differential-attestation</a><a href="#">benchmark</a><a href="#">paper</a><a href="#">Nexus</a></nav></footer></div><div class="fold" style="top:844px"><span>390 × 844</span></div></div></div></div><div><p class="fcap"><b style="color:var(--fg);font-weight:500">390 · menu open</b><br>The rail as a sheet under the docs bar, opened at the current entry. Picking a page closes it.</p><div class="frame p" style="height:844px"><div class="pg"><div class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a class="" href="#">Benchmark</a><a class="" href="#">Quick start</a><a class="cur" href="#">Docs</a><a class="" href="#">Paper</a><a class="btn" href="#">GitHub</a><button class="btn">Site</button></div></div><div class="dbar"><button class="mb on"><span class="gl">✕</span><span class="dp">getting-started/<b>run-it</b></span></button><button class="sb"><span class="pr">/</span>search</button></div><div class="sheetm"><label class="sf"><span class="pr">/</span><span class="ph">search docs</span><span class="kbd">/</span></label><div class="tree"><div class="sh on"><span class="gl">▾</span><b>Getting started</b><u>04</u></div><ul><li class="cur"><span class="gl">├─</span><a href="#">Run it</a><i class="spark"></i></li><li class=""><span class="gl">├─</span><a href="#">A real pull request</a></li><li class=""><span class="gl">├─</span><a href="#">Three instruments</a></li><li class=""><span class="gl">└─</span><a href="#">What it is not</a></li></ul><div class="sh"><span class="gl">▾</span><b>Lean</b><u>10</u></div><ul><li class=""><span class="gl">├─</span><a href="#">How it works</a></li><li class=""><span class="gl">├─</span><a href="#">Verdicts</a></li><li class=""><span class="gl">├─</span><a href="#">Writing provable code</a></li><li class=""><span class="gl">├─</span><a href="#">Pull requests</a></li><li class=""><span class="gl">├─</span><a href="#">Front end</a></li><li class=""><span class="gl">├─</span><a href="#">Editor and agents</a></li><li class=""><span class="gl">├─</span><a href="#">Around lean</a></li><li class=""><span class="gl">├─</span><a href="#">Known values</a></li><li class=""><span class="gl">├─</span><a href="#">Limits</a></li><li class=""><span class="gl">└─</span><a href="#">Assurance</a></li></ul><div class="sh"><span class="gl">▾</span><b>Differential attestation</b><u>09</u></div><ul><li class=""><span class="gl">├─</span><a href="#">Architecture</a></li><li class=""><span class="gl">├─</span><a href="#">Assurance case</a></li><li class=""><span class="gl">├─</span><a href="#">Run record</a></li><li class=""><span class="gl">├─</span><a href="#">Predicate registry</a></li><li class=""><span class="gl">├─</span><a href="#">Preview</a></li><li class=""><span class="gl">├─</span><a href="#">Pixel-diff lane</a></li><li class=""><span class="gl">├─</span><a href="#">Producer tools</a></li><li class=""><span class="gl">├─</span><a href="#">Sandbox allow-list</a></li><li class=""><span class="gl">└─</span><a href="#">OCR advice</a></li></ul><div class="sh"><span class="gl">▾</span><b>The benchmark</b><u>04</u></div><ul><li class=""><span class="gl">├─</span><a href="#">AACR-Bench</a></li><li class=""><span class="gl">├─</span><a href="#">Escaped defects</a></li><li class=""><span class="gl">├─</span><a href="#">The four lanes</a></li><li class=""><span class="gl">└─</span><a href="#">Benchmark funnel</a></li></ul><div class="sh"><span class="gl">▾</span><b>Reference</b><u>04</u></div><ul><li class=""><span class="gl">├─</span><a href="#">CLI</a></li><li class=""><span class="gl">├─</span><a href="#">Exit codes</a></li><li class=""><span class="gl">├─</span><a href="#">Certificate</a></li><li class=""><span class="gl">└─</span><a href="#">Regression table</a></li></ul><div class="sh"><span class="gl">▾</span><b>FAQ</b><u>01</u></div><ul><li class=""><span class="gl">└─</span><a href="#">FAQ</a></li></ul></div></div></div></div></div><div><p class="fcap"><b style="color:var(--fg);font-weight:500">390 · search open</b><br>The field replaces the docs bar; results take the screen. Cancel returns to the page where it was.</p><div class="frame p" style="height:844px"><div class="pg"><div class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a class="" href="#">Benchmark</a><a class="" href="#">Quick start</a><a class="cur" href="#">Docs</a><a class="" href="#">Paper</a><a class="btn" href="#">GitHub</a><button class="btn">Site</button></div></div><div class="dbar s"><label class="sf focus"><span class="pr">/</span><span class="q">predicate registry</span><span class="caret"></span><span class="kbd">esc</span></label><button class="cn">cancel</button></div><div class="res ph"><div class="rc"><span><b>4</b> results</span><span class="qq">"predicate registry"</span></div>
+  <a class="hit sel" href="#"><div class="hp"><span>differential-attestation/</span>predicate-registry</div><b>Predicate registry</b><p>The registry says which <mark>predicates</mark> of the artifact lane a changed file must meet, keyed by the file's artifact kind.</p></a><a class="hit" href="#"><div class="hp"><span>differential-attestation/</span>architecture</div><b>Architecture</b><p>The <mark>predicate registry</mark> says which predicates a touched file meets. The advice …</p></a><a class="hit" href="#"><div class="hp"><span>differential-attestation/</span>run-record</div><b>Run record</b><p>… plus a <code>skipped:unregistered</code> row for each changed file no <mark>predicate</mark> covers.</p></a><a class="hit" href="#"><div class="hp"><span>getting-started/</span>three-instruments</div><b>Three instruments</b><p>For every file that is not a function, a <mark>predicate</mark> compares the two versions.</p></a>
+  <div class="rempty"><span class="nl">empty</span><span>No results for "<b>predicat regsitry</b>"</span><button class="cp">clear</button></div></div></div></div></div></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+[
+  {
+    "id": "A",
+    "rung": "style",
+    "title": "Reference shelf: the docs as a bound, printed reference",
+    "axis": "typographic register: numbered mono small-caps sections over a hairline spine, the open page a cream rule; Source Serif 4 heads over Inter 17/1.6; shiki code on #111318; hairline-ruled contents",
+    "entry": "index.html",
+    "worse_at": "The site gets two heading voices (serif docs, Inter benchmark). It is the least dense reading: about 3,500 px per page at 1440, slow to scan for one flag. The 33-entry rail runs past the fold. The faint small-caps section heads carry the structure. There are two menu buttons on the phone. The look depends on shipping the Source Serif 4 file."
+  }
+]

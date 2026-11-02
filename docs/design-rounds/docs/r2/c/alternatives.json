@@ -1,0 +1,10 @@
+[
+  {
+    "id": "C",
+    "rung": "style",
+    "title": "Paper margin",
+    "axis": "the reading column is the page: Source Serif 4 headings and margin notes, Inter 17 px on a 720 px measure, the rail receded to grey 3 at 13 px with only the open section bright, the contents and pull notes as marginalia, calm code with no gutter",
+    "entry": "index.html",
+    "worse_at": "scanning the rail (five of six sections in grey 3); an empty right margin on short pages and the landing; on the phone every margin note falls into the column; serif heads split the docs' heading face from the benchmark page's and cost one font file; no line numbers to cite"
+  }
+]

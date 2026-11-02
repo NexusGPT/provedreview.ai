@@ -1,0 +1,573 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Docs · style round 2 · C · paper margin</title>
+<style>
+/* Type stacks: the lock's families first, then the system fonts that stand in on this machine.
+   Inter -> ui-sans-serif, system-ui, "Segoe UI", "Liberation Sans", sans-serif
+   JetBrains Mono -> ui-monospace, "SFMono-Regular", Menlo, Consolas, "DejaVu Sans Mono", monospace
+   Source Serif 4 -> Georgia, "Liberation Serif", "DejaVu Serif", serif */
+:root{--sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI","Liberation Sans",sans-serif;--mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"DejaVu Sans Mono",monospace;--serif:"Source Serif 4",Georgia,"Liberation Serif","DejaVu Serif",serif;
+--bg:#0a0b0f;--fg:#e9eaee;--body:#d9dbe1;--mut:#8b90a0;--g3:#767b8b;--dim:#5d6272;--line:rgba(255,255,255,.08);--hair:rgba(255,255,255,.05);--steel:#9fb3c8;--cream:#f3efe6;--wit:#f0a08c;--ok:#8fd3b4;--ask:#e6c37a;--panel:#0d0e13}
+*{box-sizing:border-box}
+html,body{margin:0;background:#050608;color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+
+/* ---------- the board around the frames (not the page) ---------- */
+.board{padding:32px 40px 80px;min-width:1520px}
+.bhead{display:flex;gap:18px;align-items:baseline;margin-bottom:6px;font-family:var(--mono);font-size:12px;color:var(--mut)}
+.badge{font-family:var(--mono);font-size:22px;font-weight:700;color:#050608;background:var(--cream);padding:2px 12px;border-radius:4px}
+.bhead h1{font-family:var(--sans);font-size:18px;font-weight:500;color:var(--fg);margin:0}
+.bnote{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--mut);max-width:150ch;margin:4px 0 0}
+.flabel{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);margin:44px 0 10px;display:flex;gap:12px;align-items:center}
+.flabel b{color:#050608;background:var(--cream);padding:1px 7px;border-radius:3px;letter-spacing:0}
+.frame{position:relative;outline:1px solid rgba(255,255,255,.14);background:var(--bg);overflow:hidden}
+.frame.d{width:1440px}.frame.p{width:390px}
+.fold{position:absolute;left:0;right:0;border-top:1px dashed var(--wit);z-index:40;pointer-events:none}
+.fold span{position:absolute;right:10px;top:-19px;font-family:var(--mono);font-size:10.5px;color:var(--wit);background:var(--bg);padding:1px 6px}
+.prow{display:flex;gap:40px;align-items:flex-start}
+.prow .cap{font-family:var(--mono);font-size:11px;color:var(--mut);margin:0 0 8px;line-height:1.5;width:390px}
+.prow .cap b{color:var(--fg);font-weight:500}
+
+/* ---------- shared shell: the nav of the benchmark page (look B), same markup and sizes ---------- */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 48px;font-size:14px;border-bottom:1px solid var(--line);height:64px}
+.p .nav{padding:14px 16px;height:58px}
+.logo{font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.logo .mark{display:grid;grid-template-columns:repeat(3,7px);gap:1px}.logo .mark i{display:block;width:7px;height:7px;background:var(--steel);border-radius:1px;opacity:.9}.logo .mark i:nth-child(2),.logo .mark i:nth-child(4),.logo .mark i:nth-child(9){opacity:.35}
+.links{display:flex;gap:28px;color:var(--mut);align-items:center}
+.links a.cur{color:var(--fg);position:relative}.links a.cur::after{content:"";position:absolute;left:0;right:0;bottom:-21px;height:2px;background:var(--fg)}
+.btn{font-size:13px;padding:8px 13px;border-radius:7px;display:inline-flex;align-items:center;gap:8px;font-weight:500;border:1px solid var(--line);background:rgba(255,255,255,.04);white-space:nowrap}
+.btn.m{font-family:var(--mono);font-size:12px;font-weight:400}
+.p .links a:not(.btn){display:none}
+.foot{padding:40px 48px 56px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;border-top:1px solid var(--line);font-size:13.5px;color:var(--mut)}
+.p .foot{padding:32px 16px 40px}
+.foot .wm{display:flex;flex-direction:column;gap:10px}
+.foot .fl{display:flex;gap:22px;flex-wrap:wrap;font-family:var(--mono);font-size:12px}
+
+/* ---------- docs shell, desktop: rail 280 | column (720 measure) | margin 240 ---------- */
+.shell{display:grid;grid-template-columns:280px minmax(0,1fr) 300px;align-items:start}
+.rail{align-self:stretch;padding:24px 20px 40px 32px;border-right:1px solid var(--hair);font-size:13px;line-height:1.35;color:var(--g3)}
+.srch{display:flex;align-items:center;gap:8px;height:34px;padding:0 10px;margin:0 0 26px;border:1px solid var(--line);border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--g3)}
+.srch .q{flex:1;white-space:nowrap;overflow:hidden}
+.srch .k{border:1px solid var(--line);border-radius:3px;padding:0 5px;font-size:10.5px;color:var(--g3)}
+.srch.on{border-color:rgba(233,234,238,.45);color:var(--fg);background:rgba(255,255,255,.03)}
+.srch.on .q{flex:0 0 auto}
+.caret{display:inline-block;width:1px;height:15px;background:var(--fg);margin-left:-6px;margin-right:auto}
+.grp{margin:0 0 18px}
+.gh{display:flex;justify-content:space-between;font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--g3);margin-bottom:7px}
+.gh u{text-decoration:none;letter-spacing:0;color:var(--dim)}
+.gi a{display:block;padding:3px 0 3px 12px;border-left:1px solid var(--hair);color:var(--g3)}
+.grp.open .gh{color:var(--fg)}
+.grp.open .gi a{color:var(--mut);border-left-color:var(--line)}
+.grp.open .gi a.cur{color:var(--cream);border-left:2px solid var(--cream);padding-left:11px}
+.rfoot{margin-top:28px;font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+.rfoot b{font-weight:400;color:var(--g3)}
+
+.col{padding:56px 0 72px 64px;min-width:0}
+.art{width:720px;font-size:17px;line-height:1.7;color:var(--body)}
+.margin{padding:56px 36px 0 24px;position:sticky;top:0}
+
+/* reading type: Source Serif 4 heads (the lock amendment), Inter body 17 */
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel);display:flex;gap:8px}
+.kick i{font-style:normal;color:var(--dim)}
+.art h1{font-family:var(--serif);font-weight:600;font-size:46px;line-height:1.08;letter-spacing:-.015em;color:var(--fg);margin:14px 0 12px}
+.src{font-family:var(--mono);font-size:12px;color:var(--g3);margin:0 0 28px}
+.src i{font-style:normal;color:var(--dim)}
+.src a{color:var(--mut);text-decoration:underline;text-decoration-color:rgba(139,144,160,.35);text-underline-offset:3px}
+.lede{font-size:20px;line-height:1.55;color:var(--fg);margin:0 0 8px;max-width:640px}
+.art h2{font-family:var(--serif);font-weight:600;font-size:28px;line-height:1.2;letter-spacing:-.01em;color:var(--fg);margin:56px 0 16px;display:flex;align-items:baseline;gap:14px;scroll-margin-top:24px}
+.art h3{font-family:var(--serif);font-weight:600;font-size:20px;color:var(--fg);margin:36px 0 10px}
+.sn{font-family:var(--mono);font-size:13px;font-weight:400;color:var(--wit);letter-spacing:0;min-width:12px}
+.art p{margin:0 0 18px}
+.art code{font-family:var(--mono);font-size:.84em;color:var(--fg);background:rgba(255,255,255,.05);padding:1px 5px;border-radius:3px}
+.art code.h{font-size:24px;background:none;padding:0;font-weight:400}
+.art code.vw{color:var(--wit);background:rgba(240,160,140,.08)}
+.il{color:var(--fg);text-decoration:underline;text-decoration-color:rgba(159,179,200,.5);text-underline-offset:4px}
+
+/* code: calm, no gutter, two tones, copy always visible */
+.code{margin:0 0 20px;border:1px solid var(--line);border-radius:6px;background:var(--panel)}
+.code figcaption{display:flex;align-items:center;gap:12px;padding:7px 14px;border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.code figcaption button{margin-left:auto;font-family:var(--mono);font-size:11px;letter-spacing:0;text-transform:none;color:var(--mut);border:1px solid var(--line);border-radius:4px;padding:2px 8px}
+.code pre{margin:0;padding:14px 16px 16px;overflow-x:auto;font-family:var(--mono);font-size:13.5px;line-height:1.65;color:var(--body);white-space:pre}
+.code .c{color:var(--fg)}.code .f{color:var(--steel)}
+.code.out{border-color:rgba(240,160,140,.22)}
+.code.out pre{color:var(--cream)}
+.code.out .v{color:var(--wit);letter-spacing:.1em}
+
+/* table: a printed table, hairlines, no fills */
+.tw{margin:4px 0 22px;overflow-x:auto}
+.art table{width:100%;border-collapse:collapse;font-size:15px;line-height:1.45}
+.art th{text-align:left;font-family:var(--mono);font-size:10.5px;font-weight:400;letter-spacing:.12em;text-transform:uppercase;color:var(--g3);padding:0 16px 9px 0;border-bottom:1px solid rgba(233,234,238,.3)}
+.art td{padding:10px 16px 10px 0;border-bottom:1px solid var(--hair);vertical-align:top}
+.art td:first-child{color:var(--fg)}
+.art td.ok{color:var(--ok)}.art td.ask{color:var(--ask)}
+.art td.ask code{color:var(--ask);background:rgba(230,195,122,.08)}
+.art tr.hl td{background:rgba(243,239,230,.03)}
+
+/* the note: inside the column, one rule on the left */
+.note{display:grid;grid-template-columns:64px minmax(0,1fr);gap:0;border-left:2px solid var(--cream);padding:4px 0 4px 18px;margin:8px 0 24px}
+.note .nl{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--cream);padding-top:5px}
+.note p{margin:0;font-size:16px;color:var(--fg)}
+
+/* marginal notes: pull notes beside their paragraph, Source Serif 4 italic */
+.mn{float:right;clear:right;width:240px;margin:6px -340px 12px 0;font-family:var(--serif);font-style:italic;font-size:15px;line-height:1.5;color:var(--mut);border-top:1px solid var(--line);padding-top:10px}
+.mn b{display:block;font-family:var(--mono);font-style:normal;font-weight:400;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--g3);margin-bottom:6px}
+.mn code{font-style:normal;font-size:12px;background:none;padding:0;color:var(--body)}
+.mn code.blk{display:block;margin:4px 0 6px;font-size:11.5px;word-break:break-all}
+.mn a{color:var(--fg);font-style:normal;font-family:var(--sans);font-size:13px}
+.art p code+.x{}
+
+/* contents in the margin: numbered marginalia, the section in view in cream */
+.toc{font-family:var(--serif);font-style:italic;font-size:15px;line-height:1.4;color:var(--g3);padding-bottom:22px;border-bottom:1px solid var(--line);margin-bottom:28px}
+.toc .th{font-family:var(--mono);font-style:normal;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--g3);margin-bottom:12px}
+.toc a{display:flex;gap:10px;padding:4px 0;align-items:baseline}
+.toc a .sn{font-style:normal;font-size:11px;color:var(--dim);min-width:12px}
+.toc a.sub{padding-left:22px;font-size:14px}
+.toc a.cur{color:var(--cream)}
+.toc a.cur .sn{color:var(--wit)}
+.toc a.sub.cur::before{content:"";width:10px;height:1px;background:var(--cream);margin-left:-22px;margin-right:2px;align-self:center}
+.toc .top{font-family:var(--mono);font-style:normal;font-size:11px;color:var(--dim);margin-top:8px}
+
+/* prev / next */
+.pn{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:64px;padding-top:24px;border-top:1px solid var(--line)}
+.pn a{display:flex;flex-direction:column;gap:4px;padding:4px 0}
+.pn .next{text-align:right;align-items:flex-end}
+.pn small{font-family:var(--mono);font-size:11px;color:var(--g3)}
+.pn span{font-family:var(--serif);font-size:20px;font-weight:600;color:var(--fg)}
+
+/* search panel over the column (desktop) */
+.scrim{position:absolute;left:0;right:0;top:64px;bottom:0;background:rgba(5,6,8,.62);z-index:20}
+.d .rail .srch.on{position:relative;z-index:30;background:var(--bg)}
+.panel{position:absolute;left:300px;top:96px;width:740px;z-index:30;background:var(--panel);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:8px 8px 6px;box-shadow:0 20px 60px rgba(0,0,0,.55)}
+.hc{font-family:var(--mono);font-size:11.5px;color:var(--g3);padding:10px 14px 10px}
+.hc b{font-weight:400;color:var(--fg)}
+.hit{display:grid;grid-template-columns:minmax(0,1fr);padding:12px 14px 13px;border-radius:5px;border-left:2px solid transparent}
+.hit.sel{background:rgba(255,255,255,.045);border-left-color:var(--cream)}
+.hs{font-family:var(--mono);font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--g3)}
+.ht{font-family:var(--serif);font-weight:600;font-size:20px;color:var(--fg);margin:3px 0 4px}
+.hit.sel .ht{color:var(--cream)}
+.hn{font-size:14.5px;line-height:1.5;color:var(--mut)}
+.hn code{font-family:var(--mono);font-size:12.5px;color:var(--body)}
+mark{background:rgba(243,239,230,.12);color:var(--fg);border-radius:2px;padding:0 1px}
+.hk{display:flex;gap:22px;padding:10px 14px 6px;border-top:1px solid var(--hair);margin-top:6px;font-family:var(--mono);font-size:10.5px;color:var(--dim)}
+.empty{padding:22px 14px 18px}
+.empty p{margin:0 0 6px;font-size:17px;color:var(--fg)}
+.empty b{font-weight:500}
+.empty .btn{margin-top:12px}
+
+/* docs landing: six sections as a printed contents page */
+.land{margin-top:40px;border-top:1px solid rgba(233,234,238,.3)}
+.lsec{display:grid;grid-template-columns:44px minmax(0,1fr) auto;column-gap:8px;padding:20px 0 20px;border-bottom:1px solid var(--hair)}
+.ln{font-family:var(--mono);font-size:12px;color:var(--wit);padding-top:9px;grid-row:1/4}
+.lt{font-family:var(--serif);font-weight:600;font-size:26px;color:var(--fg);line-height:1.25}
+.ll{grid-column:2;font-size:17px;color:var(--body);margin-top:4px}
+.lp{grid-column:2;font-family:var(--mono);font-size:11.5px;color:var(--g3);margin-top:8px}
+.lsec u{grid-column:3;grid-row:1;text-decoration:none;font-family:var(--mono);font-size:11.5px;color:var(--g3);padding-top:9px}
+
+/* ---------- phone 390: the rail is a menu, contents a dropdown, margin notes fall inline ---------- */
+.p .col{padding:24px 16px 48px}
+.p .art{width:auto;font-size:17px;line-height:1.65}
+.p .art h1{font-size:34px;margin:10px 0 10px}
+.p .lede{font-size:18px}
+.p .art h2{font-size:24px;margin:44px 0 14px}
+.p .mn{float:none;width:auto;margin:0 0 20px;border-top:0;border-left:1px solid var(--line);padding:0 0 0 14px;font-size:15px}
+.p .code pre{font-size:12.5px;padding:12px 14px 14px}
+.p .art table{font-size:14px}
+.p .pn span{font-size:17px}
+.p .note{grid-template-columns:minmax(0,1fr);gap:6px}.p .note .nl{padding-top:0}
+.pbar{display:flex;gap:8px;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);position:sticky;top:0;background:var(--bg);z-index:5}
+.pb{display:inline-flex;align-items:center;gap:8px;height:36px;padding:0 12px;border:1px solid var(--line);border-radius:6px;font-family:var(--mono);font-size:12px;color:var(--fg);white-space:nowrap}
+.pbar .pb:first-child{flex:1;min-width:0;overflow:hidden}
+.pb.ic{color:var(--mut)}
+.cv{font-style:normal;color:var(--g3);font-size:10px}
+.ham{display:grid;gap:3px}.ham i{display:block;width:13px;height:1px;background:var(--fg)}
+.sheet{position:absolute;left:0;right:0;top:58px;bottom:0;z-index:30;background:var(--bg);padding:0 16px 24px;overflow:hidden}
+.shh{display:flex;justify-content:space-between;align-items:center;height:56px;border-bottom:1px solid var(--line);margin:0 -16px 16px;padding:0 16px;font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel)}
+.shh .pb{letter-spacing:0;text-transform:none}
+.sheet .rail{padding:0;border:0;font-size:15px}
+.sheet .gi a{padding:7px 0 7px 14px}
+.sheet .grp.open .gi a.cur{padding-left:13px}
+.sheet .gh{font-size:11px;margin-bottom:6px}
+.sheet .grp{margin-bottom:16px}
+.sheet .grp:not(.open) .gi{display:none}
+.sheet .grp:not(.open) .gh{padding:6px 0 10px;border-bottom:1px solid var(--hair);margin-bottom:0}
+.sheet .grp:not(.open){margin-bottom:6px}
+.sheet .srch{height:44px;font-size:14px}
+.sheet .caret{margin-left:0;margin-right:auto;height:18px}
+.sheet .hit{padding:12px 12px}
+.sheet .hc{padding:4px 0 8px}
+.p .ddn{position:absolute;left:16px;right:16px;top:116px;z-index:30;background:var(--panel);border:1px solid rgba(255,255,255,.14);border-radius:8px;padding:16px 16px 6px;box-shadow:0 20px 50px rgba(0,0,0,.6)}
+.p .ddn .toc{border:0;margin:0;padding:0}
+.p .ddn .toc a{padding:8px 0;font-size:17px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="board">
+  <div class="bhead"><span class="badge">C</span><h1>Docs · style round 2 · lane C · “paper margin”</h1><span>layout A (rail) · the real page: Getting started › Quick start · blind</span></div>
+  <p class="bnote">Axis: the reading column is the page. Headings and margin notes in Source Serif 4, body Inter 17 px on a 720 px measure. The rail recedes to grey 3 at 13 px; only the open section is bright. Contents and pull notes sit in the right margin as marginalia. Code blocks: one panel, no gutter, two tones, copy always visible. Nav, colour steps and mono labels are the benchmark page's (look B).</p>
+  <p class="bnote">Worse at: scanning the rail: five of six sections sit in grey 3 (4.7:1), read on purpose, not at a glance; the serif heads cost one font file and the lock's “serif = the paper” signal; the margin is empty on pages without notes, and on the phone every margin note falls into the column. Full paragraph in NOTES.md.</p>
+  <p class="bnote">Content: the Quick start page is set from lean README “Three runs” and “Using it” at fe06326 (via JOURNEYS J1.2 to J1.5, SECTIONS §5); the DA README could not be read (404 without credentials). Rail page names other than Quick start, Verdicts, Predicate registry, Preview and CLI reference stand in until the vendored page list exists. Search snippets stand in until Pagefind indexes the pages.</p>
+
+  <div class="flabel"><b>C</b> desktop · 1440 · page at rest · Getting started › Quick start · full length, dashed line = 900 px fold</div>
+  <div class="frame d" id="f-rest"><div class="fold" style="top:900px"><span>900 px fold</span></div>
+<header class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a href="#">Benchmark</a><a href="#">Quick start</a><a class="cur" href="#">Docs</a><a href="#">Paper</a><a class="btn" href="#">GitHub</a></div></header>
+<div class="shell"><aside class="rail"><div class="srch"><span class="q">Search docs</span><span class="k">/</span></div><div class="grp open"><div class="gh"><span>Getting started</span><u>4</u></div><div class="gi"><a class="cur" href="#">Quick start</a><a class="" href="#">Three runs</a><a class="" href="#">The PR gate</a><a class="" href="#">Run it in Docker</a></div></div><div class="grp"><div class="gh"><span>Lean</span><u>6</u></div><div class="gi"><a class="" href="#">Verdicts</a><a class="" href="#">Writing code lean can prove</a><a class="" href="#">What couples with lean</a><a class="" href="#">The front end</a><a class="" href="#">A coding agent's loop</a><a class="" href="#">What is built and planned</a></div></div><div class="grp"><div class="gh"><span>Differential attestation</span><u>9</u></div><div class="gi"><a class="" href="#">Overview</a><a class="" href="#">Recording</a><a class="" href="#">Proof</a><a class="" href="#">Relation</a><a class="" href="#">Predicate registry</a><a class="" href="#">Preview</a><a class="" href="#">The gate</a><a class="" href="#">Composition (C4)</a><a class="" href="#">Comments on the pull request</a></div></div><div class="grp"><div class="gh"><span>The benchmark</span><u>4</u></div><div class="gi"><a class="" href="#">AACR-Bench</a><a class="" href="#">How our rows were measured</a><a class="" href="#">The 12 unscored instances</a><a class="" href="#">Judge logs</a></div></div><div class="grp"><div class="gh"><span>Reference</span><u>3</u></div><div class="gi"><a class="" href="#">CLI reference</a><a class="" href="#">Exit codes</a><a class="" href="#">The conformance suite</a></div></div><div class="grp"><div class="gh"><span>FAQ</span><u>1</u></div><div class="gi"><a class="" href="#">FAQ</a></div></div><div class="rfoot">lean <b>fe06326</b> · DA <b>77b43b0</b></div></aside><main class="col"><article class="art">
+<div class="kick">Getting started <i>·</i> 1 of 4</div>
+<h1>Quick start</h1>
+<p class="src">lean <a href="#">README.md</a> “Three runs”, “Using it” <i>·</i> pinned <a href="#">fe06326</a></p>
+<p class="lede">Clone lean, check one function, read the verdict. Three commands, one output, about a minute on Node 24.</p>
+
+<h2 id="install"><span class="sn">1</span>Install</h2>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">git</span> clone https://github.com/NexusGPT/lean <span class="f">&amp;&amp;</span> <span class="c">cd</span> lean</pre></figure>
+<aside class="mn"><b>Docker instead</b><code class="blk">docker build -t lean:local .</code>The image carries Python 3 and Dafny 4.</aside>
+<p>What each lane needs:</p>
+<div class="tw"><table>
+<thead><tr><th>You have</th><th>Lane A · proof</th><th>Lane B</th></tr></thead>
+<tbody>
+<tr><td>Node 24</td><td class="ask">reports <code>ASK</code></td><td class="ok">runs</td></tr>
+<tr><td>Node 24, Python 3, Dafny 4</td><td class="ok">runs</td><td class="ok">runs</td></tr>
+</tbody></table></div>
+
+<h2 id="first-run"><span class="sn">2</span>First run</h2>
+<aside class="mn"><b>The pair</b><code class="blk">langs/ts/tests/pairs/readme_ledger/</code>Two versions of <code>applyAll</code>; the candidate has <code>&lt;=</code> where the parent had <code>&lt;</code>.</aside>
+<p>Check <code>applyAll</code> across 60 generated inputs, seed 3:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">node</span> langs/ts/check.mjs \
+  <span class="f">--parent</span> langs/ts/tests/pairs/readme_ledger/parent.ts \
+  <span class="f">--candidate</span> langs/ts/tests/pairs/readme_ledger/candidate.ts \
+  <span class="f">--unit</span> applyAll <span class="f">--no-project</span> <span class="f">--n</span> 60 <span class="f">--seed</span> 3 <span class="f">--out</span> ledger.json</pre></figure>
+<p>Pull the witness out of the ledger:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">jq</span> <span class="f">-c</span> '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json</pre></figure>
+<figure class="code out"><figcaption><span>output</span><span class="v">WITNESS</span><button>copy</button></figcaption><pre>{"input":17,"floor":-1,"parent":1,"candidate":0}</pre></figure>
+
+<h2 id="verdict"><span class="sn">3</span>Read the verdict</h2>
+<aside class="mn"><b>Verdict order</b>WITNESS, PASS-proved, PASS-decided, PASS-bounded, ASK. REFUSE and NEW sit outside it. <a href="#">Verdicts →</a></aside>
+<p><code class="vw">WITNESS</code> is an input on which the two versions differ. Here: input 17, floor −1, a debit of 1 from a new account. The parent posts it; the candidate posts nothing.</p>
+<div class="note"><span class="nl">Note</span><p>Exit code <code>0</code> on every verdict, <code>WITNESS</code> included. Exit <code>2</code> means no verdict was reached. Gate on the verdict, not on the exit code.</p></div>
+<p>Same flags, same seed, same output on a fresh clone. If yours differs, compare the pinned commit above with <code>git rev-parse HEAD</code>.</p>
+
+<h2 id="next"><span class="sn">4</span>Next</h2>
+<p><a class="il" href="#">The PR gate</a>: one comment per pull request, updated on every push, then <code>--block witness</code>. Every flag: <a class="il" href="#">CLI reference</a>.</p>
+
+<nav class="pn"><a href="#" class="prev"><small>← Docs</small><span>All sections</span></a><a href="#" class="next"><small>Getting started →</small><span>Three runs</span></a></nav></article></main><div class="margin"><div class="toc"><div class="th">On this page</div><a class="cur" href="#install"><span class="sn">1</span>Install</a><a class="" href="#first-run"><span class="sn">2</span>First run</a><a class="" href="#verdict"><span class="sn">3</span>Read the verdict</a><a class="" href="#next"><span class="sn">4</span>Next</a><a class="top" href="#">↑ top</a></div></div></div>
+<footer class="foot"><div class="wm"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><span>Differential attestation and lean are built by Nexus.</span></div><nav class="fl"><a href="#">lean</a><a href="#">differential-attestation</a><a href="#">benchmark</a><a href="#">paper</a><a href="#">Nexus</a></nav></footer></div>
+
+  <div class="flabel"><b>C</b> desktop · 1440 · long page with the contents in the margin · Reference › CLI reference · “Flags” in view</div>
+  <div class="frame d" id="f-long" style="height:1500px"><div class="fold" style="top:900px"><span>900 px fold</span></div>
+<header class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a href="#">Benchmark</a><a href="#">Quick start</a><a class="cur" href="#">Docs</a><a href="#">Paper</a><a class="btn" href="#">GitHub</a></div></header>
+<div class="shell"><aside class="rail"><div class="srch"><span class="q">Search docs</span><span class="k">/</span></div><div class="grp"><div class="gh"><span>Getting started</span><u>4</u></div><div class="gi"><a class="" href="#">Quick start</a><a class="" href="#">Three runs</a><a class="" href="#">The PR gate</a><a class="" href="#">Run it in Docker</a></div></div><div class="grp"><div class="gh"><span>Lean</span><u>6</u></div><div class="gi"><a class="" href="#">Verdicts</a><a class="" href="#">Writing code lean can prove</a><a class="" href="#">What couples with lean</a><a class="" href="#">The front end</a><a class="" href="#">A coding agent's loop</a><a class="" href="#">What is built and planned</a></div></div><div class="grp"><div class="gh"><span>Differential attestation</span><u>9</u></div><div class="gi"><a class="" href="#">Overview</a><a class="" href="#">Recording</a><a class="" href="#">Proof</a><a class="" href="#">Relation</a><a class="" href="#">Predicate registry</a><a class="" href="#">Preview</a><a class="" href="#">The gate</a><a class="" href="#">Composition (C4)</a><a class="" href="#">Comments on the pull request</a></div></div><div class="grp"><div class="gh"><span>The benchmark</span><u>4</u></div><div class="gi"><a class="" href="#">AACR-Bench</a><a class="" href="#">How our rows were measured</a><a class="" href="#">The 12 unscored instances</a><a class="" href="#">Judge logs</a></div></div><div class="grp open"><div class="gh"><span>Reference</span><u>3</u></div><div class="gi"><a class="cur" href="#">CLI reference</a><a class="" href="#">Exit codes</a><a class="" href="#">The conformance suite</a></div></div><div class="grp"><div class="gh"><span>FAQ</span><u>1</u></div><div class="gi"><a class="" href="#">FAQ</a></div></div><div class="rfoot">lean <b>fe06326</b> · DA <b>77b43b0</b></div></aside><main class="col"><article class="art">
+<div class="kick">Reference <i>·</i> 1 of 3</div>
+<h1>CLI reference</h1>
+<p class="src">lean <a href="#">README.md</a> “Using it” <i>·</i> pinned <a href="#">fe06326</a></p>
+<p class="lede">Seven entry points. All exit <code>0</code> on any verdict and <code>2</code> with none.</p>
+<h2 id="commands"><span class="sn">1</span>Commands</h2>
+<div class="tw"><table>
+<thead><tr><th>Command</th><th>Scope</th></tr></thead>
+<tbody>
+<tr><td><code>check.mjs</code></td><td>one function, two versions</td></tr>
+<tr><td><code>pr.mjs</code></td><td>every changed function of a pull request</td></tr>
+<tr><td><code>exec/run.mjs</code></td><td>the execution lane on its own</td></tr>
+<tr><td><code>lint.mjs</code></td><td>what lean can and cannot reach in a file</td></tr>
+<tr><td><code>ci/comment.mjs</code></td><td>one pull request comment, updated on every push</td></tr>
+<tr><td><code>bin/lean</code></td><td>the wrapper over the above</td></tr>
+<tr><td><code>npm test</code></td><td>the conformance suite</td></tr>
+</tbody></table></div>
+<h2 id="check"><span class="sn">2</span><code class="h">check.mjs</code></h2>
+<aside class="mn"><b>From Quick start</b>The first run uses all seven flags below. <a href="#">Quick start →</a></aside>
+<p>Compares one function in two files and writes a ledger.</p>
+<h3 id="check-flags">Flags</h3>
+<div class="tw"><table>
+<thead><tr><th>Flag</th><th>Takes</th><th>In the first run</th></tr></thead>
+<tbody>
+<tr><td><code>--parent</code></td><td>file, before the change</td><td><code>…/parent.ts</code></td></tr>
+<tr><td><code>--candidate</code></td><td>file, after the change</td><td><code>…/candidate.ts</code></td></tr>
+<tr><td><code>--unit</code></td><td>function name</td><td><code>applyAll</code></td></tr>
+<tr><td><code>--no-project</code></td><td>none</td><td>set</td></tr>
+<tr class="hl"><td><code>--n</code></td><td>number of generated inputs</td><td><code>60</code></td></tr>
+<tr class="hl"><td><code>--seed</code></td><td>integer</td><td><code>3</code></td></tr>
+<tr><td><code>--out</code></td><td>ledger path</td><td><code>ledger.json</code></td></tr>
+</tbody></table></div>
+<aside class="mn"><b>Replay</b>Same <code>--n</code> and <code>--seed</code> on the same commit give the same ledger.</aside>
+<h3 id="check-ex">Example</h3>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">node</span> langs/ts/check.mjs \
+  <span class="f">--parent</span> langs/ts/tests/pairs/readme_ledger/parent.ts \
+  <span class="f">--candidate</span> langs/ts/tests/pairs/readme_ledger/candidate.ts \
+  <span class="f">--unit</span> applyAll <span class="f">--no-project</span> <span class="f">--n</span> 60 <span class="f">--seed</span> 3 <span class="f">--out</span> ledger.json</pre></figure>
+<h2 id="pr"><span class="sn">3</span><code class="h">pr.mjs</code></h2>
+<p>Runs <code>check.mjs</code> on every function the pull request changes.</p></article></main><div class="margin"><div class="toc"><div class="th">On this page</div><a class="" href="#commands"><span class="sn">1</span>Commands</a><a class="" href="#check"><span class="sn">2</span>check.mjs</a><a class="cur sub" href="#check-flags"><span class="sn"></span>Flags</a><a class=" sub" href="#check-ex"><span class="sn"></span>Example</a><a class="" href="#pr"><span class="sn">3</span>pr.mjs</a><a class="" href="#comment"><span class="sn">4</span>ci/comment.mjs</a><a class="" href="#exit"><span class="sn">5</span>Exit codes</a><a class="" href="#suite"><span class="sn">6</span>The suite</a><a class="top" href="#">↑ top</a></div></div></div>
+</div>
+
+  <div class="flabel"><b>C</b> desktop · 1440 · search open · “predicate registry” typed in the rail head, first hit selected</div>
+  <div class="frame d" id="f-search" style="height:900px">
+<header class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a href="#">Benchmark</a><a href="#">Quick start</a><a class="cur" href="#">Docs</a><a href="#">Paper</a><a class="btn" href="#">GitHub</a></div></header>
+<div class="shell"><aside class="rail"><div class="srch on"><span class="q">predicate registry</span><span class="caret"></span><span class="k">esc</span></div><div class="grp open"><div class="gh"><span>Getting started</span><u>4</u></div><div class="gi"><a class="cur" href="#">Quick start</a><a class="" href="#">Three runs</a><a class="" href="#">The PR gate</a><a class="" href="#">Run it in Docker</a></div></div><div class="grp"><div class="gh"><span>Lean</span><u>6</u></div><div class="gi"><a class="" href="#">Verdicts</a><a class="" href="#">Writing code lean can prove</a><a class="" href="#">What couples with lean</a><a class="" href="#">The front end</a><a class="" href="#">A coding agent's loop</a><a class="" href="#">What is built and planned</a></div></div><div class="grp"><div class="gh"><span>Differential attestation</span><u>9</u></div><div class="gi"><a class="" href="#">Overview</a><a class="" href="#">Recording</a><a class="" href="#">Proof</a><a class="" href="#">Relation</a><a class="" href="#">Predicate registry</a><a class="" href="#">Preview</a><a class="" href="#">The gate</a><a class="" href="#">Composition (C4)</a><a class="" href="#">Comments on the pull request</a></div></div><div class="grp"><div class="gh"><span>The benchmark</span><u>4</u></div><div class="gi"><a class="" href="#">AACR-Bench</a><a class="" href="#">How our rows were measured</a><a class="" href="#">The 12 unscored instances</a><a class="" href="#">Judge logs</a></div></div><div class="grp"><div class="gh"><span>Reference</span><u>3</u></div><div class="gi"><a class="" href="#">CLI reference</a><a class="" href="#">Exit codes</a><a class="" href="#">The conformance suite</a></div></div><div class="grp"><div class="gh"><span>FAQ</span><u>1</u></div><div class="gi"><a class="" href="#">FAQ</a></div></div><div class="rfoot">lean <b>fe06326</b> · DA <b>77b43b0</b></div></aside><main class="col"><article class="art">
+<div class="kick">Getting started <i>·</i> 1 of 4</div>
+<h1>Quick start</h1>
+<p class="src">lean <a href="#">README.md</a> “Three runs”, “Using it” <i>·</i> pinned <a href="#">fe06326</a></p>
+<p class="lede">Clone lean, check one function, read the verdict. Three commands, one output, about a minute on Node 24.</p>
+
+<h2 id="install"><span class="sn">1</span>Install</h2>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">git</span> clone https://github.com/NexusGPT/lean <span class="f">&amp;&amp;</span> <span class="c">cd</span> lean</pre></figure>
+<aside class="mn"><b>Docker instead</b><code class="blk">docker build -t lean:local .</code>The image carries Python 3 and Dafny 4.</aside>
+<p>What each lane needs:</p>
+<div class="tw"><table>
+<thead><tr><th>You have</th><th>Lane A · proof</th><th>Lane B</th></tr></thead>
+<tbody>
+<tr><td>Node 24</td><td class="ask">reports <code>ASK</code></td><td class="ok">runs</td></tr>
+<tr><td>Node 24, Python 3, Dafny 4</td><td class="ok">runs</td><td class="ok">runs</td></tr>
+</tbody></table></div>
+
+<h2 id="first-run"><span class="sn">2</span>First run</h2>
+<aside class="mn"><b>The pair</b><code class="blk">langs/ts/tests/pairs/readme_ledger/</code>Two versions of <code>applyAll</code>; the candidate has <code>&lt;=</code> where the parent had <code>&lt;</code>.</aside>
+<p>Check <code>applyAll</code> across 60 generated inputs, seed 3:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">node</span> langs/ts/check.mjs \
+  <span class="f">--parent</span> langs/ts/tests/pairs/readme_ledger/parent.ts \
+  <span class="f">--candidate</span> langs/ts/tests/pairs/readme_ledger/candidate.ts \
+  <span class="f">--unit</span> applyAll <span class="f">--no-project</span> <span class="f">--n</span> 60 <span class="f">--seed</span> 3 <span class="f">--out</span> ledger.json</pre></figure>
+<p>Pull the witness out of the ledger:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">jq</span> <span class="f">-c</span> '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json</pre></figure>
+<figure class="code out"><figcaption><span>output</span><span class="v">WITNESS</span><button>copy</button></figcaption><pre>{"input":17,"floor":-1,"parent":1,"candidate":0}</pre></figure>
+
+<h2 id="verdict"><span class="sn">3</span>Read the verdict</h2>
+<aside class="mn"><b>Verdict order</b>WITNESS, PASS-proved, PASS-decided, PASS-bounded, ASK. REFUSE and NEW sit outside it. <a href="#">Verdicts →</a></aside>
+<p><code class="vw">WITNESS</code> is an input on which the two versions differ. Here: input 17, floor −1, a debit of 1 from a new account. The parent posts it; the candidate posts nothing.</p>
+<div class="note"><span class="nl">Note</span><p>Exit code <code>0</code> on every verdict, <code>WITNESS</code> included. Exit <code>2</code> means no verdict was reached. Gate on the verdict, not on the exit code.</p></div>
+<p>Same flags, same seed, same output on a fresh clone. If yours differs, compare the pinned commit above with <code>git rev-parse HEAD</code>.</p>
+
+<h2 id="next"><span class="sn">4</span>Next</h2>
+<p><a class="il" href="#">The PR gate</a>: one comment per pull request, updated on every push, then <code>--block witness</code>. Every flag: <a class="il" href="#">CLI reference</a>.</p>
+
+<nav class="pn"><a href="#" class="prev"><small>← Docs</small><span>All sections</span></a><a href="#" class="next"><small>Getting started →</small><span>Three runs</span></a></nav></article></main><div class="margin"><div class="toc"><div class="th">On this page</div><a class="cur" href="#install"><span class="sn">1</span>Install</a><a class="" href="#first-run"><span class="sn">2</span>First run</a><a class="" href="#verdict"><span class="sn">3</span>Read the verdict</a><a class="" href="#next"><span class="sn">4</span>Next</a><a class="top" href="#">↑ top</a></div></div></div>
+<div class="scrim"></div><div class="panel"><div class="hc">3 results for <b>“predicate registry”</b></div><a class="hit sel" href="#"><span class="hs">Differential attestation</span><span class="ht">Predicate registry</span><span class="hn">The <mark>predicate registry</mark> names each relation the proof lane may assume, with its source.</span></a><a class="hit" href="#"><span class="hs">Differential attestation</span><span class="ht">Relation</span><span class="hn">A relation is checked against a <mark>predicate</mark> from the <mark>registry</mark>, never an ad hoc one.</span></a><a class="hit" href="#"><span class="hs">Reference</span><span class="ht">CLI reference</span><span class="hn"><code>lint.mjs</code> lists each function whose <mark>predicate</mark> is missing from the <mark>registry</mark>.</span></a><div class="hk"><span>↑↓ move</span><span>enter open</span><span>esc close</span></div></div></div>
+
+  <div class="flabel"><b>C</b> desktop · 1440 · search, no results · crop</div>
+  <div class="frame d" id="f-search-empty" style="height:560px">
+<header class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a href="#">Benchmark</a><a href="#">Quick start</a><a class="cur" href="#">Docs</a><a href="#">Paper</a><a class="btn" href="#">GitHub</a></div></header>
+<div class="shell"><aside class="rail"><div class="srch on"><span class="q">verdict registry</span><span class="caret"></span><span class="k">esc</span></div><div class="grp open"><div class="gh"><span>Getting started</span><u>4</u></div><div class="gi"><a class="cur" href="#">Quick start</a><a class="" href="#">Three runs</a><a class="" href="#">The PR gate</a><a class="" href="#">Run it in Docker</a></div></div><div class="grp"><div class="gh"><span>Lean</span><u>6</u></div><div class="gi"><a class="" href="#">Verdicts</a><a class="" href="#">Writing code lean can prove</a><a class="" href="#">What couples with lean</a><a class="" href="#">The front end</a><a class="" href="#">A coding agent's loop</a><a class="" href="#">What is built and planned</a></div></div><div class="grp"><div class="gh"><span>Differential attestation</span><u>9</u></div><div class="gi"><a class="" href="#">Overview</a><a class="" href="#">Recording</a><a class="" href="#">Proof</a><a class="" href="#">Relation</a><a class="" href="#">Predicate registry</a><a class="" href="#">Preview</a><a class="" href="#">The gate</a><a class="" href="#">Composition (C4)</a><a class="" href="#">Comments on the pull request</a></div></div><div class="grp"><div class="gh"><span>The benchmark</span><u>4</u></div><div class="gi"><a class="" href="#">AACR-Bench</a><a class="" href="#">How our rows were measured</a><a class="" href="#">The 12 unscored instances</a><a class="" href="#">Judge logs</a></div></div><div class="grp"><div class="gh"><span>Reference</span><u>3</u></div><div class="gi"><a class="" href="#">CLI reference</a><a class="" href="#">Exit codes</a><a class="" href="#">The conformance suite</a></div></div><div class="grp"><div class="gh"><span>FAQ</span><u>1</u></div><div class="gi"><a class="" href="#">FAQ</a></div></div><div class="rfoot">lean <b>fe06326</b> · DA <b>77b43b0</b></div></aside><main class="col"><article class="art">
+<div class="kick">Getting started <i>·</i> 1 of 4</div>
+<h1>Quick start</h1>
+<p class="src">lean <a href="#">README.md</a> “Three runs”, “Using it” <i>·</i> pinned <a href="#">fe06326</a></p>
+<p class="lede">Clone lean, check one function, read the verdict. Three commands, one output, about a minute on Node 24.</p>
+
+<h2 id="install"><span class="sn">1</span>Install</h2>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">git</span> clone https://github.com/NexusGPT/lean <span class="f">&amp;&amp;</span> <span class="c">cd</span> lean</pre></figure>
+<aside class="mn"><b>Docker instead</b><code class="blk">docker build -t lean:local .</code>The image carries Python 3 and Dafny 4.</aside>
+<p>What each lane needs:</p>
+<div class="tw"><table>
+<thead><tr><th>You have</th><th>Lane A · proof</th><th>Lane B</th></tr></thead>
+<tbody>
+<tr><td>Node 24</td><td class="ask">reports <code>ASK</code></td><td class="ok">runs</td></tr>
+<tr><td>Node 24, Python 3, Dafny 4</td><td class="ok">runs</td><td class="ok">runs</td></tr>
+</tbody></table></div>
+
+<h2 id="first-run"><span class="sn">2</span>First run</h2>
+<aside class="mn"><b>The pair</b><code class="blk">langs/ts/tests/pairs/readme_ledger/</code>Two versions of <code>applyAll</code>; the candidate has <code>&lt;=</code> where the parent had <code>&lt;</code>.</aside>
+<p>Check <code>applyAll</code> across 60 generated inputs, seed 3:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">node</span> langs/ts/check.mjs \
+  <span class="f">--parent</span> langs/ts/tests/pairs/readme_ledger/parent.ts \
+  <span class="f">--candidate</span> langs/ts/tests/pairs/readme_ledger/candidate.ts \
+  <span class="f">--unit</span> applyAll <span class="f">--no-project</span> <span class="f">--n</span> 60 <span class="f">--seed</span> 3 <span class="f">--out</span> ledger.json</pre></figure>
+<p>Pull the witness out of the ledger:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">jq</span> <span class="f">-c</span> '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json</pre></figure>
+<figure class="code out"><figcaption><span>output</span><span class="v">WITNESS</span><button>copy</button></figcaption><pre>{"input":17,"floor":-1,"parent":1,"candidate":0}</pre></figure>
+
+<h2 id="verdict"><span class="sn">3</span>Read the verdict</h2>
+<aside class="mn"><b>Verdict order</b>WITNESS, PASS-proved, PASS-decided, PASS-bounded, ASK. REFUSE and NEW sit outside it. <a href="#">Verdicts →</a></aside>
+<p><code class="vw">WITNESS</code> is an input on which the two versions differ. Here: input 17, floor −1, a debit of 1 from a new account. The parent posts it; the candidate posts nothing.</p>
+<div class="note"><span class="nl">Note</span><p>Exit code <code>0</code> on every verdict, <code>WITNESS</code> included. Exit <code>2</code> means no verdict was reached. Gate on the verdict, not on the exit code.</p></div>
+<p>Same flags, same seed, same output on a fresh clone. If yours differs, compare the pinned commit above with <code>git rev-parse HEAD</code>.</p>
+
+<h2 id="next"><span class="sn">4</span>Next</h2>
+<p><a class="il" href="#">The PR gate</a>: one comment per pull request, updated on every push, then <code>--block witness</code>. Every flag: <a class="il" href="#">CLI reference</a>.</p>
+
+<nav class="pn"><a href="#" class="prev"><small>← Docs</small><span>All sections</span></a><a href="#" class="next"><small>Getting started →</small><span>Three runs</span></a></nav></article></main><div class="margin"><div class="toc"><div class="th">On this page</div><a class="cur" href="#install"><span class="sn">1</span>Install</a><a class="" href="#first-run"><span class="sn">2</span>First run</a><a class="" href="#verdict"><span class="sn">3</span>Read the verdict</a><a class="" href="#next"><span class="sn">4</span>Next</a><a class="top" href="#">↑ top</a></div></div></div>
+<div class="scrim"></div><div class="panel"><div class="empty"><p>No results for <b>“verdict registry”</b>.</p><p class="hn">Search covers page titles and text of all 27 pages.</p><button class="btn m">Clear search</button></div></div></div>
+
+  <div class="flabel"><b>C</b> desktop · 1440 · docs landing · /docs/ · six sections, one line each</div>
+  <div class="frame d" id="f-landing"><div class="fold" style="top:900px"><span>900 px fold</span></div>
+<header class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a href="#">Benchmark</a><a href="#">Quick start</a><a class="cur" href="#">Docs</a><a href="#">Paper</a><a class="btn" href="#">GitHub</a></div></header>
+<div class="shell"><aside class="rail"><div class="srch"><span class="q">Search docs</span><span class="k">/</span></div><div class="grp"><div class="gh"><span>Getting started</span><u>4</u></div><div class="gi"><a class="" href="#">Quick start</a><a class="" href="#">Three runs</a><a class="" href="#">The PR gate</a><a class="" href="#">Run it in Docker</a></div></div><div class="grp"><div class="gh"><span>Lean</span><u>6</u></div><div class="gi"><a class="" href="#">Verdicts</a><a class="" href="#">Writing code lean can prove</a><a class="" href="#">What couples with lean</a><a class="" href="#">The front end</a><a class="" href="#">A coding agent's loop</a><a class="" href="#">What is built and planned</a></div></div><div class="grp"><div class="gh"><span>Differential attestation</span><u>9</u></div><div class="gi"><a class="" href="#">Overview</a><a class="" href="#">Recording</a><a class="" href="#">Proof</a><a class="" href="#">Relation</a><a class="" href="#">Predicate registry</a><a class="" href="#">Preview</a><a class="" href="#">The gate</a><a class="" href="#">Composition (C4)</a><a class="" href="#">Comments on the pull request</a></div></div><div class="grp"><div class="gh"><span>The benchmark</span><u>4</u></div><div class="gi"><a class="" href="#">AACR-Bench</a><a class="" href="#">How our rows were measured</a><a class="" href="#">The 12 unscored instances</a><a class="" href="#">Judge logs</a></div></div><div class="grp"><div class="gh"><span>Reference</span><u>3</u></div><div class="gi"><a class="" href="#">CLI reference</a><a class="" href="#">Exit codes</a><a class="" href="#">The conformance suite</a></div></div><div class="grp"><div class="gh"><span>FAQ</span><u>1</u></div><div class="gi"><a class="" href="#">FAQ</a></div></div><div class="rfoot">lean <b>fe06326</b> · DA <b>77b43b0</b></div></aside><main class="col"><article class="art">
+<div class="kick">Docs</div>
+<h1>Docs</h1>
+<p class="lede">Six sections, 27 pages. Each page names its source file and the commit it was read at.</p>
+<div class="land"><a class="lsec" href="#"><span class="ln">01</span><span class="lt">Getting started</span><span class="ll">Clone, check one function, gate a pull request.</span><span class="lp">Quick start · Three runs · The PR gate · +1</span><u>4 pages</u></a><a class="lsec" href="#"><span class="ln">02</span><span class="lt">Lean</span><span class="ll">The checker: verdicts, what it proves, what it cannot.</span><span class="lp">Verdicts · Writing code lean can prove · What couples with lean · +3</span><u>6 pages</u></a><a class="lsec" href="#"><span class="ln">03</span><span class="lt">Differential attestation</span><span class="ll">The architecture: recording, proof and relation around lean.</span><span class="lp">Overview · Recording · Proof · +6</span><u>9 pages</u></a><a class="lsec" href="#"><span class="ln">04</span><span class="lt">The benchmark</span><span class="ll">How the leaderboard rows were produced and how to re-run ours.</span><span class="lp">AACR-Bench · How our rows were measured · The 12 unscored instances · +1</span><u>4 pages</u></a><a class="lsec" href="#"><span class="ln">05</span><span class="lt">Reference</span><span class="ll">Every command, flag and exit code.</span><span class="lp">CLI reference · Exit codes · The conformance suite</span><u>3 pages</u></a><a class="lsec" href="#"><span class="ln">06</span><span class="lt">FAQ</span><span class="ll">Short answers, each linked to its page.</span><span class="lp">FAQ</span><u>1 page</u></a></div>
+<p class="src" style="margin-top:40px">Sources: lean <a href="#">docs/</a> and README at <a href="#">fe06326</a> · DA <a href="#">docs/architecture/</a> at <a href="#">77b43b0</a></p></article></main><div class="margin"></div></div>
+<footer class="foot"><div class="wm"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><span>Differential attestation and lean are built by Nexus.</span></div><nav class="fl"><a href="#">lean</a><a href="#">differential-attestation</a><a href="#">benchmark</a><a href="#">paper</a><a href="#">Nexus</a></nav></footer></div>
+
+  <div class="flabel"><b>C</b> phone · 390 · page at rest, menu open, search open, contents open</div>
+  <div class="prow">
+    <div><p class="cap"><b>Page at rest.</b> Full length. The rail is “Menu · Getting started”; margin notes fall into the column as indented italic notes.</p><div class="frame p" id="p-rest"><div class="fold" style="top:844px"><span>844 px fold</span></div>
+<header class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a href="#">Benchmark</a><a href="#">Quick start</a><a class="cur" href="#">Docs</a><a href="#">Paper</a><a class="btn" href="#">GitHub</a></div></header>
+<div class="pbar"><button class="pb"><span class="ham"><i></i><i></i><i></i></span>Getting started</button><button class="pb">Contents <i class="cv">▾</i></button><button class="pb ic">Search</button></div>
+<main class="col"><article class="art">
+<div class="kick">Getting started <i>·</i> 1 of 4</div>
+<h1>Quick start</h1>
+<p class="src">lean <a href="#">README.md</a> “Three runs”, “Using it” <i>·</i> pinned <a href="#">fe06326</a></p>
+<p class="lede">Clone lean, check one function, read the verdict. Three commands, one output, about a minute on Node 24.</p>
+
+<h2 id="install"><span class="sn">1</span>Install</h2>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">git</span> clone https://github.com/NexusGPT/lean <span class="f">&amp;&amp;</span> <span class="c">cd</span> lean</pre></figure>
+<aside class="mn"><b>Docker instead</b><code class="blk">docker build -t lean:local .</code>The image carries Python 3 and Dafny 4.</aside>
+<p>What each lane needs:</p>
+<div class="tw"><table>
+<thead><tr><th>You have</th><th>Lane A · proof</th><th>Lane B</th></tr></thead>
+<tbody>
+<tr><td>Node 24</td><td class="ask">reports <code>ASK</code></td><td class="ok">runs</td></tr>
+<tr><td>Node 24, Python 3, Dafny 4</td><td class="ok">runs</td><td class="ok">runs</td></tr>
+</tbody></table></div>
+
+<h2 id="first-run"><span class="sn">2</span>First run</h2>
+<aside class="mn"><b>The pair</b><code class="blk">langs/ts/tests/pairs/readme_ledger/</code>Two versions of <code>applyAll</code>; the candidate has <code>&lt;=</code> where the parent had <code>&lt;</code>.</aside>
+<p>Check <code>applyAll</code> across 60 generated inputs, seed 3:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">node</span> langs/ts/check.mjs \
+  <span class="f">--parent</span> langs/ts/tests/pairs/readme_ledger/parent.ts \
+  <span class="f">--candidate</span> langs/ts/tests/pairs/readme_ledger/candidate.ts \
+  <span class="f">--unit</span> applyAll <span class="f">--no-project</span> <span class="f">--n</span> 60 <span class="f">--seed</span> 3 <span class="f">--out</span> ledger.json</pre></figure>
+<p>Pull the witness out of the ledger:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">jq</span> <span class="f">-c</span> '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json</pre></figure>
+<figure class="code out"><figcaption><span>output</span><span class="v">WITNESS</span><button>copy</button></figcaption><pre>{"input":17,"floor":-1,"parent":1,"candidate":0}</pre></figure>
+
+<h2 id="verdict"><span class="sn">3</span>Read the verdict</h2>
+<aside class="mn"><b>Verdict order</b>WITNESS, PASS-proved, PASS-decided, PASS-bounded, ASK. REFUSE and NEW sit outside it. <a href="#">Verdicts →</a></aside>
+<p><code class="vw">WITNESS</code> is an input on which the two versions differ. Here: input 17, floor −1, a debit of 1 from a new account. The parent posts it; the candidate posts nothing.</p>
+<div class="note"><span class="nl">Note</span><p>Exit code <code>0</code> on every verdict, <code>WITNESS</code> included. Exit <code>2</code> means no verdict was reached. Gate on the verdict, not on the exit code.</p></div>
+<p>Same flags, same seed, same output on a fresh clone. If yours differs, compare the pinned commit above with <code>git rev-parse HEAD</code>.</p>
+
+<h2 id="next"><span class="sn">4</span>Next</h2>
+<p><a class="il" href="#">The PR gate</a>: one comment per pull request, updated on every push, then <code>--block witness</code>. Every flag: <a class="il" href="#">CLI reference</a>.</p>
+
+<nav class="pn"><a href="#" class="prev"><small>← Docs</small><span>All sections</span></a><a href="#" class="next"><small>Getting started →</small><span>Three runs</span></a></nav></article></main>
+<footer class="foot"><div class="wm"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><span>Differential attestation and lean are built by Nexus.</span></div><nav class="fl"><a href="#">lean</a><a href="#">differential-attestation</a><a href="#">benchmark</a><a href="#">paper</a><a href="#">Nexus</a></nav></footer></div></div>
+    <div><p class="cap"><b>Menu open.</b> The open section listed, the other five folded to one line each; search sits on top.</p><div class="frame p" id="p-menu" style="height:844px">
+<header class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a href="#">Benchmark</a><a href="#">Quick start</a><a class="cur" href="#">Docs</a><a href="#">Paper</a><a class="btn" href="#">GitHub</a></div></header>
+<div class="pbar"><button class="pb"><span class="ham"><i></i><i></i><i></i></span>Getting started</button><button class="pb">Contents <i class="cv">▾</i></button><button class="pb ic">Search</button></div>
+<main class="col"><article class="art">
+<div class="kick">Getting started <i>·</i> 1 of 4</div>
+<h1>Quick start</h1>
+<p class="src">lean <a href="#">README.md</a> “Three runs”, “Using it” <i>·</i> pinned <a href="#">fe06326</a></p>
+<p class="lede">Clone lean, check one function, read the verdict. Three commands, one output, about a minute on Node 24.</p>
+
+<h2 id="install"><span class="sn">1</span>Install</h2>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">git</span> clone https://github.com/NexusGPT/lean <span class="f">&amp;&amp;</span> <span class="c">cd</span> lean</pre></figure>
+<aside class="mn"><b>Docker instead</b><code class="blk">docker build -t lean:local .</code>The image carries Python 3 and Dafny 4.</aside>
+<p>What each lane needs:</p>
+<div class="tw"><table>
+<thead><tr><th>You have</th><th>Lane A · proof</th><th>Lane B</th></tr></thead>
+<tbody>
+<tr><td>Node 24</td><td class="ask">reports <code>ASK</code></td><td class="ok">runs</td></tr>
+<tr><td>Node 24, Python 3, Dafny 4</td><td class="ok">runs</td><td class="ok">runs</td></tr>
+</tbody></table></div>
+
+<h2 id="first-run"><span class="sn">2</span>First run</h2>
+<aside class="mn"><b>The pair</b><code class="blk">langs/ts/tests/pairs/readme_ledger/</code>Two versions of <code>applyAll</code>; the candidate has <code>&lt;=</code> where the parent had <code>&lt;</code>.</aside>
+<p>Check <code>applyAll</code> across 60 generated inputs, seed 3:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">node</span> langs/ts/check.mjs \
+  <span class="f">--parent</span> langs/ts/tests/pairs/readme_ledger/parent.ts \
+  <span class="f">--candidate</span> langs/ts/tests/pairs/readme_ledger/candidate.ts \
+  <span class="f">--unit</span> applyAll <span class="f">--no-project</span> <span class="f">--n</span> 60 <span class="f">--seed</span> 3 <span class="f">--out</span> ledger.json</pre></figure>
+<p>Pull the witness out of the ledger:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">jq</span> <span class="f">-c</span> '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json</pre></figure>
+<figure class="code out"><figcaption><span>output</span><span class="v">WITNESS</span><button>copy</button></figcaption><pre>{"input":17,"floor":-1,"parent":1,"candidate":0}</pre></figure>
+
+<h2 id="verdict"><span class="sn">3</span>Read the verdict</h2>
+<aside class="mn"><b>Verdict order</b>WITNESS, PASS-proved, PASS-decided, PASS-bounded, ASK. REFUSE and NEW sit outside it. <a href="#">Verdicts →</a></aside>
+<p><code class="vw">WITNESS</code> is an input on which the two versions differ. Here: input 17, floor −1, a debit of 1 from a new account. The parent posts it; the candidate posts nothing.</p>
+<div class="note"><span class="nl">Note</span><p>Exit code <code>0</code> on every verdict, <code>WITNESS</code> included. Exit <code>2</code> means no verdict was reached. Gate on the verdict, not on the exit code.</p></div>
+<p>Same flags, same seed, same output on a fresh clone. If yours differs, compare the pinned commit above with <code>git rev-parse HEAD</code>.</p>
+
+<h2 id="next"><span class="sn">4</span>Next</h2>
+<p><a class="il" href="#">The PR gate</a>: one comment per pull request, updated on every push, then <code>--block witness</code>. Every flag: <a class="il" href="#">CLI reference</a>.</p>
+
+<nav class="pn"><a href="#" class="prev"><small>← Docs</small><span>All sections</span></a><a href="#" class="next"><small>Getting started →</small><span>Three runs</span></a></nav></article></main>
+<div class="sheet"><div class="shh"><span>Docs</span><button class="pb">Close ✕</button></div><div class="srch"><span class="q">Search docs</span></div><aside class="rail"><div class="grp open"><div class="gh"><span>Getting started</span><u>4</u></div><div class="gi"><a class="cur" href="#">Quick start</a><a class="" href="#">Three runs</a><a class="" href="#">The PR gate</a><a class="" href="#">Run it in Docker</a></div></div><div class="grp"><div class="gh"><span>Lean</span><u>6</u></div><div class="gi"><a class="" href="#">Verdicts</a><a class="" href="#">Writing code lean can prove</a><a class="" href="#">What couples with lean</a><a class="" href="#">The front end</a><a class="" href="#">A coding agent's loop</a><a class="" href="#">What is built and planned</a></div></div><div class="grp"><div class="gh"><span>Differential attestation</span><u>9</u></div><div class="gi"><a class="" href="#">Overview</a><a class="" href="#">Recording</a><a class="" href="#">Proof</a><a class="" href="#">Relation</a><a class="" href="#">Predicate registry</a><a class="" href="#">Preview</a><a class="" href="#">The gate</a><a class="" href="#">Composition (C4)</a><a class="" href="#">Comments on the pull request</a></div></div><div class="grp"><div class="gh"><span>The benchmark</span><u>4</u></div><div class="gi"><a class="" href="#">AACR-Bench</a><a class="" href="#">How our rows were measured</a><a class="" href="#">The 12 unscored instances</a><a class="" href="#">Judge logs</a></div></div><div class="grp"><div class="gh"><span>Reference</span><u>3</u></div><div class="gi"><a class="" href="#">CLI reference</a><a class="" href="#">Exit codes</a><a class="" href="#">The conformance suite</a></div></div><div class="grp"><div class="gh"><span>FAQ</span><u>1</u></div><div class="gi"><a class="" href="#">FAQ</a></div></div><div class="rfoot">lean <b>fe06326</b> · DA <b>77b43b0</b></div></aside></div></div></div>
+    <div><p class="cap"><b>Search open.</b> Full sheet; hits as on desktop.</p><div class="frame p" id="p-search" style="height:844px">
+<header class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a href="#">Benchmark</a><a href="#">Quick start</a><a class="cur" href="#">Docs</a><a href="#">Paper</a><a class="btn" href="#">GitHub</a></div></header>
+<div class="pbar"><button class="pb"><span class="ham"><i></i><i></i><i></i></span>Getting started</button><button class="pb">Contents <i class="cv">▾</i></button><button class="pb ic">Search</button></div>
+<main class="col"><article class="art">
+<div class="kick">Getting started <i>·</i> 1 of 4</div>
+<h1>Quick start</h1>
+<p class="src">lean <a href="#">README.md</a> “Three runs”, “Using it” <i>·</i> pinned <a href="#">fe06326</a></p>
+<p class="lede">Clone lean, check one function, read the verdict. Three commands, one output, about a minute on Node 24.</p>
+
+<h2 id="install"><span class="sn">1</span>Install</h2>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">git</span> clone https://github.com/NexusGPT/lean <span class="f">&amp;&amp;</span> <span class="c">cd</span> lean</pre></figure>
+<aside class="mn"><b>Docker instead</b><code class="blk">docker build -t lean:local .</code>The image carries Python 3 and Dafny 4.</aside>
+<p>What each lane needs:</p>
+<div class="tw"><table>
+<thead><tr><th>You have</th><th>Lane A · proof</th><th>Lane B</th></tr></thead>
+<tbody>
+<tr><td>Node 24</td><td class="ask">reports <code>ASK</code></td><td class="ok">runs</td></tr>
+<tr><td>Node 24, Python 3, Dafny 4</td><td class="ok">runs</td><td class="ok">runs</td></tr>
+</tbody></table></div>
+
+<h2 id="first-run"><span class="sn">2</span>First run</h2>
+<aside class="mn"><b>The pair</b><code class="blk">langs/ts/tests/pairs/readme_ledger/</code>Two versions of <code>applyAll</code>; the candidate has <code>&lt;=</code> where the parent had <code>&lt;</code>.</aside>
+<p>Check <code>applyAll</code> across 60 generated inputs, seed 3:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">node</span> langs/ts/check.mjs \
+  <span class="f">--parent</span> langs/ts/tests/pairs/readme_ledger/parent.ts \
+  <span class="f">--candidate</span> langs/ts/tests/pairs/readme_ledger/candidate.ts \
+  <span class="f">--unit</span> applyAll <span class="f">--no-project</span> <span class="f">--n</span> 60 <span class="f">--seed</span> 3 <span class="f">--out</span> ledger.json</pre></figure>
+<p>Pull the witness out of the ledger:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">jq</span> <span class="f">-c</span> '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json</pre></figure>
+<figure class="code out"><figcaption><span>output</span><span class="v">WITNESS</span><button>copy</button></figcaption><pre>{"input":17,"floor":-1,"parent":1,"candidate":0}</pre></figure>
+
+<h2 id="verdict"><span class="sn">3</span>Read the verdict</h2>
+<aside class="mn"><b>Verdict order</b>WITNESS, PASS-proved, PASS-decided, PASS-bounded, ASK. REFUSE and NEW sit outside it. <a href="#">Verdicts →</a></aside>
+<p><code class="vw">WITNESS</code> is an input on which the two versions differ. Here: input 17, floor −1, a debit of 1 from a new account. The parent posts it; the candidate posts nothing.</p>
+<div class="note"><span class="nl">Note</span><p>Exit code <code>0</code> on every verdict, <code>WITNESS</code> included. Exit <code>2</code> means no verdict was reached. Gate on the verdict, not on the exit code.</p></div>
+<p>Same flags, same seed, same output on a fresh clone. If yours differs, compare the pinned commit above with <code>git rev-parse HEAD</code>.</p>
+
+<h2 id="next"><span class="sn">4</span>Next</h2>
+<p><a class="il" href="#">The PR gate</a>: one comment per pull request, updated on every push, then <code>--block witness</code>. Every flag: <a class="il" href="#">CLI reference</a>.</p>
+
+<nav class="pn"><a href="#" class="prev"><small>← Docs</small><span>All sections</span></a><a href="#" class="next"><small>Getting started →</small><span>Three runs</span></a></nav></article></main>
+<div class="sheet"><div class="shh"><span>Search</span><button class="pb">Cancel</button></div><div class="srch on"><span class="q">predicate registry</span><span class="caret"></span></div><div class="hits"><div class="hc">3 results for <b>“predicate registry”</b></div><a class="hit sel" href="#"><span class="hs">Differential attestation</span><span class="ht">Predicate registry</span><span class="hn">The <mark>predicate registry</mark> names each relation the proof lane may assume, with its source.</span></a><a class="hit" href="#"><span class="hs">Differential attestation</span><span class="ht">Relation</span><span class="hn">A relation is checked against a <mark>predicate</mark> from the <mark>registry</mark>, never an ad hoc one.</span></a><a class="hit" href="#"><span class="hs">Reference</span><span class="ht">CLI reference</span><span class="hn"><code>lint.mjs</code> lists each function whose <mark>predicate</mark> is missing from the <mark>registry</mark>.</span></a></div></div></div></div>
+    <div><p class="cap"><b>Contents open.</b> The margin contents as a dropdown under the docs bar; the section in view in cream.</p><div class="frame p" id="p-toc" style="height:844px">
+<header class="nav"><a class="logo" href="#"><span class="mark"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>provedreview</a><div class="links"><a href="#">Benchmark</a><a href="#">Quick start</a><a class="cur" href="#">Docs</a><a href="#">Paper</a><a class="btn" href="#">GitHub</a></div></header>
+<div class="pbar"><button class="pb"><span class="ham"><i></i><i></i><i></i></span>Getting started</button><button class="pb">Contents <i class="cv">▾</i></button><button class="pb ic">Search</button></div>
+<main class="col"><article class="art">
+<div class="kick">Getting started <i>·</i> 1 of 4</div>
+<h1>Quick start</h1>
+<p class="src">lean <a href="#">README.md</a> “Three runs”, “Using it” <i>·</i> pinned <a href="#">fe06326</a></p>
+<p class="lede">Clone lean, check one function, read the verdict. Three commands, one output, about a minute on Node 24.</p>
+
+<h2 id="install"><span class="sn">1</span>Install</h2>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">git</span> clone https://github.com/NexusGPT/lean <span class="f">&amp;&amp;</span> <span class="c">cd</span> lean</pre></figure>
+<aside class="mn"><b>Docker instead</b><code class="blk">docker build -t lean:local .</code>The image carries Python 3 and Dafny 4.</aside>
+<p>What each lane needs:</p>
+<div class="tw"><table>
+<thead><tr><th>You have</th><th>Lane A · proof</th><th>Lane B</th></tr></thead>
+<tbody>
+<tr><td>Node 24</td><td class="ask">reports <code>ASK</code></td><td class="ok">runs</td></tr>
+<tr><td>Node 24, Python 3, Dafny 4</td><td class="ok">runs</td><td class="ok">runs</td></tr>
+</tbody></table></div>
+
+<h2 id="first-run"><span class="sn">2</span>First run</h2>
+<aside class="mn"><b>The pair</b><code class="blk">langs/ts/tests/pairs/readme_ledger/</code>Two versions of <code>applyAll</code>; the candidate has <code>&lt;=</code> where the parent had <code>&lt;</code>.</aside>
+<p>Check <code>applyAll</code> across 60 generated inputs, seed 3:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">node</span> langs/ts/check.mjs \
+  <span class="f">--parent</span> langs/ts/tests/pairs/readme_ledger/parent.ts \
+  <span class="f">--candidate</span> langs/ts/tests/pairs/readme_ledger/candidate.ts \
+  <span class="f">--unit</span> applyAll <span class="f">--no-project</span> <span class="f">--n</span> 60 <span class="f">--seed</span> 3 <span class="f">--out</span> ledger.json</pre></figure>
+<p>Pull the witness out of the ledger:</p>
+<figure class="code"><figcaption><span>shell</span><button>copy</button></figcaption><pre><span class="c">jq</span> <span class="f">-c</span> '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json</pre></figure>
+<figure class="code out"><figcaption><span>output</span><span class="v">WITNESS</span><button>copy</button></figcaption><pre>{"input":17,"floor":-1,"parent":1,"candidate":0}</pre></figure>
+
+<h2 id="verdict"><span class="sn">3</span>Read the verdict</h2>
+<aside class="mn"><b>Verdict order</b>WITNESS, PASS-proved, PASS-decided, PASS-bounded, ASK. REFUSE and NEW sit outside it. <a href="#">Verdicts →</a></aside>
+<p><code class="vw">WITNESS</code> is an input on which the two versions differ. Here: input 17, floor −1, a debit of 1 from a new account. The parent posts it; the candidate posts nothing.</p>
+<div class="note"><span class="nl">Note</span><p>Exit code <code>0</code> on every verdict, <code>WITNESS</code> included. Exit <code>2</code> means no verdict was reached. Gate on the verdict, not on the exit code.</p></div>
+<p>Same flags, same seed, same output on a fresh clone. If yours differs, compare the pinned commit above with <code>git rev-parse HEAD</code>.</p>
+
+<h2 id="next"><span class="sn">4</span>Next</h2>
+<p><a class="il" href="#">The PR gate</a>: one comment per pull request, updated on every push, then <code>--block witness</code>. Every flag: <a class="il" href="#">CLI reference</a>.</p>
+
+<nav class="pn"><a href="#" class="prev"><small>← Docs</small><span>All sections</span></a><a href="#" class="next"><small>Getting started →</small><span>Three runs</span></a></nav></article></main>
+<div class="ddn"><div class="toc"><div class="th">On this page</div><a class="" href="#install"><span class="sn">1</span>Install</a><a class="cur" href="#first-run"><span class="sn">2</span>First run</a><a class="" href="#verdict"><span class="sn">3</span>Read the verdict</a><a class="" href="#next"><span class="sn">4</span>Next</a><a class="top" href="#">↑ top</a></div></div></div></div>
+  </div>
+</div>
+</body>
+</html>
