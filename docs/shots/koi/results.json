@@ -28,7 +28,7 @@
    },
    {
     "seed": 2,
-    "minE2": 10.011
+    "minE2": 10.305
    },
    {
     "seed": 3,
@@ -208,7 +208,7 @@
  "budget 1440x900": {
   "ok": true,
   "frames": 600,
-  "avgMs": 0.426,
+  "avgMs": 0.412,
   "limitMs": 4
  },
  "guard hidden tab": {
@@ -220,13 +220,13 @@
   "hidden": {
    "idle": true,
    "running": false,
-   "frames": 290,
+   "frames": 314,
    "framesWhileHidden": 0
   },
   "back": {
    "idle": false,
    "running": true,
-   "frames": 471
+   "frames": 536
   }
  },
  "guard hero off screen": {
@@ -241,7 +241,7 @@
   }
  },
  "guard resize re-measures": {
-  "ok": false,
+  "ok": true,
   "at1440": {
    "cx": 397.8203125,
    "cy": 352.015625,
@@ -256,9 +256,9 @@
   },
   "fromDom": {
    "cx": 195,
-   "cy": 281.4375,
+   "cy": 208.4375,
    "rx": 247.48737341529161,
-   "ry": 226.8928884132334
+   "ry": 52.94462024134274
   }
  },
  "no page errors": {
