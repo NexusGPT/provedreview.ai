@@ -78,7 +78,8 @@ test('HTML validity (html-validate:standard)', async () => {
 });
 
 test('links: every href resolves', () => {
-  const h = html(), ids = new Set([...h.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])), pending = new Set();
+  // the markup only: the inlined script's templates hold hrefs the build already rendered into the markup
+  const h = html().replace(/<script\b[^>]*>[\s\S]*?<\/script>/g, ''), ids = new Set([...h.matchAll(/\sid="([^"]+)"/g)].map((m) => m[1])), pending = new Set();
   const hrefs = [...new Set([...h.matchAll(/\shref="([^"]*)"/g)].map((m) => m[1].replace(/&amp;/g, '&')))];
   assert.ok(hrefs.length > 10);
   for (const href of hrefs) {
@@ -125,7 +126,10 @@ async function open(vp, query = '', opts = {}) {
 const ids = (page) => page.$$eval('.tbl .tr[data-id]', (els) => els.map((e) => e.dataset.id));
 const cnt = (page) => page.$eval('.bar .cnt', (e) => e.textContent.trim());
 async function shot(page, name, full = true) {
-  if (full) { const H = await page.evaluate(() => document.documentElement.scrollHeight); for (let y = 0; y <= H; y += 600) await page.evaluate((y) => scrollTo(0, y), y); await page.evaluate(() => scrollTo(0, 0)); await page.waitForTimeout(1000); }
+  if (full) { const H = await page.evaluate(() => document.documentElement.scrollHeight); for (let y = 0; y <= H + 600; y += 400) { await page.evaluate((y) => scrollTo(0, y), y); await page.waitForTimeout(120); }
+    await page.evaluate(() => scrollTo(0, 0)); await page.waitForTimeout(1000);
+    assert.deepEqual(await page.$$eval('.rv:not(.in)', (els) => els.map((e) => e.id)), [], 'every section revealed before the shot'); }
+  else await page.waitForTimeout(900); // a reveal on scroll runs .8 s
   const f = path.join(SHOTS, name + '.png'); await page.screenshot({ path: f, fullPage: full });
   return f;
 }
@@ -193,14 +197,15 @@ test('a deep link opens a row and a filter from the URL', async () => {
 test('loading and error states', async () => {
   let { page, ctx, errs, outside } = await open('d', '?state=loading');
   assert.equal(await page.$$eval('.sk .tr', (e) => e.length), 10); assert.equal((await ids(page)).length, 0);
-  assert.doesNotMatch(await page.$eval('.tbl', (e) => e.textContent), /\d\d\.\d/, 'no value before it is read');
+  assert.doesNotMatch(await page.$eval('.tbl .sk', (e) => e.textContent), /\d/, 'no value before it is read');
   assert.ok(await page.$eval('.chip', (e) => e.disabled)); assert.equal(await cnt(page), 'reading rows…');
   const fl = await shot(page, 'desktop-loading', false); assert.equal(png(fl).w, 1440);
   assert.deepEqual(outside, []); assert.deepEqual(errs, []); await ctx.close();
 
   ({ page, ctx, errs } = await open('d', '?state=error'));
   assert.match(await page.$eval('.err', (e) => e.textContent), /data\/leaderboard\.json did not load/);
-  assert.equal(await page.$eval('.err [data-retry]', (e) => e.textContent), 'Retry'); assert.equal(await cnt(page), 'no rows');
+  assert.equal(await page.$eval('.err [data-retry]', (e) => e.textContent), 'Retry');
+  assert.deepEqual(await page.$eval('.err [data-retry]', (e) => getComputedStyle(e).padding), '8px 13px', 'the button keeps the .btn padding'); assert.equal(await cnt(page), 'no rows');
   const fe = await shot(page, 'desktop-error', false); assert.equal(png(fe).w, 1440);
   await Promise.all([page.waitForURL(/\/benchmark\/$/), page.click('.err [data-retry]')]);
   assert.equal((await ids(page)).length, ROWS.length, 'retry loads the rows'); assert.deepEqual(errs, []); await ctx.close();
@@ -239,4 +244,14 @@ test('phone 390: loaded, no page overflow, filters sheet, sort select, expand', 
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 390, 'no horizontal page scroll with a row open');
   for (const f of [fl, fs1, fx]) assert.equal(png(f).w, 390, f);
   assert.deepEqual(outside, []); assert.deepEqual(errs, []); await ctx.close();
+});
+
+test('between the phone and 1440 the table scrolls in its box, never the page', async () => {
+  for (const w of [1024, 800]) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: 900 } }), page = await ctx.newPage();
+    await page.goto(base + '/benchmark/', { waitUntil: 'load' });
+    assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), w, `no page scroll at ${w}`);
+    assert.ok(await page.$eval('.scr', (e) => e.scrollWidth > e.clientWidth), `the table scrolls at ${w}`);
+    await ctx.close();
+  }
 });
