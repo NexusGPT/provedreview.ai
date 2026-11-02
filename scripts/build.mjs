@@ -34,7 +34,14 @@ const rebase = (s) => (BASE === '/' ? s : s
   .replace(/(\s(?:href|src|poster|content|action)=")\/(?!\/)/g, `$1${BASE}`)
   .replace(/url\(\/(?!\/)/g, `url(${BASE}`)
   .replace(/(['"`])\/public\//g, `$1${BASE}public/`));
-const write = (rel, body) => { const f = path.join(out, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, body); };
+// every page names its scripts and stylesheets with the file's content hash (/engine.js?v=1a2b3c4d), so a deploy is never
+// shadowed by a copy a browser or the Pages cache kept (the koi rework stayed on screen after its withdrawal)
+import crypto from 'node:crypto';
+const stamp = (rel) => crypto.createHash('sha1').update(fs.readFileSync(path.join(root, rel))).digest('hex').slice(0, 8);
+const STAMPED = ['engine.js', 'site.js', 'docs.js', 'styles.css', 'site.css', 'docs.css'].filter((f) => fs.existsSync(path.join(root, f)));
+const stamps = Object.fromEntries(STAMPED.map((f) => [f, stamp(f)]));
+const versioned = (html) => html.replace(/((?:src|href)=")\/(engine\.js|site\.js|docs\.js|styles\.css|site\.css|docs\.css)(")/g, (m, a, f, z) => stamps[f] ? `${a}/${f}?v=${stamps[f]}${z}` : m);
+const write = (rel, body) => { const f = path.join(out, rel); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, rel.endsWith('.html') ? versioned(body) : body); };
 const copy = (from, to = from) => fs.cpSync(path.join(root, from), path.join(out, to), { recursive: true });
 
 fs.rmSync(out, { recursive: true, force: true });
