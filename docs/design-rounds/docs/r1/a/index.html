@@ -1,0 +1,242 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Docs, rung 1 (layout), A: rail</title>
+<style>
+  body { margin: 24px; }
+  .badge { display: inline-block; border: 2px solid #555; padding: 2px 10px; font-weight: bold; margin-right: 8px; }
+  h1, h2 { font-weight: normal; }
+  h2 { margin: 48px 0 8px; }
+  .lede { max-width: 900px; }
+  .frame { position: relative; border: 2px solid #555; box-sizing: border-box; overflow: hidden; }
+  .row { display: flex; gap: 48px; align-items: flex-start; flex-wrap: wrap; }
+  .cap { margin: 0 0 8px; }
+  .z { border: 1px solid #999; box-sizing: border-box; padding: 6px 8px; position: relative; }
+  .z > b { display: block; }
+  .z > span { display: block; }
+  .code > span { padding-right: 150px; }
+  .phone .code > span { padding-right: 70px; }
+  .z.cur { border: 3px solid #555; }
+  .z.dash { border-style: dashed; }
+  .stack > .z, .stack > .stack { margin-bottom: 10px; }
+  .fold { position: absolute; left: 0; right: 0; border-top: 2px dashed #555; pointer-events: none; }
+  .fold > span { position: absolute; right: 8px; top: 2px; background: #fff; padding: 0 4px; }
+  .dim { position: absolute; top: 2px; right: 6px; }
+  .grid1440 { display: grid; grid-template-columns: 280px 1fr 240px; grid-template-rows: 64px auto 80px; width: 1440px; }
+  .nav { grid-column: 1 / -1; }
+  .foot { grid-column: 1 / -1; }
+  .rail { padding: 10px; border-right: 1px solid #999; }
+  .col { padding: 32px 64px 40px; }
+  .col > .stack { max-width: 720px; }
+  .toc { padding: 32px 16px 10px; border-left: 1px solid #999; }
+  .pair { display: flex; gap: 16px; }
+  .pair > .z { flex: 1; }
+  .entries { padding-left: 10px; }
+  .entries > .z { margin-top: 4px; padding: 3px 8px; }
+  .phone { width: 390px; }
+  .phone .body { padding: 16px; }
+  .over { position: absolute; border: 2px solid #555; background: #fff; box-sizing: border-box; padding: 10px; }
+</style>
+</head>
+<body>
+
+<h1><span class="badge">A</span>Docs, rung 1 (layout): rail</h1>
+<p class="lede">Axis: a fixed left rail of every section and page, a wide reading column, an in-page table of contents on the right for long pages. The rail is the map: where am I, what else is here, all at once, with no click. Boxes are zones only: no data, no styling. Frames are drawn at true width (1440 and 390 CSS px); the dashed line marks the first screen.</p>
+
+<!-- ============ 1440: long page ============ -->
+<h2><span class="badge">A</span>1440 · a long page at rest (e.g. the CLI reference, arrived from Quick start)</h2>
+<div class="frame grid1440">
+  <div class="z nav"><b>Site nav (shared shell)</b><span>wordmark → Home · Benchmark · Quick start · Docs (marked current) · Paper · GitHub. Owned by the home lane; the docs only mark "Docs" current.</span></div>
+
+  <div class="rail">
+    <div style="height:100%">
+      <div class="stack" style="position:sticky; top:0">
+        <div class="z"><b>Rail · sticky, scrolls on its own</b><span>280 px. Stays in view while the column scrolls; its own scroll keeps the current entry in view on load.</span></div>
+        <div class="z"><b>Search field</b><span>"Search docs", with its key shown as text: /. Opens the results panel (frame below).</span></div>
+        <div class="z"><b>Section group 1 of 6 · heading</b><span>Getting started</span>
+          <div class="entries"><div class="z">page entry</div><div class="z">page entry</div></div></div>
+        <div class="z"><b>Section group 2 of 6 · heading</b><span>Concepts</span>
+          <div class="entries"><div class="z">page entry</div><div class="z">page entry</div><div class="z">page entry</div><div class="z">page entry</div></div></div>
+        <div class="z"><b>Section group 3 of 6 · heading</b><span>Guides</span>
+          <div class="entries"><div class="z">page entry</div><div class="z">page entry</div><div class="z">page entry</div><div class="z">page entry</div><div class="z">page entry</div></div></div>
+        <div class="z"><b>Section group 4 of 6 · heading</b><span>Reference</span>
+          <div class="entries"><div class="z cur"><b>current page entry</b>marked by weight and a bar, never by hover alone</div><div class="z">page entry</div><div class="z">page entry</div></div></div>
+        <div class="z"><b>Section group 5 of 6 · heading</b><span>Differential attestation</span>
+          <div class="entries"><div class="z">page entry ×9 (the architecture pages)</div></div></div>
+        <div class="z"><b>Section group 6 of 6 · heading</b><span>FAQ</span>
+          <div class="entries"><div class="z">page entry</div></div></div>
+        <div class="z dash"><b>Rule</b><span>All six groups open, every page listed (about 30 entries). No collapsing: every page is one click from every page.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col">
+    <div class="stack">
+      <div class="z"><b>Section label</b><span>the rail group this page sits in; plain text, one line</span></div>
+      <div class="z" style="height:64px"><b>Page title</b><span>the page's H1</span></div>
+      <div class="z"><b>Source line</b><span>source file · pinned commit, linked to that commit on GitHub</span></div>
+      <div class="z" style="height:70px"><b>Lede</b><span>the page's first paragraph: what this page answers</span></div>
+      <div class="z"><b>H2 heading</b><span>anchor target of a table-of-contents entry; its link icon is always visible</span></div>
+      <div class="z" style="height:110px"><b>Prose</b><span>reading measure max 720 px, whatever the window width</span></div>
+      <div class="z code" style="height:130px"><b>Code block</b><span>one command or output; long lines scroll sideways inside the block</span>
+        <div class="z" style="position:absolute; top:6px; right:6px"><b>Copy control</b><span>always visible; confirms in place</span></div></div>
+      <div class="z"><b>H2 heading</b><span>next section of the page</span></div>
+      <div class="z" style="height:180px"><b>Table</b><span>e.g. commands × flags, exit codes; wider than 720 → scrolls sideways inside its frame, header row kept</span></div>
+      <div class="z" style="height:90px"><b>Prose</b><span>body text</span></div>
+      <div class="z" style="height:220px"><b>Figure + caption</b><span>e.g. the verdicts figure; fits the column width</span></div>
+      <div class="z"><b>H3 heading</b><span>sub-section; listed indented in the table of contents</span></div>
+      <div class="z" style="height:110px"><b>Prose</b><span>body text, the rest of the page</span></div>
+      <div class="z code" style="height:130px"><b>Code block</b><span>another command</span>
+        <div class="z" style="position:absolute; top:6px; right:6px"><b>Copy control</b></div></div>
+      <div class="z" style="height:90px"><b>Prose</b><span>body text</span></div>
+      <div class="pair">
+        <div class="z" style="height:80px"><b>← Previous</b><span>its section label + its title; the page before in rail order</span></div>
+        <div class="z" style="height:80px; text-align:right"><b>Next →</b><span>its section label + its title; crosses section borders in rail order</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="toc">
+    <div style="height:100%">
+      <div class="stack" style="position:sticky; top:0">
+        <div class="z"><b>On this page · sticky</b><span>240 px. Shown when the page has 3 or more H2s.</span></div>
+        <div class="z"><b>H2 entry</b></div>
+        <div class="z cur"><b>H2 entry · current</b><span>the heading in view, marked</span></div>
+        <div class="z" style="margin-left:14px"><b>H3 entry</b></div>
+        <div class="z"><b>H2 entry</b></div>
+        <div class="z"><b>Back to top</b></div>
+        <div class="z dash"><b>Rule</b><span>On a short page this column stays empty: the reading column never moves sideways between pages.</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="z foot"><b>Footer (shared shell)</b><span>the site's footer, owned by the home lane</span></div>
+  <div class="fold" style="top:900px"><span>end of the first screen (1440 × 900)</span></div>
+</div>
+
+<!-- ============ 1440: search open ============ -->
+<h2><span class="badge">A</span>1440 · search open (typed into the rail's field)</h2>
+<div class="frame grid1440" style="height:620px">
+  <div class="z nav"><b>Site nav (shared shell)</b></div>
+  <div class="rail"><div class="stack">
+    <div class="z cur"><b>Search field · focused, holding the query</b><span>Esc or the clear control closes the panel</span></div>
+    <div class="z" style="height:420px"><b>Rail</b><span>unchanged under the panel</span></div>
+  </div></div>
+  <div class="col" style="position:relative">
+    <div class="z" style="height:420px"><b>Reading column</b><span>the page you were on, unchanged under the panel</span></div>
+  </div>
+  <div class="toc"><div class="z" style="height:420px"><b>On this page</b></div></div>
+  <div class="over" style="left:280px; top:72px; width:760px; height:470px">
+    <div class="stack">
+      <div class="z"><b>Results panel · anchored to the field, over the column</b><span>results update as you type; arrow keys move, Enter opens</span></div>
+      <div class="z"><b>Result count line</b><span>"N results for &lt;query&gt;"</span></div>
+      <div class="z cur"><b>Hit · selected</b><span>page title · its section label · a snippet with the match marked</span></div>
+      <div class="z"><b>Hit</b><span>page title · section label · snippet</span></div>
+      <div class="z"><b>Hit</b><span>page title · section label · snippet</span></div>
+      <div class="z dash"><b>Empty state (replaces the hits)</b><span>"No results for &lt;query&gt;" + a clear-search control</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ 1440: landing ============ -->
+<h2><span class="badge">A</span>1440 · /docs/ landing (arrived by nav "Docs")</h2>
+<div class="frame grid1440" style="height:700px">
+  <div class="z nav"><b>Site nav (shared shell)</b><span>"Docs" marked current</span></div>
+  <div class="rail"><div class="stack">
+    <div class="z"><b>Search field</b></div>
+    <div class="z" style="height:470px"><b>Rail</b><span>the same six groups; no entry marked</span></div>
+  </div></div>
+  <div class="col"><div class="stack">
+    <div class="z" style="height:56px"><b>Title</b><span>Docs</span></div>
+    <div class="z"><b>One line</b><span>what the docs cover + the link to Quick start for a first run</span></div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px">
+      <div class="z" style="height:100px"><b>Section block 1</b><span>section name + one line + its first pages</span></div>
+      <div class="z" style="height:100px"><b>Section block 2</b><span>same</span></div>
+      <div class="z" style="height:100px"><b>Section block 3</b><span>same</span></div>
+      <div class="z" style="height:100px"><b>Section block 4</b><span>same</span></div>
+      <div class="z" style="height:100px"><b>Section block 5</b><span>same</span></div>
+      <div class="z" style="height:100px"><b>Section block 6</b><span>same</span></div>
+    </div>
+  </div></div>
+  <div class="toc"><div class="z dash"><b>Empty</b><span>no table of contents on the landing</span></div></div>
+  <div class="z foot"><b>Footer (shared shell)</b></div>
+</div>
+
+<!-- ============ 390 ============ -->
+<h2><span class="badge">A</span>390 · the same page, the menu, and search</h2>
+<p class="lede">Adapted, not designed for: the rail becomes a full-height menu sheet behind one button; the table of contents becomes a closed disclosure under the title. Trade: on the phone the reader no longer sees where the page sits without opening the menu.</p>
+<div class="row">
+
+  <div>
+    <p class="cap"><b>390 · page at rest</b></p>
+    <div class="frame phone">
+      <div class="z" style="height:56px"><b>Site nav (shared shell)</b><span>its phone form is the home lane's</span></div>
+      <div class="z" style="height:52px; display:flex; gap:8px; padding:6px">
+        <div class="z" style="flex:1"><b>Menu button</b><span>"Menu · &lt;section label&gt;"</span></div>
+        <div class="z" style="width:96px"><b>Search</b><span>button</span></div>
+      </div>
+      <div class="z dash" style="border-top:none"><b>Docs bar · sticky under the nav</b><span>stays in view while the page scrolls</span></div>
+      <div class="body stack">
+        <div class="z"><b>Section label</b></div>
+        <div class="z" style="height:80px"><b>Page title</b><span>wraps to as many lines as it needs</span></div>
+        <div class="z"><b>Source line</b><span>source file · pinned commit link</span></div>
+        <div class="z"><b>On this page · closed</b><span>tap opens the H2/H3 list inline; shown on long pages only</span></div>
+        <div class="z" style="height:90px"><b>Lede</b></div>
+        <div class="z"><b>H2 heading</b></div>
+        <div class="z" style="height:140px"><b>Prose</b><span>full width minus 16 px margins</span></div>
+        <div class="z code" style="height:140px"><b>Code block</b><span>scrolls sideways inside the block; the page never scrolls sideways</span>
+          <div class="z" style="position:absolute; top:6px; right:6px"><b>Copy</b></div></div>
+        <div class="z" style="height:200px"><b>Table</b><span>scrolls sideways inside its frame; first column kept in view</span></div>
+        <div class="z" style="height:200px"><b>Figure + caption</b><span>scaled to width</span></div>
+        <div class="z" style="height:140px"><b>Prose</b></div>
+        <div class="z" style="height:72px"><b>← Previous</b><span>section label + title; full width</span></div>
+        <div class="z" style="height:72px; text-align:right"><b>Next →</b><span>section label + title; stacked under Previous</span></div>
+      </div>
+      <div class="z" style="height:90px"><b>Footer (shared shell)</b></div>
+      <div class="fold" style="top:844px"><span>end of the first screen (390 × 844)</span></div>
+    </div>
+  </div>
+
+  <div>
+    <p class="cap"><b>390 · menu open</b></p>
+    <div class="frame phone" style="height:844px">
+      <div class="z" style="height:56px"><b>Site nav (shared shell)</b></div>
+      <div class="over" style="left:0; top:56px; width:390px; height:788px">
+        <div class="stack">
+          <div class="z" style="display:flex; justify-content:space-between"><b>Sheet header: "Docs"</b><span class="z">Close</span></div>
+          <div class="z"><b>Search field</b><span>the same field as the rail's</span></div>
+          <div class="z"><b>Section group 1 of 6</b><div class="entries"><div class="z">page entry</div><div class="z">page entry</div></div></div>
+          <div class="z"><b>Section group 2 of 6</b><div class="entries"><div class="z">page entry ×4</div></div></div>
+          <div class="z"><b>Section group 3 of 6</b><div class="entries"><div class="z">page entry ×5</div></div></div>
+          <div class="z"><b>Section group 4 of 6</b><div class="entries"><div class="z cur"><b>current page entry</b>opened scrolled to here</div><div class="z">page entry</div></div></div>
+          <div class="z"><b>Section group 5 of 6</b><div class="entries"><div class="z">page entry ×9</div></div></div>
+          <div class="z"><b>Section group 6 of 6</b></div>
+          <div class="z dash"><b>Rule</b><span>the sheet scrolls on its own; picking a page closes it and opens the page at its top. Entries at least 44 px tall.</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <p class="cap"><b>390 · search open</b></p>
+    <div class="frame phone" style="height:844px">
+      <div class="z" style="height:56px"><b>Site nav (shared shell)</b></div>
+      <div class="z cur" style="height:52px; display:flex; gap:8px; padding:6px">
+        <div class="z" style="flex:1"><b>Search field · focused</b></div>
+        <div class="z" style="width:80px"><b>Cancel</b></div>
+      </div>
+      <div class="body stack">
+        <div class="z"><b>Result count line</b></div>
+        <div class="z" style="height:90px"><b>Hit</b><span>title · section label · snippet</span></div>
+        <div class="z" style="height:90px"><b>Hit</b><span>title · section label · snippet</span></div>
+        <div class="z" style="height:90px"><b>Hit</b><span>title · section label · snippet</span></div>
+        <div class="z dash"><b>Empty state</b><span>"No results for &lt;query&gt;" + clear control</span></div>
+        <div class="z dash"><b>Rule</b><span>results take the screen below the docs bar; Cancel returns to the page where it was</span></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>

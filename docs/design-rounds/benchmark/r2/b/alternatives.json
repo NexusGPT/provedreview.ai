@@ -1,0 +1,10 @@
+[
+  {
+    "id": "b",
+    "rung": "style",
+    "title": "Instrument",
+    "axis": "numeric treatment and structural measured-by device: dense 38 px rows; F1 as a bar, precision and recall as needles on one shared graduated 0-40 % scale, decimal-aligned mono numerals; who measured a row is a left rail (solid cream = measured by us, dashed steel = published by Open Code Review) that joins across adjacent rows of one run and breaks when a sort interleaves them",
+    "entry": "index.html",
+    "worse_at": "busiest reading: three tracks of ink per row slow a one-number glance; the shared scale compresses if any metric ever leaves the 0-40 range and makes small gaps look like steps; on the phone only F1 keeps its gauge without a swipe and 56 px rows show about nine rows per screen; the dashed rail can read as a dim solid line on low-contrast screens, leaving the words to carry the distinction"
+  }
+]

@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>1c · Docs layout, reader first · rung 1</title>
+<style>
+  body { margin: 24px; }
+  .badge { display: inline-block; border: 2px solid #555; padding: 2px 10px; font-weight: bold; }
+  .frame-label { margin: 32px 0 8px; font-weight: bold; }
+  .frame { position: relative; border: 2px solid #555; box-sizing: border-box; overflow: hidden; }
+  .w1440 { width: 1440px; }
+  .w390 { width: 390px; }
+  .row-of-phones { display: flex; gap: 32px; align-items: flex-start; flex-wrap: nowrap; }
+  .z { border: 1px solid #888; box-sizing: border-box; padding: 6px 8px; margin: 0; overflow: hidden; }
+  .z > b { display: block; }
+  .z > small { display: block; }
+  .row { display: flex; gap: 8px; }
+  .grow { flex: 1; }
+  .col { width: 760px; margin: 0 auto; display: flex; flex-direction: column; gap: 8px; padding: 16px 0; }
+  .pcol { display: flex; flex-direction: column; gap: 8px; padding: 12px 16px; }
+  .sticky { border-style: double; border-width: 3px; }
+  .overlay { position: absolute; background: #fff; border: 2px dashed #555; box-sizing: border-box; padding: 8px; }
+  .scrim { position: absolute; border: 1px dashed #aaa; box-sizing: border-box; padding: 8px; display: flex; flex-direction: column; justify-content: flex-end; }
+  .scrim b, .scrim small, .overlay > small { display: block; }
+  .scrim > span { background: #fff; padding: 4px; }
+  .inner { margin-top: 6px; }
+  .note { max-width: 1440px; }
+  .legend span { display: inline-block; margin-right: 24px; }
+  .legend .box { display: inline-block; width: 28px; height: 14px; vertical-align: middle; margin-right: 6px; box-sizing: border-box; }
+</style>
+</head>
+<body>
+
+<p><span class="badge">1c</span> &nbsp; <b>Docs, layout rung 1, Lane C: "reader first"</b></p>
+<p class="note">Thesis: the docs page is one reading column. Navigation stays one control away: the page tree lives in a drawer on every viewport; a docs bar carries the drawer button, a breadcrumb and a search field that never leaves the screen; the page's own table of contents is a strip under its title. Named axis: <b>what is dominant</b> (the page being read, not the tree around it).</p>
+<p class="legend">
+  <span><span class="box" style="border:1px solid #888"></span>zone</span>
+  <span><span class="box" style="border:3px double #555"></span>sticky once the reader scrolls</span>
+  <span><span class="box" style="border:2px dashed #555"></span>overlay, opened by a control</span>
+</p>
+
+<!-- ============================ 1440 ============================ -->
+
+<p class="frame-label">1440 · state 1 of 4 · a docs page at rest (e.g. /docs/concepts/verdicts/)</p>
+<div class="frame w1440">
+  <div class="z" style="height:56px"><b>Site nav (shared shell)</b><small>wordmark · Benchmark · Quick start · Docs (current) · Paper · GitHub</small></div>
+  <div class="row z sticky" style="height:64px; padding:6px 24px; align-items:stretch">
+    <div class="z" style="width:170px"><b>Contents button</b><small>opens the drawer (state 2)</small></div>
+    <div class="z grow"><b>Breadcrumb</b><small>Docs / section / page title; each crumb a link (section opens its block on the landing)</small></div>
+    <div class="z" style="width:420px"><b>Search field (persistent)</b><small>Pagefind; "/" focuses it; results drop below (state 3)</small></div>
+  </div>
+  <div class="col">
+    <div class="z" style="height:110px"><b>Title block</b><small>page title · one-line summary of what the page answers</small></div>
+    <div class="z sticky" style="height:72px"><b>On-this-page strip</b><small>the page's h2 headings in one line, the current one marked; sticks under the docs bar; absent on pages with fewer than 3 headings; overflows into "more ▾"</small></div>
+    <div class="z" style="height:150px"><b>Body: prose</b><small>headings (h2, h3 with anchor links), paragraphs; column measure about 70 characters</small></div>
+    <div class="z" style="height:120px"><b>Code block</b><small>command or source; language label</small>
+      <div class="z inner" style="width:150px; margin-left:auto"><b>Copy control</b><small>visible always; "Copied" on click</small></div>
+    </div>
+    <div class="z" style="height:110px"><b>Table</b><small>full column width; scrolls sideways inside its own frame if wider</small></div>
+    <div class="z" style="height:150px"><b>Figure</b><small>image or SVG with caption (e.g. the verdicts figure)</small></div>
+    <div class="z" style="height:90px"><b>Body: prose (continues)</b><small>the rest of the page</small></div>
+    <div class="row" style="height:80px">
+      <div class="z grow"><b>Previous</b><small>"← Previous" + page title + its section</small></div>
+      <div class="z grow" style="text-align:right"><b>Next</b><small>"Next →" + page title + its section</small></div>
+    </div>
+    <div class="z" style="height:44px"><b>Source line</b><small>source file in its repository @ pinned commit, linked to the commit on GitHub</small></div>
+  </div>
+  <div class="z" style="height:72px"><b>Footer (shared shell)</b><small>site links</small></div>
+  <div class="scrim" style="top:136px; left:16px; width:300px; height:110px"><span><b>Margin, left: empty by design</b><small>the tree is not drawn here; the column is the page</small></span></div>
+  <div class="scrim" style="top:136px; right:16px; width:300px; height:110px"><span><b>Margin, right: empty by design</b><small>no right-hand table of contents; the strip carries it</small></span></div>
+</div>
+
+<p class="frame-label">1440 · state 2 of 4 · the drawer open (Contents button clicked)</p>
+<div class="frame w1440" style="height:760px">
+  <div class="z" style="height:56px"><b>Site nav (shared shell)</b><small>unchanged</small></div>
+  <div class="row z sticky" style="height:64px; padding:6px 24px">
+    <div class="z" style="width:170px"><b>Contents button (pressed)</b><small>second click closes</small></div>
+    <div class="z grow"><b>Breadcrumb</b><small>unchanged</small></div>
+    <div class="z" style="width:420px"><b>Search field</b><small>unchanged</small></div>
+  </div>
+  <div class="col" style="opacity:1">
+    <div class="z" style="height:110px"><b>Title block</b><small>page underneath, stays in place</small></div>
+    <div class="z" style="height:52px"><b>On-this-page strip</b></div>
+    <div class="z" style="height:300px"><b>Body</b></div>
+  </div>
+  <div class="scrim" style="top:120px; left:380px; width:1060px; height:640px; padding-left:24px"><span><b>Scrim over the page</b><small>click or Esc closes the drawer; the page keeps its scroll position</small></span></div>
+  <div class="overlay" style="top:120px; left:0; width:380px; height:640px">
+    <div class="z" style="height:52px"><b>Drawer head</b><small>"Contents" · close control</small></div>
+    <div class="z inner" style="height:80px"><b>Section 1 · Getting started</b><small>its pages, in order; each a link</small></div>
+    <div class="z inner" style="height:80px"><b>Section 2 · Concepts</b><small>its pages; the current page marked (not by colour alone)</small></div>
+    <div class="z inner" style="height:80px"><b>Section 3 · Guides</b><small>its pages</small></div>
+    <div class="z inner" style="height:80px"><b>Section 4 · Reference</b><small>CLI, certificate, .gate/sandbox.json</small></div>
+    <div class="z inner" style="height:80px"><b>Section 5 · Differential attestation</b><small>the architecture pages</small></div>
+    <div class="z inner" style="height:60px"><b>Section 6 · FAQ</b><small>one page or several</small></div>
+    <small>All six sections expanded; the drawer scrolls on its own; opens scrolled to the current page.</small>
+  </div>
+</div>
+
+<p class="frame-label">1440 · state 3 of 4 · search open (the reader typed in the search field)</p>
+<div class="frame w1440" style="height:640px">
+  <div class="z" style="height:56px"><b>Site nav (shared shell)</b></div>
+  <div class="row z sticky" style="height:64px; padding:6px 24px">
+    <div class="z" style="width:170px"><b>Contents button</b></div>
+    <div class="z grow"><b>Breadcrumb</b></div>
+    <div class="z" style="width:420px"><b>Search field (focused, with query)</b><small>clear control inside the field; Esc closes results</small></div>
+  </div>
+  <div class="col">
+    <div class="z" style="height:110px"><b>Title block</b><small>page underneath</small></div>
+    <div class="z" style="height:300px"><b>Body</b></div>
+  </div>
+  <div class="overlay" style="top:118px; right:24px; width:560px; height:500px">
+    <div class="z" style="height:40px"><b>Result count</b><small>"N results for the query"</small></div>
+    <div class="z inner" style="height:96px"><b>Hit 1 (top hit, keyboard-selected)</b><small>page title · section · snippet with the matched words · Enter opens it</small></div>
+    <div class="z inner" style="height:96px"><b>Hit 2</b><small>title · section · snippet</small></div>
+    <div class="z inner" style="height:96px"><b>Hit 3 …</b><small>arrows move; the list scrolls inside the panel</small></div>
+    <div class="z inner" style="height:100px"><b>Empty state (when no hit)</b><small>"No results for the query" · clear-search control · link to the docs landing</small></div>
+  </div>
+</div>
+
+<p class="frame-label">1440 · state 4 of 4 · the docs landing /docs/ (from nav "Docs" or the 404 page)</p>
+<div class="frame w1440">
+  <div class="z" style="height:56px"><b>Site nav (shared shell)</b><small>Docs current</small></div>
+  <div class="row z sticky" style="height:64px; padding:6px 24px">
+    <div class="z" style="width:170px"><b>Contents button</b><small>same drawer</small></div>
+    <div class="z grow"><b>Breadcrumb</b><small>"Docs" alone</small></div>
+    <div class="z" style="width:420px"><b>Search field</b><small>same field, same place</small></div>
+  </div>
+  <div class="col">
+    <div class="z" style="height:90px"><b>Title block</b><small>"Docs" · one line: what the docs cover</small></div>
+    <div class="z" style="height:60px"><b>Start line</b><small>link to Quick start (install and first run) · link to the CLI reference</small></div>
+    <div class="row" style="height:150px">
+      <div class="z grow"><b>Section block · Getting started</b><small>section name, one line, every page listed</small></div>
+      <div class="z grow"><b>Section block · Concepts</b><small>every page listed</small></div>
+    </div>
+    <div class="row" style="height:150px">
+      <div class="z grow"><b>Section block · Guides</b><small>every page listed</small></div>
+      <div class="z grow"><b>Section block · Reference</b><small>every page listed</small></div>
+    </div>
+    <div class="row" style="height:150px">
+      <div class="z grow"><b>Section block · Differential attestation</b><small>every page listed</small></div>
+      <div class="z grow"><b>Section block · FAQ</b><small>every page listed</small></div>
+    </div>
+    <small>The landing is the one place the whole tree sits in the column: the drawer's content, laid flat.</small>
+  </div>
+  <div class="z" style="height:72px"><b>Footer (shared shell)</b></div>
+</div>
+
+<!-- ============================ 390 ============================ -->
+
+<p class="frame-label" style="margin-top:56px">390 · the same four states on the phone (secondary viewport)</p>
+<div class="row-of-phones">
+
+  <div>
+    <p class="frame-label" style="margin-top:0">390 · state 1 · page at rest</p>
+    <div class="frame w390">
+      <div class="z" style="height:56px"><b>Site nav (shared shell)</b><small>wordmark · site menu button</small></div>
+      <div class="z sticky" style="padding:6px">
+        <div class="row" style="height:48px">
+          <div class="z" style="width:110px"><b>Contents</b><small>drawer</small></div>
+          <div class="z grow"><b>Breadcrumb</b><small>section / page, truncated from the left</small></div>
+        </div>
+        <div class="z inner" style="height:48px"><b>Search field (persistent)</b><small>full width</small></div>
+        <small>Sticky as one row once scrolled: Contents · page title · search icon</small>
+      </div>
+      <div class="pcol">
+        <div class="z" style="height:110px"><b>Title block</b><small>title · one-line summary</small></div>
+        <div class="z sticky" style="height:84px"><b>On this page ▾</b><small>the current heading; opens the heading list; sticks under the docs bar</small></div>
+        <div class="z" style="height:150px"><b>Body: prose</b><small>headings, paragraphs; no horizontal scroll</small></div>
+        <div class="z" style="height:120px"><b>Code block</b><small>scrolls sideways inside itself</small>
+          <div class="z inner" style="width:120px; margin-left:auto"><b>Copy control</b><small>always visible</small></div>
+        </div>
+        <div class="z" style="height:100px"><b>Table</b><small>scrolls sideways inside its frame</small></div>
+        <div class="z" style="height:120px"><b>Figure</b><small>fits the width; caption</small></div>
+        <div class="z" style="height:80px"><b>Body (continues)</b></div>
+        <div class="z" style="height:64px"><b>Previous</b><small>"← Previous" + title</small></div>
+        <div class="z" style="height:64px"><b>Next</b><small>"Next →" + title (stacked, full width)</small></div>
+        <div class="z" style="height:56px"><b>Source line</b><small>file @ pinned commit</small></div>
+      </div>
+      <div class="z" style="height:72px"><b>Footer (shared shell)</b></div>
+    </div>
+  </div>
+
+  <div>
+    <p class="frame-label" style="margin-top:0">390 · state 2 · drawer open</p>
+    <div class="frame w390" style="height:760px">
+      <div class="z" style="height:56px"><b>Site nav (shared shell)</b></div>
+      <div class="overlay" style="top:56px; left:0; width:390px; height:704px">
+        <div class="z" style="height:52px"><b>Drawer head</b><small>"Contents" · close control</small></div>
+        <div class="z inner" style="height:48px"><b>Search field</b><small>repeated at the drawer top</small></div>
+        <div class="z inner" style="height:80px"><b>Section 1 · Getting started</b><small>pages</small></div>
+        <div class="z inner" style="height:80px"><b>Section 2 · Concepts</b><small>pages; current marked</small></div>
+        <div class="z inner" style="height:80px"><b>Section 3 · Guides</b></div>
+        <div class="z inner" style="height:80px"><b>Section 4 · Reference</b></div>
+        <div class="z inner" style="height:80px"><b>Section 5 · Differential attestation</b></div>
+        <div class="z inner" style="height:60px"><b>Section 6 · FAQ</b></div>
+        <small>Full-screen sheet; scrolls; tapping a page closes it and opens the page.</small>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <p class="frame-label" style="margin-top:0">390 · state 3 · search open</p>
+    <div class="frame w390" style="height:760px">
+      <div class="z" style="height:56px"><b>Site nav (shared shell)</b></div>
+      <div class="overlay" style="top:56px; left:0; width:390px; height:704px">
+        <div class="row" style="height:52px">
+          <div class="z grow"><b>Search field (focused)</b><small>clear control</small></div>
+          <div class="z" style="width:80px"><b>Cancel</b></div>
+        </div>
+        <div class="z inner" style="height:40px"><b>Result count</b></div>
+        <div class="z inner" style="height:100px"><b>Hit 1</b><small>title · section · snippet</small></div>
+        <div class="z inner" style="height:100px"><b>Hit 2</b><small>title · section · snippet</small></div>
+        <div class="z inner" style="height:100px"><b>Hit 3 …</b><small>list scrolls</small></div>
+        <div class="z inner" style="height:100px"><b>Empty state</b><small>"No results" · clear control · docs landing link</small></div>
+        <small>Full-screen; the phone keyboard sits over the lower half.</small>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <p class="frame-label" style="margin-top:0">390 · state 4 · docs landing</p>
+    <div class="frame w390">
+      <div class="z" style="height:56px"><b>Site nav (shared shell)</b></div>
+      <div class="z sticky" style="padding:6px">
+        <div class="row" style="height:48px">
+          <div class="z" style="width:110px"><b>Contents</b></div>
+          <div class="z grow"><b>Breadcrumb</b><small>"Docs"</small></div>
+        </div>
+        <div class="z inner" style="height:48px"><b>Search field</b></div>
+      </div>
+      <div class="pcol">
+        <div class="z" style="height:90px"><b>Title block</b><small>"Docs" · one line</small></div>
+        <div class="z" style="height:64px"><b>Start line</b><small>Quick start · CLI reference</small></div>
+        <div class="z" style="height:110px"><b>Section block · Getting started</b><small>every page listed</small></div>
+        <div class="z" style="height:110px"><b>Section block · Concepts</b></div>
+        <div class="z" style="height:110px"><b>Section block · Guides</b></div>
+        <div class="z" style="height:110px"><b>Section block · Reference</b></div>
+        <div class="z" style="height:110px"><b>Section block · Differential attestation</b></div>
+        <div class="z" style="height:80px"><b>Section block · FAQ</b></div>
+      </div>
+      <div class="z" style="height:72px"><b>Footer (shared shell)</b></div>
+    </div>
+  </div>
+
+</div>
+
+<p class="note" style="margin-top:32px"><b>Worse at:</b> browsing. The reader never sees the page tree beside the page, so "what else is in this section" costs a click on desktop as on the phone; siblings are found by drawer, by prev and next, or by search, not by glancing left. At 1440 about half the width is empty margin. The sidebar highlight that J3.3 and J1.5 name exists only inside the open drawer; the breadcrumb carries "where am I" instead.</p>
+
+</body>
+</html>

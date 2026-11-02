@@ -1,0 +1,10 @@
+[
+ {
+  "id": "2a",
+  "rung": "style",
+  "title": "Quiet ledger",
+  "axis": "emphasis budget: restraint as the identity; thin rules, mono numerals, three grey steps of chrome; only position and F1 reach full white; measured-by told apart by a solid cream vs dotted grey edge rule plus words, repeated on the chips",
+  "entry": "index.html",
+  "worse_at": "the two-runs split rests on a 2 px solid-vs-dotted edge and words, so a dim phone or a cropped screenshot can still read 16 rows as one contest; no bars, so precision/recall trade-offs and the F1 lead are read digit by digit and the page is less striking to share; the three greys sit close (dimmest raised to #767b8b for 4.5:1); on the phone about five rows above the fold and P/R behind a swipe"
+ }
+]

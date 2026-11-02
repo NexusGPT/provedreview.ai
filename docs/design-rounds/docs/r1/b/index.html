@@ -1,0 +1,201 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Docs, rung 1 layout, B: top sections</title>
+<style>
+  body { margin: 24px; }
+  .badge { display: inline-block; border: 2px solid #555; padding: 2px 10px; font-weight: bold; font-size: 20px; }
+  h1 { font-size: 22px; } h2 { font-size: 18px; margin-top: 48px; } h3 { font-size: 15px; margin: 28px 0 8px; }
+  .scroll { overflow-x: auto; padding-bottom: 8px; }
+  .frame { border: 2px solid #888; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; padding: 8px; }
+  .d { width: 1440px; min-height: 900px; }
+  .p { width: 390px; min-height: 844px; }
+  .box { border: 1px solid #999; box-sizing: border-box; padding: 6px 8px; font-size: 13px; }
+  .box b { display: block; font-size: 13px; }
+  .box .w { color: #666; font-size: 12px; }
+  .dash { border-style: dashed; }
+  .row { display: flex; gap: 8px; }
+  .grow { flex: 1; }
+  .col { display: flex; flex-direction: column; gap: 8px; }
+  .boards { display: flex; gap: 32px; flex-wrap: wrap; align-items: flex-start; }
+  .cap { font-size: 13px; max-width: 390px; margin: 6px 0 0; }
+  .tab { flex: 1; text-align: center; }
+  .tab.on { border-width: 3px; }
+  .ind { margin-left: 16px; }
+  ul.key { font-size: 14px; max-width: 900px; }
+</style>
+</head>
+<body>
+
+<p><span class="badge">B</span></p>
+<h1>Docs, rung 1 (layout): B, "top sections"</h1>
+<p>Axis: the six sections are a horizontal second nav under the site nav; the current section's pages are a slim left list; one wide reading column; search sits in the second nav. Labelled boxes only: no data, no styling. A box's name is bold; the line under it says what it holds. A dashed box is a state that opens on demand.</p>
+
+<!-- ============ DESKTOP 1440 ============ -->
+<h2>1440 (desktop, primary): a docs page at rest</h2>
+<div class="scroll">
+<div class="frame d">
+  <div class="box"><b>Site nav (shared shell)</b><span class="w">wordmark (to Home) · Benchmark · Quick start · Docs (current) · Paper · GitHub</span></div>
+
+  <div class="row">
+    <div class="row grow" style="gap:0">
+      <div class="box tab"><b>Section 1</b><span class="w">Getting started</span></div>
+      <div class="box tab on"><b>Section 2 (current)</b><span class="w">Concepts; marked as current</span></div>
+      <div class="box tab"><b>Section 3</b><span class="w">Guides</span></div>
+      <div class="box tab"><b>Section 4</b><span class="w">Reference</span></div>
+      <div class="box tab"><b>Section 5</b><span class="w">Differential attestation</span></div>
+      <div class="box tab"><b>Section 6</b><span class="w">FAQ</span></div>
+    </div>
+    <div class="box" style="width:340px"><b>Search field</b><span class="w">Pagefind over every docs page; "/" focuses it; results drop below the bar</span></div>
+  </div>
+  <div class="box" style="text-align:center"><span class="w">↑ Second nav: the section tabs and the search field above are one bar, sticky under the site nav while reading</span></div>
+
+  <div class="row grow" style="align-items:stretch">
+    <div class="col" style="width:240px">
+      <div class="box"><b>Section title</b><span class="w">the current section's name and its page count</span></div>
+      <div class="box grow"><b>Page list (slim left list)</b><span class="w">only this section's pages, in order; the open page marked</span>
+        <div class="box" style="margin-top:8px"><b>Page 1</b><span class="w">link</span></div>
+        <div class="box" style="margin-top:6px; border-width:3px"><b>Page 2 (open)</b><span class="w">marked current</span>
+          <div class="box ind" style="margin-top:6px"><b>On this page</b><span class="w">the open page's h2 headings, nested under its entry; only for long pages; the heading in view marked</span></div>
+        </div>
+        <div class="box" style="margin-top:6px"><b>Page 3 … n</b><span class="w">links</span></div>
+      </div>
+    </div>
+
+    <div class="col grow" style="max-width:none">
+      <div class="box"><b>Breadcrumb line</b><span class="w">Docs / section / page; each part a link</span></div>
+      <div class="box"><b>Page title + lead</b><span class="w">h1 and its one-sentence lead</span></div>
+      <div class="box grow" style="min-height:420px"><b>Reading column (wide, one column)</b><span class="w">the page body: prose with headings, tables, an occasional figure; measure capped for reading, the column itself takes the rest of the width</span>
+        <div class="box" style="margin-top:12px"><b>Prose + h2 / h3</b><span class="w">body text</span></div>
+        <div class="row" style="margin-top:8px">
+          <div class="box grow"><b>Code block</b><span class="w">command or code, highlighted at build</span></div>
+          <div class="box" style="width:150px"><b>Copy control</b><span class="w">visible always, top right of the block; confirms "Copied"</span></div>
+        </div>
+        <div class="box" style="margin-top:8px"><b>Table</b><span class="w">scrolls sideways inside its own frame if wider than the column</span></div>
+        <div class="box" style="margin-top:8px"><b>Figure</b><span class="w">image with caption</span></div>
+      </div>
+      <div class="row">
+        <div class="box grow"><b>Previous</b><span class="w">← previous page title; crosses into the previous section, naming it</span></div>
+        <div class="box grow" style="text-align:right"><b>Next</b><span class="w">next page title →; crosses into the next section, naming it</span></div>
+      </div>
+      <div class="box"><b>Page source line</b><span class="w">source file + pinned commit (link to GitHub at that commit)</span></div>
+    </div>
+  </div>
+
+  <div class="box"><b>Footer (shared shell)</b><span class="w">site footer links</span></div>
+</div>
+</div>
+
+<h3>1440 states</h3>
+<div class="boards">
+  <div>
+    <div class="frame" style="width:700px">
+      <div class="box"><b>Site nav</b></div>
+      <div class="row">
+        <div class="box grow"><b>Section tabs</b><span class="w">unchanged</span></div>
+        <div class="box" style="width:220px; border-width:3px"><b>Search field (typing)</b><span class="w">query; clear control</span></div>
+      </div>
+      <div class="row">
+        <div class="box" style="width:120px; min-height:200px"><b>Page list</b><span class="w">dimmed, under</span></div>
+        <div class="box dash grow"><b>Search results panel</b><span class="w">drops under the second nav, over the reading column; one row per hit: page title, its section name, a snippet; arrow keys + Enter; Esc closes</span>
+          <div class="box" style="margin-top:6px"><b>Hit row</b><span class="w">title · section · snippet</span></div>
+          <div class="box" style="margin-top:6px"><b>Hit row</b></div>
+          <div class="box" style="margin-top:6px"><b>Empty state</b><span class="w">"No results for …" + clear search</span></div>
+        </div>
+      </div>
+    </div>
+    <p class="cap">Search open. Opening a hit switches the section tab and the left list to the hit's section.</p>
+  </div>
+  <div>
+    <div class="frame" style="width:700px">
+      <div class="box"><b>Site nav</b></div>
+      <div class="row">
+        <div class="box grow"><b>Section tabs</b><span class="w">none marked current</span></div>
+        <div class="box" style="width:220px"><b>Search field</b></div>
+      </div>
+      <div class="box"><b>Docs landing title + lead</b><span class="w">/docs/: what the docs cover, one line</span></div>
+      <div class="row">
+        <div class="box grow"><b>Section 1 block</b><span class="w">name + every page title as a link</span></div>
+        <div class="box grow"><b>Section 2 block</b><span class="w">same</span></div>
+        <div class="box grow"><b>Section 3 block</b><span class="w">same</span></div>
+      </div>
+      <div class="row">
+        <div class="box grow"><b>Section 4 block</b><span class="w">same</span></div>
+        <div class="box grow"><b>Section 5 block</b><span class="w">same</span></div>
+        <div class="box grow"><b>Section 6 block</b><span class="w">same</span></div>
+      </div>
+      <div class="box"><b>Start line</b><span class="w">link to Quick start (install)</span></div>
+    </div>
+    <p class="cap">Docs landing (/docs/): no left list; the one place every page is listed at once (J3.2).</p>
+  </div>
+</div>
+
+<!-- ============ PHONE 390 ============ -->
+<h2>390 (phone, secondary): the same page</h2>
+<div class="boards">
+  <div>
+    <div class="frame p">
+      <div class="box"><b>Site nav (shared shell)</b><span class="w">wordmark · menu for the five links</span></div>
+      <div class="row">
+        <div class="box grow"><b>Section strip</b><span class="w">the six section tabs in one row; scrolls sideways inside itself; current tab scrolled into view</span></div>
+        <div class="box" style="width:70px"><b>Search</b><span class="w">button</span></div>
+      </div>
+      <div class="box"><b>Pages menu bar</b><span class="w">"section · open page ▾"; opens the page list (the collapsed sidebar)</span></div>
+      <div class="box"><b>Breadcrumb line</b><span class="w">Docs / section / page</span></div>
+      <div class="box"><b>Page title + lead</b></div>
+      <div class="box grow" style="min-height:330px"><b>Reading column (full width)</b><span class="w">prose, headings, tables</span>
+        <div class="box" style="margin-top:8px"><b>Code block + copy control</b><span class="w">block scrolls sideways inside itself; copy control fixed top right</span></div>
+        <div class="box" style="margin-top:8px"><b>Table</b><span class="w">scrolls inside its frame; the page never scrolls sideways</span></div>
+      </div>
+      <div class="box"><b>Previous</b><span class="w">full width, stacked</span></div>
+      <div class="box"><b>Next</b><span class="w">full width, stacked</span></div>
+      <div class="box"><b>Page source line</b></div>
+      <div class="box"><b>Footer</b></div>
+    </div>
+    <p class="cap">At rest. The second nav (section strip + pages menu bar) stays sticky under the site nav.</p>
+  </div>
+
+  <div>
+    <div class="frame p">
+      <div class="box"><b>Site nav</b></div>
+      <div class="row">
+        <div class="box grow"><b>Section strip</b><span class="w">still switchable</span></div>
+        <div class="box" style="width:70px"><b>Search</b></div>
+      </div>
+      <div class="box dash grow"><b>Pages menu (open)</b><span class="w">pushes down from the bar; closes on a pick, on Esc, or on the bar again</span>
+        <div class="box" style="margin-top:8px"><b>Section title</b><span class="w">current section</span></div>
+        <div class="box" style="margin-top:6px"><b>Page 1</b></div>
+        <div class="box" style="margin-top:6px; border-width:3px"><b>Page 2 (open)</b>
+          <div class="box ind" style="margin-top:6px"><b>On this page</b><span class="w">its h2 headings, long pages only</span></div>
+        </div>
+        <div class="box" style="margin-top:6px"><b>Page 3 … n</b></div>
+      </div>
+    </div>
+    <p class="cap">Pages menu open: the left list, collapsed to a menu.</p>
+  </div>
+
+  <div>
+    <div class="frame p">
+      <div class="box"><b>Site nav</b></div>
+      <div class="box" style="border-width:3px"><b>Search field (full width)</b><span class="w">replaces the second nav while open; cancel control</span></div>
+      <div class="box dash grow"><b>Search results (full screen below the field)</b>
+        <div class="box" style="margin-top:8px"><b>Hit row</b><span class="w">title · section · snippet</span></div>
+        <div class="box" style="margin-top:6px"><b>Hit row</b></div>
+        <div class="box" style="margin-top:6px"><b>Empty state</b><span class="w">"No results for …" + clear</span></div>
+      </div>
+    </div>
+    <p class="cap">Search open.</p>
+  </div>
+</div>
+
+<h2>What B is worse at</h2>
+<ul class="key">
+  <li>The whole tree is never visible on a page: the left list shows one section. A reader who does not know which section holds a page guesses a tab or searches. Only the /docs/ landing lists every page.</li>
+  <li>Two bars stacked above the reading column cost vertical space on every page; on the phone, the section strip plus the pages menu bar take about two rows more than a single menu would.</li>
+  <li>Six tab labels of uneven length ("Differential attestation" against "FAQ") and uneven section sizes (nine DA pages against one FAQ page). At 390 the strip hides tabs 4 to 6 off-screen until the reader scrolls it.</li>
+  <li>The in-page table of contents lives inside a 240 px list, nested under the open page: long pages with many headings make that list tall and wrap the heading titles.</li>
+</ul>
+
+</body>
+</html>

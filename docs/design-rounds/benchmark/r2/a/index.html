@@ -1,0 +1,464 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Benchmark · style round 2 · 2a · quiet ledger</title>
+<style>
+/* lock tokens: docs/DESIGN.md (ground #0a0b0f, Inter, JetBrains Mono, Source Serif 4 italics for the math); ink and rule values from the home page's styles.css */
+:root{
+  --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,"DejaVu Sans Mono",monospace;
+  --serif:"Source Serif 4","Source Serif Pro",Georgia,"DejaVu Serif",serif;
+  --bg:#0a0b0f; --fg:#e9eaee; --ink2:#c7ccd6; --ink3:#a3a8b6; --mut:#8b90a0; --dim:#767b8b;
+  --line:rgba(255,255,255,.07); --rule:rgba(255,255,255,.14); --raise:rgba(255,255,255,.022);
+  --steel:#9fb3c8; --cream:#f3efe6;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#15161b;color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+
+/* ---------- board chrome (not part of the design) ---------- */
+.board{padding:32px 40px 8px;min-width:1520px;font-size:13px;color:#b9bfcb;max-width:1520px}
+.board .badge{display:inline-block;font-family:var(--mono);font-weight:700;font-size:18px;color:#0a0b0f;background:var(--cream);border-radius:6px;padding:4px 10px;margin-right:12px;vertical-align:middle}
+.board h1{display:inline;font-size:20px;font-weight:600;color:var(--fg);vertical-align:middle;letter-spacing:-.01em}
+.board p{margin:8px 0 0;max-width:150ch;line-height:1.5}.board b{color:var(--fg);font-weight:600}
+.vp{font-family:var(--mono);font-size:12px;letter-spacing:.06em;color:var(--mut);margin:36px 40px 10px;font-weight:400}
+.vp b{color:var(--fg);font-weight:500}
+.stage{padding:0 40px}
+.frame{position:relative;background:var(--bg);outline:1px solid #2a2c34;overflow:hidden}
+.frame.desk{width:1440px}.frame.phone{width:390px}
+.frame.crop{max-height:var(--h)}
+.fold{position:absolute;left:0;right:0;border-top:1px dashed #f0a08c;z-index:9;pointer-events:none}
+.fold i{position:absolute;right:8px;top:-18px;font:11px var(--mono);font-style:normal;color:#f0a08c;background:#15161b;padding:1px 6px}
+.statesrow{display:flex;gap:28px;align-items:flex-start;flex-wrap:nowrap}
+.cap{font-family:var(--mono);font-size:11px;color:var(--mut);margin:0 0 8px;max-width:390px;line-height:1.5}
+.cap b{color:var(--fg);font-weight:500}
+
+/* ---------- the page ---------- */
+.pg{font-size:14px;color:var(--fg);background:var(--bg)}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 48px;font-size:14px;border-bottom:1px solid var(--line)}
+.logo{font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.logo .mark{display:grid;grid-template-columns:repeat(3,7px);gap:1px}.logo .mark i{display:block;width:7px;height:7px;background:var(--steel);border-radius:1px;opacity:.9}
+.logo .mark i:nth-child(2),.logo .mark i:nth-child(4),.logo .mark i:nth-child(9){opacity:.35}
+.links{display:flex;gap:28px;color:var(--mut)}.links a:hover{color:var(--fg)}
+.links a[aria-current]{color:var(--fg)}
+.navr{display:flex;gap:10px;align-items:center}
+.btn{font-size:13px;padding:8px 13px;border-radius:8px;display:inline-flex;align-items:center;gap:8px;font-weight:500;border:1px solid var(--line);background:rgba(255,255,255,.04)}
+.wrap{max-width:1240px;margin:0 auto;padding:0 48px}
+
+/* head: one line */
+.phead{padding-top:80px;display:flex;align-items:baseline;gap:20px;flex-wrap:wrap}
+.phead h1{margin:0;font-size:28px;font-weight:500;letter-spacing:-.025em}
+.scope{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.caveat{font-family:var(--mono);font-size:12px;color:var(--mut);margin:10px 0 0;line-height:1.6}
+.caveat a{color:var(--ink2);border-bottom:1px solid var(--rule)}
+
+/* the measured-by marks: a solid rule for our runs, a dotted rule for published numbers */
+.mk{display:inline-block;width:14px;height:0;vertical-align:middle;margin-right:8px;position:relative;top:-1px}
+.mk.us{border-top:2px solid var(--cream)}
+.mk.pub{border-top:2px dotted var(--dim)}
+
+/* filter bar */
+.fbar{display:flex;align-items:center;gap:5px;margin-top:24px;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px;flex-wrap:wrap}
+.fbar .lbl{color:var(--dim);margin:0 4px 0 0;font-size:10.5px;letter-spacing:.08em;text-transform:uppercase}
+.fbar .sep{width:1px;height:18px;background:var(--line);margin:0 6px}
+.chip{border:1px solid var(--line);border-radius:6px;padding:4px 7px;font-size:11px;white-space:nowrap;color:var(--mut);transition:color .12s,border-color .12s}
+.chip:hover{color:var(--ink2);border-color:var(--rule)}
+.chip:active{transform:translateY(.5px)}
+.chip[aria-pressed="true"]{color:var(--fg);border-color:rgba(233,234,238,.45)}
+.chip .mk{width:12px;margin-right:7px}
+.count{color:var(--ink3);margin-left:auto;white-space:nowrap}.count b{color:var(--fg);font-weight:500}
+.reset{color:var(--mut);border-bottom:1px solid var(--rule);margin-left:12px;white-space:nowrap}
+.reset[disabled]{color:var(--dim);border-color:transparent;cursor:default}
+.dl{color:var(--ink2);margin-left:14px;white-space:nowrap}.dl:hover{color:var(--fg)}
+.fbar.off .chip,.fbar.off .reset,.fbar.off .dl{color:var(--dim);pointer-events:none}
+
+/* table */
+.tw{position:relative}
+table.lb{width:100%;border-collapse:collapse;margin-top:4px;table-layout:fixed}
+.lb th{font-family:var(--mono);font-size:11px;letter-spacing:.06em;color:var(--dim);font-weight:400;text-align:right;padding:12px 10px 10px;border-bottom:1px solid var(--rule);white-space:nowrap;user-select:none}
+.lb th.l{text-align:left}
+.lb th button{color:inherit;letter-spacing:inherit}
+.lb th button:hover{color:var(--ink2)}
+.lb th.on{color:var(--fg)}
+.lb th .ar{display:inline-block;width:10px;text-align:center;margin-left:2px}
+.lb td{padding:10px 10px;border-bottom:1px solid var(--line);text-align:right;vertical-align:baseline;font-family:var(--mono);font-size:13px;color:var(--ink3);font-variant-numeric:tabular-nums}
+.lb td.l{text-align:left}
+.lb tr.r{cursor:pointer}
+.lb tr.r:hover td{background:var(--raise)}
+.lb tr.r.open td{border-bottom-color:transparent;background:var(--raise)}
+.lb td.pos{color:var(--fg);font-size:13px;text-align:left;padding-left:12px;position:relative}
+.lb tr.us td.pos::before{content:"";position:absolute;left:0;top:10px;bottom:10px;border-left:2px solid var(--cream)}
+.lb tr.pub td.pos::before{content:"";position:absolute;left:0;top:10px;bottom:10px;border-left:2px dotted var(--dim)}
+.lb td.sys{font-family:var(--sans)}
+.sys .nm{font-size:14px;font-weight:500;color:var(--fg);line-height:1.35;margin-right:10px}
+.sys .md{font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.45;white-space:nowrap;display:inline-block}
+.sys .vd{color:var(--dim)}
+.lb td.by{font-size:11px;white-space:nowrap}
+.lb tr.us td.by{color:var(--ink2)}
+.lb tr.pub td.by{color:var(--dim)}
+.lb td.f1{color:var(--fg);font-size:15px;font-weight:500;letter-spacing:-.01em}
+.lb td.na{color:var(--dim)}
+.lb td.cv{color:var(--dim);text-align:center;padding-left:0;padding-right:0}
+.lb tr.r:hover td.cv{color:var(--ink2)}
+.cv i{display:inline-block;font-style:normal;transition:transform .16s ease}
+tr.open .cv i{transform:rotate(90deg);color:var(--fg)}
+.tfoot{display:flex;gap:28px;justify-content:space-between;font-family:var(--mono);font-size:11.5px;color:var(--dim);padding:14px 0 0;line-height:1.6;flex-wrap:wrap}
+.tfoot a{color:var(--mut);border-bottom:1px solid var(--line)}
+
+/* row detail */
+.lb tr.det td{padding:0;text-align:left;background:var(--raise);border-bottom:1px solid var(--rule)}
+.dwrap{overflow:hidden;animation:open .18s ease-out}
+@keyframes open{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.dgrid{display:grid;grid-template-columns:1.2fr 1.2fr 1.1fr .9fr;gap:0 32px;padding:6px 10px 18px 58px}
+.dgrid dl{margin:0}
+.dgrid dt{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);margin-top:12px}
+.dgrid dd{margin:4px 0 0;font-family:var(--mono);font-size:12px;color:var(--ink2);line-height:1.55;overflow-wrap:anywhere}
+.dgrid dd a{border-bottom:1px solid var(--rule)}.dgrid dd a:hover{color:var(--fg)}
+.dgrid dd .q{color:var(--dim)}
+.cite{grid-column:1/-1;display:flex;gap:14px;align-items:center;margin-top:16px;padding-top:12px;border-top:1px dashed var(--line);font-family:var(--mono);font-size:11.5px;color:var(--mut)}
+.cite code{flex:1;color:var(--ink2);overflow-wrap:anywhere}
+.cite button,.cite a{color:var(--ink2);border:1px solid var(--line);border-radius:6px;padding:4px 9px;white-space:nowrap}
+.cite button:hover,.cite a:hover{color:var(--fg);border-color:var(--rule)}
+
+/* empty, loading, error lines */
+.lb td.msg{text-align:left;padding:28px 12px;font-family:var(--mono);font-size:12.5px;color:var(--ink3);border-bottom:1px solid var(--rule)}
+.msg b{color:var(--fg);font-weight:500;margin-right:14px}
+.msg button,.msg a{color:var(--fg);border:1px solid var(--rule);border-radius:6px;padding:5px 10px;margin-left:12px}
+.msg .why{display:block;color:var(--dim);margin-top:8px;font-size:11.5px}
+.sk td{border-bottom:1px solid var(--line)}
+.sk i{display:inline-block;height:9px;border-radius:2px;background:rgba(255,255,255,.06);animation:breathe 2.4s ease-in-out infinite}
+@keyframes breathe{50%{opacity:.45}}
+
+/* sections below the table: the lock's 80 px rhythm */
+.sec{padding:80px 0 0}
+.sec h2{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel);font-weight:400;margin:0 0 20px;display:flex;align-items:center;gap:10px}
+.sec h2::before{content:"";width:14px;height:1px;background:var(--steel);opacity:.6}
+.ledger{border-top:1px solid var(--rule)}
+.ledger .li{display:grid;grid-template-columns:220px minmax(0,1fr);gap:32px;padding:16px 0;border-bottom:1px solid var(--line)}
+.ledger .k{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.ledger .v{font-size:14.5px;line-height:1.6;color:var(--ink2);max-width:76ch}
+.ledger .v code,.ledger .v .n{font-family:var(--mono);font-size:13px;color:var(--fg)}
+.math{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--cream);margin-left:6px}
+
+.ed{border-top:1px solid var(--rule)}
+.ed .grp{font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--dim);padding:16px 0 4px}
+.ed .row{display:grid;grid-template-columns:220px auto 120px minmax(0,1fr);gap:24px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.ed .who{font-size:14px;color:var(--ink2)}
+.units{display:flex;gap:2px}
+.units i{display:block;width:8px;height:14px;border-radius:1px;background:rgba(255,255,255,.08)}
+.units i.f{background:var(--ink2)}
+.ed .n{font-family:var(--mono);font-size:15px;color:var(--fg);text-align:right}
+.ed .n small{color:var(--dim);font-size:12px}
+.ed .note{font-family:var(--mono);font-size:11.5px;color:var(--dim)}
+.ed .src{font-family:var(--mono);font-size:11.5px;color:var(--dim);padding-top:12px}
+
+.files .li{grid-template-columns:220px minmax(0,1fr) 200px 90px;align-items:baseline}
+.files .get{font-family:var(--mono);font-size:12px;color:var(--ink2);text-align:right;border:0}
+.files .get:hover{color:var(--fg)}
+.files .meta{font-family:var(--mono);font-size:12px;color:var(--dim)}
+
+.foot{margin-top:80px;border-top:1px solid var(--line);padding:32px 48px 48px;display:flex;justify-content:space-between;gap:24px;font-size:13px;color:var(--mut);flex-wrap:wrap}
+.foot .wm{display:flex;gap:18px;align-items:center;flex-wrap:wrap}
+.foot .fl{display:flex;gap:22px;flex-wrap:wrap;font-family:var(--mono);font-size:12px}
+
+/* ---------- phone (390): same page, adapted ---------- */
+.pg.ph .nav{padding:14px 16px}
+.pg.ph .links,.pg.ph .navr .btn.gh{display:none}
+.pg.ph .wrap{padding:0 16px}
+.pg.ph .phead{padding-top:48px;gap:6px;flex-direction:column}
+.pg.ph .phead h1{font-size:24px}
+.pg.ph .scope{font-size:11px;line-height:1.5}
+.pg.ph .fbar{gap:6px;padding:10px 0}
+.pg.ph .fbar .sep{display:none}
+.pg.ph .fbar .grpw{display:flex;flex-wrap:wrap;gap:6px;width:100%;align-items:center}
+.pg.ph .count{margin-left:0}
+.pg.ph .dl{margin-left:auto}
+.pg.ph .tw{margin:0 -16px}
+.pg.ph .sc{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.pg.ph table.lb{width:auto;min-width:100%}
+.pg.ph .lb th,.pg.ph .lb td{padding-left:6px;padding-right:6px}
+.pg.ph .lb td{font-size:12px}
+.pg.ph .lb td.f1{font-size:14px}
+.pg.ph .lb .stk{position:sticky;background:var(--bg);z-index:2}
+.pg.ph .lb tr.r:hover td.stk,.pg.ph .lb tr.open td.stk{background:#0e0f13}
+.pg.ph .lb .s0{left:0}.pg.ph .lb .s1{left:34px}.pg.ph .lb .s2{left:184px;box-shadow:inset -1px 0 0 var(--rule)}
+.pg.ph .lb td.pos{padding-left:16px}
+.pg.ph .lb tr.us td.pos::before,.pg.ph .lb tr.pub td.pos::before{left:6px}
+.pg.ph .sys .nm{font-size:13px;display:block;margin:0}
+.pg.ph .sys .md{display:block;max-width:138px;margin-top:2px;font-size:10.5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pg.ph .sys .tg{display:block;font-family:var(--mono);font-size:10px;margin-top:3px;color:var(--dim)}
+.pg.ph tr.us .sys .tg{color:var(--ink3)}
+.pg.ph .sys .tg .mk{width:10px;margin-right:5px}
+.pg.ph .dgrid{grid-template-columns:1fr;padding:0 16px 16px;width:390px;position:sticky;left:0}
+.pg.ph .cite{flex-wrap:wrap}
+.pg.ph .tfoot{padding:12px 16px 0;flex-direction:column;gap:6px}
+.pg.ph .swipe{display:block}
+.swipe{display:none;font-family:var(--mono);font-size:10.5px;color:var(--dim);text-align:right;padding:6px 16px 0}
+.pg.ph .sec{padding-top:48px}
+.pg.ph .ledger .li,.pg.ph .files .li{grid-template-columns:1fr;gap:6px}
+.pg.ph .files .get{text-align:left}
+.pg.ph .ed .row{grid-template-columns:1fr auto;gap:8px 12px}
+.pg.ph .ed .units{grid-column:1/-1;order:3}
+.pg.ph .ed .units i{width:6px}
+.pg.ph .ed .note{grid-column:1/-1;order:4}
+.pg.ph .foot{margin-top:48px;padding:24px 16px 32px;flex-direction:column}
+.tg{display:none}
+.pg.ph .lb .msg{position:sticky;left:0}
+.pg.ph .lb td.msg{padding:22px 16px}
+.pg.ph .msg button{margin:10px 0 0}
+</style>
+</head>
+<body>
+
+<div class="board">
+  <span class="badge">2a</span><h1>Benchmark page · style round 2 · lane a · “quiet ledger”</h1>
+  <p><b>Axis:</b> restraint as the identity. Thin rules, mono numerals, muted chrome; the position and F1 columns are the only marks that reach full white. “Measured by us” rows carry a solid cream rule at the left edge; “Published by Open Code Review” rows carry a dotted grey one. The same two marks sit on the filter chips, so no legend is needed.</p>
+  <p><b>Layout:</b> picked layout A (round 1, “scoreboard first”). <b>Data:</b> all 16 rows of <code>data/leaderboard.json</code>, inlined. The tables below are live: sort a header, toggle a chip, click a row. Blind round: no current screen and no other lane’s file opened.</p>
+</div>
+
+<h2 class="vp"><b>Desktop · 1440 · loaded</b> · primary viewport · dashed line = 900 px fold</h2>
+<div class="stage"><div class="frame desk" id="f-desk"><div class="fold" style="top:900px"><i>900 px fold</i></div></div></div>
+
+<h2 class="vp"><b>Phone · 390 · loaded</b> · secondary viewport · position, system and F1 stay put; the rest scrolls sideways inside the table</h2>
+<div class="stage"><div class="frame phone" id="f-phone"><div class="fold" style="top:844px"><i>844 px fold</i></div></div></div>
+
+<h2 class="vp"><b>State · a row expanded</b> · desktop 1440 · DA + lean opened in place; a second click closes it</h2>
+<div class="stage"><div class="frame desk crop" id="f-open" style="--h:760px"></div></div>
+
+<h2 class="vp"><b>States · empty, loading, error</b> · desktop 1440, cropped to the table</h2>
+<div class="stage" style="display:flex;flex-direction:column;gap:20px">
+  <div><p class="cap"><b>Empty filter result</b> · System: Codex + Measured by us</p><div class="frame desk crop" id="f-empty" style="--h:430px"></div></div>
+  <div><p class="cap"><b>Loading</b></p><div class="frame desk crop" id="f-load" style="--h:560px"></div></div>
+  <div><p class="cap"><b>Error</b> · the data file failed</p><div class="frame desk crop" id="f-err" style="--h:430px"></div></div>
+</div>
+
+<h2 class="vp"><b>States on the phone · 390</b> · expanded, empty, loading, error</h2>
+<div class="stage statesrow">
+  <div><p class="cap"><b>Expanded</b> · DA + lean</p><div class="frame phone crop" id="p-open" style="--h:1060px"></div></div>
+  <div><p class="cap"><b>Empty</b></p><div class="frame phone crop" id="p-empty" style="--h:640px"></div></div>
+  <div><p class="cap"><b>Loading</b></p><div class="frame phone crop" id="p-load" style="--h:640px"></div></div>
+  <div><p class="cap"><b>Error</b></p><div class="frame phone crop" id="p-err" style="--h:640px"></div></div>
+</div>
+<div style="height:60px"></div>
+
+<script>
+const DATA = {"benchmark":"AACR-Bench (200 pull requests, 50 repositories, 10 languages, 1,505 verified comments; arXiv 2601.19494)","columns":{"f1":"percent; the harmonic mean of precision and recall over the judge's matches","precision":"tool comments matched / tool comments","recall":"human notes matched / human notes","avg_time":"wall time per pull request as published","avg_tokens":"tokens per pull request as published","measured_by":"who ran the judge: our run of the official pipeline, or the numbers Open Code Review publishes; rows of the two were not judged in one run"},"rows":[{"id":"da-lean-opus","system":"DA + lean","model":"claude-opus-5-5 (reader) with a claude-opus-4-8 filter","vendor":"Nexus","measured_by":"Measured by us","version":"DA d3 (composed entry: d2-reader + gate + C4), lean v0.1.2 findings","f1":31.61,"precision":34.09,"recall":29.47,"avg_time":null,"avg_tokens":null,"instances":184,"notes":1414,"judge":"claude-opus-5-5","rounds":3,"comments":1059,"source":"research/open-code-review/d3/RESULT.md '## Same instances' (DA repository)","read":"2026-10-31","judge_logs":"available"},{"id":"ocr-floor-opus46","system":"Open Code Review","model":"claude-opus-4-6","vendor":"Alibaba","measured_by":"Measured by us","version":"OCR 375f64c (the published reader, our run through the official pipeline)","f1":29.02,"precision":27.72,"recall":30.43,"avg_time":null,"avg_tokens":null,"instances":184,"notes":1414,"judge":"claude-opus-5-5","rounds":3,"comments":1426,"source":"research/open-code-review/d3/RESULT.md '## Same instances' (DA repository)","read":"2026-10-31","judge_logs":"available"},{"id":"pub-01","system":"Open Code Review","model":"Claude-4.6-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":25.1,"precision":33.9,"precision_fraction":"301/889","recall":20,"recall_fraction":"301/1505","avg_time":"1m23s","avg_tokens":"385K","avg_tokens_in_out":"375K / 10K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":889,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-02","system":"Open Code Review","model":"Qwen3.8-Max","vendor":"Alibaba","measured_by":"Published by Open Code Review","version":"Open Code Review v1.8.7","f1":23,"precision":33.9,"precision_fraction":"262/774","recall":17.4,"recall_fraction":"262/1505","avg_time":"5m14s","avg_tokens":"334K","avg_tokens_in_out":"303K / 32K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":774,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-03","system":"Open Code Review","model":"GLM-5.2","vendor":"Zhipu AI","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":21.3,"precision":32.3,"precision_fraction":"239/741","recall":15.9,"recall_fraction":"239/1505","avg_time":"7m58s","avg_tokens":"682K","avg_tokens_in_out":"624K / 58K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":741,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-04","system":"Open Code Review","model":"Qwen3.7-Max","vendor":"Alibaba","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":21.2,"precision":25.2,"precision_fraction":"276/1096","recall":18.3,"recall_fraction":"276/1505","avg_time":"4m41s","avg_tokens":"625K","avg_tokens_in_out":"587K / 38K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":1096,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-05","system":"Open Code Review","model":"GPT-5.5","vendor":"OpenAI","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":21,"precision":32.1,"precision_fraction":"234/728","recall":15.5,"recall_fraction":"234/1505","avg_time":"2m51s","avg_tokens":"422K","avg_tokens_in_out":"409K / 13K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":728,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-06","system":"Open Code Review","model":"GLM-5.1","vendor":"Zhipu AI","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":20.4,"precision":28.9,"precision_fraction":"237/820","recall":15.7,"recall_fraction":"237/1505","avg_time":"4m11s","avg_tokens":"743K","avg_tokens_in_out":"707K / 36K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":820,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-07","system":"Open Code Review","model":"Claude-4.8-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":17.9,"precision":37.8,"precision_fraction":"176/465","recall":11.7,"recall_fraction":"176/1505","avg_time":"1m6s","avg_tokens":"352K","avg_tokens_in_out":"342K / 11K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":465,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-08","system":"Open Code Review","model":"Deepseek-V4-Pro","vendor":"DeepSeek","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":17.9,"precision":30.6,"precision_fraction":"191/624","recall":12.7,"recall_fraction":"191/1505","avg_time":"6m28s","avg_tokens":"394K","avg_tokens_in_out":"350K / 44K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":624,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-09","system":"Claude Code","model":"Claude-4.8-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":14.13,"precision":15.93,"precision_fraction":"191/1200","recall":12.7,"recall_fraction":"191/1505","avg_time":"5m38s","avg_tokens":"2,062K","avg_tokens_in_out":"2,039K / 23K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":1200,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-10","system":"Claude Code","model":"Qwen3.7-Max","vendor":"Alibaba","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":12.17,"precision":8.23,"precision_fraction":"351/4260","recall":23.37,"recall_fraction":"351/1505","avg_time":"8m6s","avg_tokens":"5,153K","avg_tokens_in_out":"5,108K / 44K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":4260,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-11","system":"Claude Code","model":"GLM-5.1","vendor":"Zhipu AI","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":11.93,"precision":8.37,"precision_fraction":"313/3742","recall":20.8,"recall_fraction":"313/1505","avg_time":"14m10s","avg_tokens":"4,038K","avg_tokens_in_out":"3,998K / 39K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":3742,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-12","system":"Claude Code","model":"Claude-4.6-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":11.57,"precision":7.23,"precision_fraction":"435/5980","recall":28.9,"recall_fraction":"435/1505","avg_time":"13m6s","avg_tokens":"5,664K","avg_tokens_in_out":"5,603K / 60K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":5980,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-13","system":"Claude Code","model":"Deepseek-V4-Pro","vendor":"DeepSeek","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":10.93,"precision":8.27,"precision_fraction":"243/2945","recall":16.13,"recall_fraction":"243/1505","avg_time":"14m24s","avg_tokens":"5,450K","avg_tokens_in_out":"5,389K / 60K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":2945,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},{"id":"pub-14","system":"Codex","model":"GPT-5.5","vendor":"OpenAI","measured_by":"Published by Open Code Review","version":"Codex v0.140.0","f1":8.36,"precision":27.82,"precision_fraction":"74/266","recall":4.92,"recall_fraction":"74/1505","avg_time":"2m58s","avg_tokens":"525K","avg_tokens_in_out":"520K / 5K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":266,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"}],"escaped_defects":{"strongest_reader":10,"recordings":22,"recordings_and_proof":31,"of":43,"clean_refused_reader":22,"clean_refused_recordings":4,"source":"the paper's abstract (paper v3)"},"unscored":{"count":12,"of":196,"reason":"11 commits GitHub no longer serves, 1 reader failure","source":"research/open-code-review/d3/RESULT.md"}};
+
+const SYSTEMS = ["DA + lean", "Open Code Review", "Claude Code", "Codex"];
+const BY = [["Measured by us", "us"], ["Published by Open Code Review", "pub"]];
+const LOGS = { // J2.5: the composed and the floor judge logs
+  "da-lean-opus": { file: "judge.jsonl", what: "composed entry", lines: "2,241 lines" },
+  "ocr-floor-opus46": { file: "judge.jsonl", what: "floor entry", lines: null }
+};
+const COLS = [
+  { k: "pos", label: "#", w: 44, l: true },
+  { k: "sys", label: "System · model · vendor", l: true, sort: "system" },
+  { k: "by", label: "Measured by", w: 226, l: true, sort: "measured_by" },
+  { k: "f1", label: "F1 %", w: 76, sort: "f1" },
+  { k: "precision", label: "Precision %", w: 94, sort: "precision" },
+  { k: "recall", label: "Recall %", w: 78, sort: "recall" },
+  { k: "avg_time", label: "Time / PR", w: 80, sort: "avg_time" },
+  { k: "avg_tokens", label: "Tokens / PR", w: 92, sort: "avg_tokens" },
+  { k: "instances", label: "Instances", w: 80, sort: "instances" },
+  { k: "cv", label: "", w: 24 }
+];
+// phone: position, system, F1 fixed; the rest after them
+const PCOLS = ["pos", "sys", "f1", "precision", "recall", "by", "avg_time", "avg_tokens", "instances", "cv"];
+const PW = { pos: 34, sys: 150, f1: 64, precision: 98, recall: 82, by: 196, avg_time: 80, avg_tokens: 92, instances: 78, cv: 26 };
+
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const N = { us: DATA.rows.filter(r => r.measured_by === "Measured by us").length, pub: DATA.rows.filter(r => r.measured_by !== "Measured by us").length };
+const kind = r => r.measured_by === "Measured by us" ? "us" : "pub";
+const pct = v => v == null ? null : v.toFixed(2);
+const secs = t => { if (!t) return null; const m = /(?:(\d+)m)?(?:(\d+)s)?/.exec(t); return (+(m[1] || 0)) * 60 + (+(m[2] || 0)); };
+const toks = t => t == null ? null : parseFloat(t.replace(/,/g, ""));
+const sortVal = (r, k) => k === "avg_time" ? secs(r.avg_time) : k === "avg_tokens" ? toks(r.avg_tokens) : r[k];
+const mark = k => `<span class="mk ${k}" aria-hidden="true"></span>`;
+const shortBy = r => kind(r) === "us" ? "Measured by us" : "Published by OCR";
+
+function sorted(rows, s) {
+  const out = rows.slice();
+  out.sort((a, b) => {
+    const x = sortVal(a, s.key), y = sortVal(b, s.key);
+    if (x == null && y == null) return 0;
+    if (x == null) return 1; if (y == null) return -1; // a missing value always sorts last
+    if (typeof x === "string") return s.dir * x.localeCompare(y);
+    return s.dir === -1 ? y - x : x - y;
+  });
+  // positions: equal values share a position (17.90 and 17.90 are both 8)
+  let pos = 0, prev;
+  out.forEach((r, i) => { const v = sortVal(r, s.key); if (i === 0 || v !== prev) pos = i + 1; r._pos = v == null ? "–" : pos; prev = v; });
+  return out;
+}
+
+function nav(cur) {
+  return `<div class="nav"><a class="logo" href="#"><span class="mark">${"<i></i>".repeat(9)}</span>provedreview</a>
+  <div class="links"><a href="#" aria-current="page">Benchmark</a><a href="#">Quick start</a><a href="#">Docs</a><a href="#">Paper</a></div>
+  <div class="navr"><a class="btn gh" href="#">GitHub</a><button class="btn mn" style="display:none">Menu</button></div></div>`;
+}
+
+function head() {
+  return `<div class="phead"><h1>Benchmark</h1><span class="scope">AACR-Bench · 200 pull requests · 50 repositories · 10 languages · 1,505 human notes</span></div>
+  <p class="caveat">${mark("us")}${N.us} rows from our run of the official pipeline. ${mark("pub")}${N.pub} rows as Open Code Review publishes them. Two separate judge runs. <a href="#method">Method ↓</a></p>`;
+}
+
+function fbar(st, n, total, off) {
+  const chip = (g, v, lab, m) => `<button class="chip" data-g="${g}" data-v="${esc(v)}" aria-pressed="${st[g].has(v)}">${m ? mark(m) : ""}${esc(lab)}</button>`;
+  const any = st.sys.size || st.by.size;
+  return `<div class="fbar${off ? " off" : ""}">
+   <span class="grpw"><span class="lbl">System</span>${SYSTEMS.map(s => chip("sys", s, s)).join("")}</span><span class="sep"></span>
+   <span class="grpw"><span class="lbl">Measured by</span>${BY.map(([v, m]) => chip("by", v, v, m)).join("")}</span>
+   <span class="grpw" style="flex:1"><span class="count">${off ? "<b>–</b> of – rows" : `<b>${n}</b> of ${total} rows`}</span><button class="reset" ${any && !off ? "" : "disabled"}>Reset</button><a class="dl" href="#downloads">Download all judge logs ↓</a></span>
+  </div>`;
+}
+
+function cell(r, k, ph) {
+  const stk = ph ? (k === "pos" ? " stk s0" : k === "sys" ? " stk s1" : k === "f1" ? " stk s2" : "") : "";
+  switch (k) {
+    case "pos": return `<td class="pos l${stk}">${r._pos}</td>`;
+    case "sys": return `<td class="sys l${stk}"><span class="nm">${esc(r.system)}</span><span class="md">${esc(r.model)} <span class="vd">· ${esc(r.vendor)}</span></span><span class="tg">${mark(kind(r))}${shortBy(r)}</span></td>`;
+    case "by": return `<td class="by l">${mark(kind(r))}${esc(r.measured_by)}</td>`;
+    case "f1": return `<td class="f1${stk}">${pct(r.f1)}</td>`;
+    case "precision": return `<td title="${esc(r.precision_fraction || "")}">${pct(r.precision)}</td>`;
+    case "recall": return `<td title="${esc(r.recall_fraction || "")}">${pct(r.recall)}</td>`;
+    case "avg_time": case "avg_tokens": return r[k] == null ? `<td class="na" title="not in our metrics files">—</td>` : `<td>${esc(r[k])}</td>`;
+    case "instances": return `<td>${r.instances}</td>`;
+    case "cv": return `<td class="cv"><i>›</i></td>`;
+  }
+}
+
+function detail(r, span) {
+  const us = kind(r) === "us", log = LOGS[r.id];
+  const inst = us ? `${r.instances} of ${DATA.unscored.of} <span class="q">· ${DATA.unscored.count} unscored: ${esc(DATA.unscored.reason)}</span>` : `${r.instances} <span class="q">· every pull request</span>`;
+  const src = /^https?:/.test(r.source) ? `<a href="${esc(r.source)}">${esc(r.source.replace(/^https:\/\//, ""))}</a>` : esc(r.source);
+  const cite = `${r.system} · ${r.model} · F1 ${pct(r.f1)} · P ${pct(r.precision)} · R ${pct(r.recall)} · AACR-Bench, ${us ? `${r.instances} of ${DATA.unscored.of}` : r.instances} instances · judge ${r.judge}${r.rounds ? `, ${r.rounds} rounds` : ""} · ${r.measured_by.toLowerCase()} · read ${r.read}`;
+  return `<tr class="det"><td colspan="${span}"><div class="dwrap"><div class="dgrid">
+   <dl><dt>Measured by</dt><dd>${mark(kind(r))}${esc(r.measured_by)}</dd><dt>Version</dt><dd>${esc(r.version)}</dd></dl>
+   <dl><dt>Instances</dt><dd>${inst}</dd><dt>Human notes · tool comments</dt><dd>${r.notes.toLocaleString("en-US")} · ${r.comments.toLocaleString("en-US")}</dd>
+     ${r.precision_fraction ? `<dt>Matched</dt><dd>P ${r.precision_fraction} · R ${r.recall_fraction}</dd>` : ""}
+     ${r.avg_tokens_in_out ? `<dt>Tokens in / out</dt><dd>${esc(r.avg_tokens_in_out)}</dd>` : ""}</dl>
+   <dl><dt>Judge</dt><dd>${esc(r.judge)}${r.rounds ? ` · ${r.rounds} rounds, mean` : ""}</dd><dt>Source · read</dt><dd>${src} <span class="q">· ${esc(r.read)}</span></dd></dl>
+   <dl><dt>Judge log</dt><dd>${log ? `<a href="#">${log.file} ↓</a> <span class="q">· ${log.what}${log.lines ? " · " + log.lines : ""}</span>` : `<span class="q">not published</span>`}</dd><dt>Paper</dt><dd><a href="#">The paper →</a></dd></dl>
+   <div class="cite"><span>cite</span><code>${esc(cite)}</code><button>Copy</button></div>
+  </div></div></td></tr>`;
+}
+
+function table(pg) {
+  const { st, ph } = pg;
+  const cols = ph ? PCOLS.map(k => COLS.find(c => c.k === k)) : COLS;
+  const th = cols.map(c => {
+    const stk = ph ? (c.k === "pos" ? " stk s0" : c.k === "sys" ? " stk s1" : c.k === "f1" ? " stk s2" : "") : "";
+    const w = ph ? PW[c.k] : c.w;
+    const on = c.sort && st.sort.key === c.sort;
+    let label = c.k === "pos" ? (st.sort.key === "f1" ? "#" : `# by ${COLS.find(x => x.sort === st.sort.key).label.replace(/ %$/, "")}`) : c.label;
+    if (ph && c.k === "sys") label = "System · model";
+    const inner = c.sort ? `<button data-sort="${c.sort}">${esc(label)}<span class="ar">${on ? (st.sort.dir === -1 ? "↓" : "↑") : ""}</span></button>` : esc(label);
+    return `<th class="${c.l ? "l" : ""}${on ? " on" : ""}${stk}"${w ? ` style="width:${w}px"` : ""}${c.k === "pos" && st.sort.key !== "f1" ? ' style="width:' + (ph ? 34 : 56) + 'px;overflow:visible"' : ""}>${inner}</th>`;
+  }).join("");
+  const span = cols.length;
+  let body;
+  if (pg.state === "loading") {
+    const wds = { pos: 14, sys: 150, by: 130, f1: 40, precision: 40, recall: 40, avg_time: 44, avg_tokens: 44, instances: 30, cv: 0 };
+    body = Array.from({ length: 8 }, (_, i) => `<tr class="sk">${cols.map(c => `<td class="${c.l ? "l" : ""}${ph && ["pos", "sys", "f1"].includes(c.k) ? " stk " + ({ pos: "s0", sys: "s1", f1: "s2" })[c.k] : ""}">${wds[c.k] ? `<i style="width:${Math.round(wds[c.k] * (ph && c.k === "sys" ? .7 : 1) * (1 - (i % 3) * .12))}px;animation-delay:${i * .08}s"></i>` : ""}</td>`).join("")}</tr>`).join("");
+  } else if (pg.state === "error") {
+    body = `<tr><td class="msg" colspan="${span}"><div style="${ph ? "width:358px;position:sticky;left:16px" : ""}"><b>The rows did not load.</b>data/leaderboard.json could not be read.${ph ? "<br>" : ""}<button>Retry</button><span class="why">Filters and sort return with the rows. The method and the downloads below still work.</span></div></td></tr>`;
+  } else {
+    const rows = pg.rows();
+    if (!rows.length) body = `<tr><td class="msg" colspan="${span}"><div style="${ph ? "width:358px;position:sticky;left:16px" : ""}"><b>No row matches.</b>${[...st.sys].join(" + ")}${st.sys.size && st.by.size ? " · " : ""}${[...st.by].join(" + ")}<button class="reset2">Reset filters</button></div></td></tr>`;
+    else body = rows.map(r => `<tr class="r ${kind(r)}${st.open.has(r.id) ? " open" : ""}" data-id="${r.id}" aria-expanded="${st.open.has(r.id)}">${cols.map(c => cell(r, c.k, ph)).join("")}</tr>${st.open.has(r.id) ? detail(r, span) : ""}`).join("");
+  }
+  return `<div class="tw"><div class="sc"><table class="lb"${ph ? ` style="width:${cols.reduce((a, c) => a + PW[c.k], 0)}px"` : ""}><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table></div>
+   <div class="swipe">precision, recall, measured by, time, tokens, instances →</div></div>`;
+}
+
+function below(ph) {
+  const ed = DATA.escaped_defects;
+  const units = n => `<span class="units" role="img" aria-label="${n} of ${ed.of}">${Array.from({ length: ed.of }, (_, i) => `<i class="${i < n ? "f" : ""}"></i>`).join("")}</span>`;
+  const edrow = (who, n, note) => `<div class="row" title="${who}: ${n} of ${ed.of}"><span class="who">${who}</span>${units(n)}<span class="n">${n} <small>of ${ed.of}</small></span><span class="note">${note}</span></div>`;
+  return `
+  <section class="sec" id="method"><h2>Method</h2><div class="ledger">
+   <div class="li"><span class="k">The benchmark</span><span class="v">${esc(DATA.benchmark)}.</span></div>
+   <div class="li"><span class="k">The pipeline</span><span class="v">Our ${N.us} rows: the official pipeline, run by us on the same instances, with Open Code Review’s published reader (<code>OCR 375f64c</code>) as the floor and DA + lean (<code>DA d3</code>, <code>lean v0.1.2</code>) as the entry. The ${N.pub} published rows: Open Code Review’s own runs, read from open-codereview.ai on 2026-10-31.</span></div>
+   <div class="li"><span class="k">The judge</span><span class="v">Precision: tool comments matched / tool comments. Recall: human notes matched / human notes. F1 <span class="math">F = 2PR / (P + R)</span>. Our rows: judge <code>claude-opus-5-5</code>, 3 rounds, the mean shown. Published rows: judge not published. The two sets were never judged in one run.</span></div>
+   <div class="li"><span class="k">How our rows were measured</span><span class="v">DA + lean: reader <code>claude-opus-5-5</code>, filter <code>claude-opus-4-8</code>. Floor: reader <code>claude-opus-4-6</code>. Both: <span class="n">184</span> instances, <span class="n">1,414</span> human notes; time and tokens per pull request not in our metrics files (—).</span></div>
+   <div class="li"><span class="k">The ${DATA.unscored.count} unscored instances</span><span class="v"><span class="n">${DATA.unscored.count}</span> of <span class="n">${DATA.unscored.of}</span>: ${esc(DATA.unscored.reason)}. Both our rows leave out the same ${DATA.unscored.count}.</span></div>
+  </div></section>
+
+  <section class="sec" id="escaped"><h2>Escaped defects</h2><div class="ed">
+   <div class="grp">Defects caught · of ${ed.of} that escaped review · higher is better</div>
+   ${edrow("Recordings and proof", ed.recordings_and_proof, "")}
+   ${edrow("Recordings", ed.recordings, "")}
+   ${edrow("Strongest reader", ed.strongest_reader, "")}
+   <div class="grp" style="padding-top:22px">Clean changes refused · of ${ed.of} · lower is better</div>
+   ${edrow("Recordings", ed.clean_refused_recordings, "")}
+   ${edrow("Strongest reader", ed.clean_refused_reader, "")}
+   <div class="src">Source: ${esc(ed.source)}</div>
+  </div></section>
+
+  <section class="sec" id="downloads"><h2>Downloads</h2><div class="ledger files">
+   <div class="li"><span class="k">All judge logs</span><span class="v">Both our rows, every round, one archive</span><span class="meta">judge-logs.zip</span><a class="get" href="#">Download ↓</a></div>
+   <div class="li"><span class="k">${mark("us")}DA + lean</span><span class="v">Judge log, composed entry</span><span class="meta">judge.jsonl · 2,241 lines</span><a class="get" href="#">Download ↓</a></div>
+   <div class="li"><span class="k">${mark("us")}Open Code Review</span><span class="v">Judge log, floor entry (our run)</span><span class="meta">judge.jsonl</span><a class="get" href="#">Download ↓</a></div>
+   <div class="li"><span class="k">${mark("pub")}Published rows</span><span class="v">Open Code Review publishes no judge logs</span><span class="meta">—</span><span class="get" style="color:var(--dim)">none</span></div>
+   <div class="li"><span class="k">The table</span><span class="v">All ${DATA.rows.length} rows with their conditions</span><span class="meta">leaderboard.json</span><a class="get" href="#">Download ↓</a></div>
+   <div class="li"><span class="k">Our metrics source</span><span class="v">RESULT.md, “## Same instances”, at the build pin</span><span class="meta">DA repository</span><a class="get" href="#">Open →</a></div>
+  </div></section>`;
+}
+
+function foot() {
+  return `<footer class="foot"><div class="wm"><a class="logo" href="#"><span class="mark">${"<i></i>".repeat(9)}</span>provedreview</a><span>Differential attestation is built by Nexus. lean is the checker inside it.</span></div>
+  <nav class="fl"><a href="#">lean</a><a href="#">differential-attestation</a><a href="#">benchmark</a><a href="#">paper</a><a href="#">Nexus</a></nav></footer>`;
+}
+
+function mount(el, o) {
+  const pg = {
+    ph: !!o.ph, state: o.state || "loaded",
+    st: { sys: new Set(o.sys || []), by: new Set(o.by || []), sort: { key: "f1", dir: -1 }, open: new Set(o.open || []) },
+    rows() { return sorted(DATA.rows.filter(r => (!this.st.sys.size || this.st.sys.has(r.system)) && (!this.st.by.size || this.st.by.has(r.measured_by))), this.st.sort); }
+  };
+  const root = document.createElement("div");
+  root.className = "pg" + (pg.ph ? " ph" : "");
+  el.appendChild(root);
+  const draw = () => {
+    const off = pg.state !== "loaded";
+    const n = off ? 0 : pg.rows().length;
+    root.innerHTML = nav() + `<div class="wrap">` + head() + fbar(pg.st, n, DATA.rows.length, off) + table(pg) +
+      `<div class="tfoot"><span>— not in our metrics files · equal values share a position</span><span>Published rows read 2026-10-31 from open-codereview.ai · our rows from RESULT.md at the build pin</span><a href="#method">Method ↓</a></div>` +
+      (o.short ? "" : below(pg.ph)) + `</div>` + (o.short ? "" : foot());
+    if (pg.ph) root.querySelector(".mn").style.display = "";
+  };
+  root.addEventListener("click", e => {
+    const t = e.target.closest("button,tr.r,a"); if (!t) return;
+    if (t.tagName === "A") { e.preventDefault(); return; }
+    if (pg.state !== "loaded") { if (t.textContent === "Retry") { pg.state = "loading"; draw(); setTimeout(() => { pg.state = "loaded"; draw(); }, 900); } return; }
+    if (t.dataset.g) { const s = pg.st[t.dataset.g]; s.has(t.dataset.v) ? s.delete(t.dataset.v) : s.add(t.dataset.v); }
+    else if (t.classList.contains("reset") || t.classList.contains("reset2")) { pg.st.sys.clear(); pg.st.by.clear(); }
+    else if (t.dataset.sort) { const k = t.dataset.sort, s = pg.st.sort; if (s.key === k) s.dir = -s.dir; else { s.key = k; s.dir = (k === "system" || k === "measured_by" || k === "avg_time" || k === "avg_tokens") ? 1 : -1; } }
+    else if (t.matches("tr.r")) { const id = t.dataset.id; pg.st.open.has(id) ? pg.st.open.delete(id) : pg.st.open.add(id); }
+    else if (t.textContent === "Copy") { const c = t.previousElementSibling.textContent; navigator.clipboard && navigator.clipboard.writeText(c).catch(() => {}); t.textContent = "Copied"; setTimeout(() => t.textContent = "Copy", 1400); return; }
+    else return;
+    draw();
+  });
+  draw();
+}
+
+mount(document.getElementById("f-desk"), {});
+mount(document.getElementById("f-phone"), { ph: true });
+mount(document.getElementById("f-open"), { open: ["da-lean-opus"], short: true });
+mount(document.getElementById("f-empty"), { sys: ["Codex"], by: ["Measured by us"], short: true });
+mount(document.getElementById("f-load"), { state: "loading", short: true });
+mount(document.getElementById("f-err"), { state: "error", short: true });
+mount(document.getElementById("p-open"), { ph: true, open: ["da-lean-opus"], short: true });
+mount(document.getElementById("p-empty"), { ph: true, sys: ["Codex"], by: ["Measured by us"], short: true });
+mount(document.getElementById("p-load"), { ph: true, state: "loading", short: true });
+mount(document.getElementById("p-err"), { ph: true, state: "error", short: true });
+
+// capture aid: index.html#only=f-desk shows one frame alone at the page origin
+const only = /only=([\w-]+)/.exec(location.hash);
+if (only) { const f = document.getElementById(only[1]); document.body.replaceChildren(f); f.style.outline = "0"; f.style.maxHeight = "none"; document.body.style.background = "#0a0b0f"; }
+</script>
+</body>
+</html>

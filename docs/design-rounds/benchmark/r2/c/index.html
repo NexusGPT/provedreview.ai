@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Benchmark · style round 2 · 2c · editorial</title>
+<style>
+:root{
+  --sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+  --serif:"Source Serif 4","Source Serif Pro",Georgia,"Times New Roman",serif;
+  --bg:#0a0b0f;--fg:#e9eaee;--mut:#8b90a0;--line:rgba(255,255,255,.07);--hair:rgba(255,255,255,.14);
+  --steel:#9fb3c8;--cream:#f3efe6;--wit:#f0a08c;--ok:#8fd3b4;--ask:#e6c37a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;background:#15161b;color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+
+/* ---------- board chrome (not part of the design) ---------- */
+.board{padding:28px 32px 80px}
+.bhead{display:flex;align-items:baseline;gap:14px;margin:0 0 6px;font-family:var(--mono);font-size:12px;color:var(--mut)}
+.badge{display:inline-block;font-family:var(--mono);font-weight:700;font-size:22px;color:#0a0b0f;background:var(--cream);padding:3px 12px;border-radius:4px;letter-spacing:.02em}
+.btitle{font-family:var(--serif);font-size:22px;color:var(--cream)}
+.bnote{font-family:var(--mono);font-size:12px;color:var(--mut);max-width:110ch;line-height:1.6;margin:4px 0 0}
+.flabel{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);margin:40px 0 10px;display:flex;gap:10px;align-items:center}
+.flabel .badge{font-size:12px;padding:1px 7px}
+.frame{background:var(--bg);border:1px solid #2a2c33;position:relative;overflow:hidden}
+.frame.desk{width:1442px}
+.frame.phone{width:392px}
+.fold{position:absolute;left:0;right:0;top:900px;border-top:1px dashed rgba(240,160,140,.55);z-index:5;pointer-events:none}
+.fold i{position:absolute;right:12px;top:-18px;font:normal 10px var(--mono);color:var(--wit);letter-spacing:.08em}
+.states{display:grid;grid-template-columns:repeat(2,max-content);gap:28px 32px}
+.mini{zoom:.5}
+.mini-wrap .flabel{margin-top:0}
+
+/* ---------- the page ---------- */
+.pg{font-size:15px;line-height:1.5}
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 80px;font-size:14px;border-bottom:1px solid var(--line)}
+.logo{font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.logo .mark{display:grid;grid-template-columns:repeat(3,7px);gap:1px}
+.logo .mark i{display:block;width:7px;height:7px;background:var(--steel);border-radius:1px;opacity:.9}
+.logo .mark i:nth-child(2),.logo .mark i:nth-child(4),.logo .mark i:nth-child(9){opacity:.35}
+.links{display:flex;gap:28px;color:var(--mut);align-items:center}
+.links a:hover{color:var(--fg)}
+.links a.on{color:var(--cream)}
+.links a.gh{font-size:13.5px;padding:8px 13px;border-radius:8px;border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--fg)}
+
+.wrap{max-width:1440px;margin:0 auto;padding:0 80px}
+
+/* head: title left, the caveat as a pull line right */
+.head{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,470px);gap:64px;align-items:end;padding:80px 0 22px}
+.kick{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel)}
+.head h1{font-family:var(--serif);font-weight:400;font-size:60px;line-height:1;letter-spacing:-.015em;margin:10px 0 10px;color:var(--cream)}
+.scope{font-family:var(--mono);font-size:12.5px;color:var(--mut);margin:0}
+.scope b{color:var(--fg);font-weight:400}
+.pull{margin:0;border-left:1px solid var(--cream);padding:2px 0 2px 24px;font-family:var(--serif);font-style:italic;font-size:21px;line-height:1.38;color:var(--cream)}
+.pull .n{font-family:var(--mono);font-style:normal;font-size:15px;color:var(--fg)}
+.pull a{font-family:var(--mono);font-style:normal;font-size:11.5px;letter-spacing:.06em;color:var(--steel);display:inline-block;margin-top:8px;border-bottom:1px solid rgba(159,179,200,.35)}
+
+/* filter bar: one line between two hairlines */
+.bar{display:flex;align-items:center;gap:12px;white-space:nowrap;border-top:1px solid var(--hair);border-bottom:1px solid var(--line);padding:10px 0;font-size:12.5px}
+.grp{display:flex;align-items:center;gap:4px;flex:none}
+.grp>span{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin-right:4px}
+.chip{border:1px solid var(--line);border-radius:999px;padding:3px 7px;color:#c7ccd6;line-height:1.3;transition:border-color .16s,color .16s,background .16s}
+.chip:hover{border-color:var(--hair);color:var(--fg)}
+.chip[aria-pressed=true]{border-color:var(--cream);color:var(--cream);background:rgba(243,239,230,.06)}
+.chip:active{transform:translateY(1px)}
+.chip.us{font-family:var(--serif);font-style:italic;font-size:13.5px}
+.chip.pub{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+.bar .sp{flex:1}
+.count{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.count b{color:var(--fg);font-weight:400}
+.reset{font-family:var(--mono);font-size:12px;color:var(--steel);border-bottom:1px solid rgba(159,179,200,.35)}
+.reset[hidden]{display:none}
+.dl{font-family:var(--mono);font-size:11.5px;color:var(--fg);border:1px solid var(--hair);border-radius:8px;padding:5px 10px}
+.dl:hover{border-color:var(--cream)}
+
+/* the results table, set like print: a heavy rule on top, hairlines inside, a rule at the foot */
+.tblw{position:relative}
+table.res{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}
+.res thead th{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);text-align:right;padding:14px 12px 9px;border-bottom:1px solid var(--cream);white-space:nowrap;vertical-align:bottom}
+.res thead th.l{text-align:left}
+.res thead th button{letter-spacing:inherit;text-transform:inherit;color:inherit}
+.res thead th button:hover{color:var(--fg)}
+.res thead th[aria-sort=descending] button,.res thead th[aria-sort=ascending] button{color:var(--cream)}
+.res thead th .dir{display:inline-block;width:1em;text-align:center}
+.res tbody td{padding:7px 12px;border-bottom:1px solid var(--line);text-align:right;vertical-align:baseline;font-family:var(--mono);font-size:14px;line-height:1.25;color:#c7ccd6;white-space:nowrap}
+.res tbody tr.r{cursor:pointer;transition:background .16s}
+.res tbody tr.r:hover td{background:rgba(255,255,255,.022)}
+.res tbody tr.r:active td{background:rgba(255,255,255,.04)}
+.res td.pos{text-align:left;color:var(--mut);font-size:13px;width:52px}
+.res td.sys{text-align:left;font-family:var(--sans);white-space:normal}
+.res td.sys .s{font-size:15px;color:var(--fg);font-weight:500;line-height:1.3}
+.res td.sys .m{display:block}
+.res td.sys .m{font-family:var(--mono);font-size:11px;color:var(--mut);line-height:1.35;white-space:nowrap}
+.res td.sys .v{font-family:var(--mono);font-size:10.5px;color:#6c7180;letter-spacing:.04em;margin-left:10px}
+.res td.by{text-align:left}
+.by .us{font-family:var(--serif);font-style:italic;font-size:15.5px;color:var(--cream)}
+.by .pub{font-family:var(--mono);font-size:10.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--steel)}
+.res td.f1{font-size:17px;color:var(--fg);letter-spacing:-.01em}
+.res tr.ours td.f1{color:var(--cream)}
+.res td.na{color:#5a5f6d}
+.res td.chev{width:34px;color:var(--mut);font-size:12px;text-align:center}
+.res td.chev i{display:inline-block;font-style:normal;transition:transform .2s}
+.res tr.open td{border-bottom-color:transparent}
+.res tr.open td.chev i{transform:rotate(90deg);color:var(--cream)}
+.res tr.open td.pos{color:var(--cream)}
+.res tfoot td{border-top:1px solid var(--cream);padding:12px 14px 0;font-family:var(--mono);font-size:11.5px;color:var(--mut);text-align:left;white-space:normal;line-height:1.6}
+
+/* the row detail: a printed note under its row */
+.res tr.det td{padding:0;text-align:left;border-bottom:1px solid var(--hair);white-space:normal}
+.det .in{display:grid;grid-template-columns:repeat(4,minmax(0,1fr)) minmax(0,1.15fr);gap:22px 34px;padding:6px 14px 26px 66px;animation:open .22s ease-out}
+.mini .det .in,#f-pexp .det .in{animation:none}
+@keyframes open{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+.det dl{margin:0}
+.det dt{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 4px}
+.det dd{margin:0 0 14px;font-family:var(--serif);font-size:15px;line-height:1.45;color:#d9dae0}
+.det dd .n{font-family:var(--mono);font-size:13px;color:var(--fg)}
+.det dd .q{font-family:var(--mono);font-size:12px;color:var(--mut)}
+.det .act{display:flex;flex-direction:column;gap:10px;align-items:flex-start;border-left:1px solid var(--line);padding-left:26px}
+.det .act a{font-family:var(--mono);font-size:12.5px;color:var(--fg);border-bottom:1px solid rgba(243,239,230,.35)}
+.det .act a:hover{border-bottom-color:var(--cream)}
+.det .act .off{font-family:var(--serif);font-style:italic;font-size:14px;color:var(--mut)}
+.det .act a.paper{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--cream);border:0}
+
+/* states */
+.stbox{padding:72px 0 80px;text-align:center;border-bottom:1px solid var(--line)}
+.stbox h3{font-family:var(--serif);font-weight:400;font-size:30px;color:var(--cream);margin:0 0 8px}
+.stbox p{font-family:var(--mono);font-size:12.5px;color:var(--mut);margin:0 0 18px}
+.stbox .reset,.stbox .retry{font-size:13px}
+.retry{font-family:var(--mono);color:var(--fg);border:1px solid var(--hair);border-radius:8px;padding:7px 13px}
+.skel td{padding:18px 14px!important}
+.skel i{display:block;height:9px;border-radius:2px;background:linear-gradient(90deg,rgba(255,255,255,.04),rgba(255,255,255,.08),rgba(255,255,255,.04));background-size:200% 100%;animation:sh 1.6s ease-in-out infinite}
+@keyframes sh{from{background-position:100% 0}to{background-position:-100% 0}}
+.loadline{font-family:var(--mono);font-size:12px;color:var(--mut);padding:14px 14px 0}
+
+/* below the table */
+.sec{padding:80px 0 0}
+.sech{display:grid;grid-template-columns:200px minmax(0,1fr);gap:48px;border-top:1px solid var(--hair);padding-top:22px}
+.sech .k{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel);padding-top:10px}
+.sech h2{font-family:var(--serif);font-weight:400;font-size:40px;line-height:1.1;letter-spacing:-.01em;color:var(--cream);margin:0 0 6px}
+.method{display:grid;grid-template-columns:200px minmax(0,1fr);gap:48px}
+.method ol{list-style:none;margin:28px 0 0;padding:0;grid-column:2;columns:2;column-gap:56px}
+.method li{break-inside:avoid;margin:0 0 30px}
+.method h3{font-family:var(--mono);font-weight:400;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--mut);margin:0 0 8px}
+.method h3 b{color:var(--cream);font-weight:400;margin-right:10px}
+.method p{font-family:var(--serif);font-size:17px;line-height:1.6;color:#d9dae0;margin:0;max-width:58ch}
+.method p .n,.esc .n{font-family:var(--mono);font-size:14px;color:var(--fg)}
+.method p i{color:var(--cream)}
+.esc{display:grid;grid-template-columns:200px minmax(0,1fr);gap:48px}
+.esc .body{margin-top:26px}
+.esc table{border-collapse:collapse;width:100%;max-width:980px}
+.esc caption{text-align:left;font-family:var(--serif);font-style:italic;font-size:17px;color:#d9dae0;padding:0 0 10px}
+.esc th{font-family:var(--mono);font-weight:400;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);text-align:left;padding:10px 0;border-bottom:1px solid var(--cream)}
+.esc td{padding:12px 0;border-bottom:1px solid var(--line);vertical-align:middle}
+.esc td.who{font-size:14.5px;width:300px}
+.esc td.who.us{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--cream)}
+.esc td.val{font-family:var(--mono);font-size:17px;text-align:right;width:120px;color:var(--fg);padding-left:22px}
+.esc td.val small{font-size:12px;color:var(--mut)}
+.ticks{display:grid;grid-template-columns:repeat(43,1fr);gap:3px;height:14px;max-width:520px}
+.ticks i{background:rgba(255,255,255,.07)}
+.ticks i.on{background:var(--steel)}
+.ticks.us i.on{background:var(--cream)}
+.esc .gap{height:30px}
+.src{font-family:var(--mono);font-size:11.5px;color:var(--mut);margin:16px 0 0}
+.downs{display:grid;grid-template-columns:200px minmax(0,1fr);gap:48px}
+.downs ul{list-style:none;padding:0;margin:26px 0 0;max-width:980px}
+.downs li{display:grid;grid-template-columns:260px minmax(0,1fr) 140px;gap:24px;align-items:baseline;padding:13px 0;border-bottom:1px solid var(--line)}
+.downs li:first-child{border-top:1px solid var(--cream)}
+.downs li a{font-family:var(--mono);font-size:13px;color:var(--fg)}
+.downs li a:hover{color:var(--cream)}
+.downs li span{font-family:var(--serif);font-size:15.5px;color:#c7ccd6}
+.downs li em{font-family:var(--mono);font-style:normal;font-size:11.5px;color:var(--mut);text-align:right}
+.foot{margin-top:96px;padding:36px 80px 52px;display:flex;justify-content:space-between;gap:24px;border-top:1px solid var(--line);font-size:13.5px;color:var(--mut)}
+.foot nav{display:flex;gap:22px;font-family:var(--mono);font-size:12px}
+
+/* ---------- phone ---------- */
+.phone .nav{padding:14px 20px 0;display:block;border:0}
+.phone .links{gap:16px;margin:12px 0 0;padding:0 0 12px;font-size:13px;border-bottom:1px solid var(--line)}
+.phone .links a.gh{padding:0;border:0;background:none;color:var(--mut)}
+.phone .wrap{padding:0 20px}
+.phone .head{grid-template-columns:minmax(0,1fr);gap:22px;padding:48px 0 24px}
+.phone .head h1{font-size:42px;margin:10px 0 10px}
+.phone .scope{font-size:11.5px;line-height:1.55}
+.phone .pull{font-size:17.5px;padding-left:16px}
+.phone .pull .n{font-size:13px}
+.phone .bar{white-space:normal;flex-wrap:wrap;gap:10px 14px;padding:12px 0}
+.phone .grp{gap:6px;flex-wrap:wrap;flex:1 1 100%}
+.phone .grp>span{width:100%;margin:0 0 2px}
+.phone .bar .sp{display:none}
+.phone .chip{padding:5px 10px}
+.phone .tblw{margin:0 -20px}
+.phone .scr{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.phone table.res{width:auto;min-width:100%}
+.phone .res thead th{padding:14px 10px 8px;font-size:9.5px;letter-spacing:.07em}
+.phone .res tbody td{padding:11px 10px;font-size:13px}
+.phone .res .stk{position:sticky;background:var(--bg);z-index:1}
+.phone .res .c0{left:0;width:40px;min-width:40px;padding-left:20px}
+.phone .res .c1{left:40px;width:178px;min-width:178px;max-width:178px}
+.phone .res .c2{left:218px;width:66px;min-width:66px;box-shadow:inset -1px 0 0 var(--hair)}
+.phone .res td.sys .s{font-size:14px;display:block;line-height:1.25}
+.phone .res td.sys .m{display:block;margin:1px 0 0;font-size:10px;white-space:normal;line-height:1.3}
+.phone .res td.sys .v{display:none}
+.phone .res td.sys .tag{display:block;margin-top:3px}
+.phone .res td.sys .tag .us{font-size:13px}
+.phone .res td.sys .tag .pub{font-size:8.5px;letter-spacing:.02em;white-space:nowrap}
+.phone .res td.f1{font-size:15px}
+.phone .res td.chev{display:none}
+.phone .res tr.r:hover td.stk{background:#0d0e12}
+.phone .det .in{position:sticky;left:0;width:390px;grid-template-columns:1fr 1fr;gap:4px 18px;padding:4px 20px 20px}
+.phone .det .act{grid-column:1/-1;border-left:0;padding:12px 0 0;border-top:1px solid var(--line);flex-direction:row;flex-wrap:wrap;gap:12px 18px}
+.phone .res tfoot td{position:sticky;left:0;padding:12px 20px 0}
+.phone .swipe{font-family:var(--mono);font-size:10.5px;color:var(--mut);padding:8px 20px 0;text-align:right}
+.phone .sec{padding:48px 0 0}
+.phone .sech,.phone .method,.phone .esc,.phone .downs{grid-template-columns:minmax(0,1fr);gap:8px}
+.phone .sech h2{font-size:30px}
+.phone .method ol{grid-column:1;columns:1;margin-top:18px}
+.phone .method p{font-size:16px}
+.phone .esc td.who{width:auto;font-size:13px;padding-right:10px}
+.phone .esc td.who.us{font-size:14.5px}
+.phone .esc td.val{width:auto;font-size:15px;padding-left:10px}
+.phone .esc .tickrow td{padding-top:0}
+.phone .downs li{grid-template-columns:minmax(0,1fr);gap:2px}
+.phone .downs li em{text-align:left}
+.phone .stbox{padding:48px 0 54px}
+.phone .stbox h3{font-size:24px}
+.phone .foot{margin-top:64px;padding:28px 20px 40px;flex-direction:column}
+.phone .foot nav{flex-wrap:wrap;gap:12px 18px}
+</style>
+</head>
+<body>
+<div class="board">
+  <div class="bhead"><span class="badge">2c</span><span class="btitle">Benchmark · style round 2 · lane C · editorial</span></div>
+  <p class="bnote">On picked layout A (table fills the first screen, thin filter bar above; method, escaped defects, downloads below). Source Serif 4 carries the page head, the method and the caveat pull line; the table is set as a printed results table: a cream rule above the header and at the foot, hairlines between rows. Measured by us = serif italic in cream; Published by Open Code Review = mono capitals in steel. Every frame is live: sort on the headers, toggle the chips, click a row. Blind round: no current screen, no other lane opened.</p>
+
+  <div class="flabel"><span class="badge">2c</span> Desktop · 1440 · loaded · default sort F1 descending · dashed line = the 900 px fold</div>
+  <div class="frame desk" id="f-desk"><div class="fold"><i>900 PX FOLD</i></div></div>
+
+  <div class="flabel"><span class="badge">2c</span> Phone · 390 · loaded · position, system and F1 fixed; the other columns scroll sideways</div>
+  <div class="frame phone" id="f-phone"></div>
+
+  <div class="flabel"><span class="badge">2c</span> The other four states · desktop, shown at half size</div>
+  <div class="states">
+    <div class="mini-wrap"><div class="flabel">State · row expanded (DA + lean)</div><div class="mini"><div class="frame desk" id="f-exp"></div></div></div>
+    <div class="mini-wrap"><div class="flabel">State · empty filter result (System: Codex + Measured by us)</div><div class="mini"><div class="frame desk" id="f-empty"></div></div></div>
+    <div class="mini-wrap"><div class="flabel">State · loading the table</div><div class="mini"><div class="frame desk" id="f-load"></div></div></div>
+    <div class="mini-wrap"><div class="flabel">State · data file failed to load</div><div class="mini"><div class="frame desk" id="f-err"></div></div></div>
+  </div>
+  <div class="flabel">Phone · row expanded (DA + lean)</div>
+  <div class="frame phone" id="f-pexp"></div>
+</div>
+
+<script>
+// inlined verbatim from data/leaderboard.json (read 2026-10-31)
+const DATA = {"benchmark":"AACR-Bench (200 pull requests, 50 repositories, 10 languages, 1,505 verified comments; arXiv 2601.19494)","rows":[
+{"id":"da-lean-opus","system":"DA + lean","model":"claude-opus-5-5 (reader) with a claude-opus-4-8 filter","vendor":"Nexus","measured_by":"Measured by us","version":"DA d3 (composed entry: d2-reader + gate + C4), lean v0.1.2 findings","f1":31.61,"precision":34.09,"recall":29.47,"avg_time":null,"avg_tokens":null,"instances":184,"notes":1414,"judge":"claude-opus-5-5","rounds":3,"comments":1059,"source":"research/open-code-review/d3/RESULT.md '## Same instances' (DA repository)","read":"2026-10-31","judge_logs":"available"},
+{"id":"ocr-floor-opus46","system":"Open Code Review","model":"claude-opus-4-6","vendor":"Alibaba","measured_by":"Measured by us","version":"OCR 375f64c (the published reader, our run through the official pipeline)","f1":29.02,"precision":27.72,"recall":30.43,"avg_time":null,"avg_tokens":null,"instances":184,"notes":1414,"judge":"claude-opus-5-5","rounds":3,"comments":1426,"source":"research/open-code-review/d3/RESULT.md '## Same instances' (DA repository)","read":"2026-10-31","judge_logs":"available"},
+{"id":"pub-01","system":"Open Code Review","model":"Claude-4.6-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":25.1,"precision":33.9,"precision_fraction":"301/889","recall":20.0,"recall_fraction":"301/1505","avg_time":"1m23s","avg_tokens":"385K","avg_tokens_in_out":"375K / 10K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":889,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-02","system":"Open Code Review","model":"Qwen3.8-Max","vendor":"Alibaba","measured_by":"Published by Open Code Review","version":"Open Code Review v1.8.7","f1":23.0,"precision":33.9,"precision_fraction":"262/774","recall":17.4,"recall_fraction":"262/1505","avg_time":"5m14s","avg_tokens":"334K","avg_tokens_in_out":"303K / 32K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":774,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-03","system":"Open Code Review","model":"GLM-5.2","vendor":"Zhipu AI","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":21.3,"precision":32.3,"precision_fraction":"239/741","recall":15.9,"recall_fraction":"239/1505","avg_time":"7m58s","avg_tokens":"682K","avg_tokens_in_out":"624K / 58K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":741,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-04","system":"Open Code Review","model":"Qwen3.7-Max","vendor":"Alibaba","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":21.2,"precision":25.2,"precision_fraction":"276/1096","recall":18.3,"recall_fraction":"276/1505","avg_time":"4m41s","avg_tokens":"625K","avg_tokens_in_out":"587K / 38K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":1096,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-05","system":"Open Code Review","model":"GPT-5.5","vendor":"OpenAI","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":21.0,"precision":32.1,"precision_fraction":"234/728","recall":15.5,"recall_fraction":"234/1505","avg_time":"2m51s","avg_tokens":"422K","avg_tokens_in_out":"409K / 13K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":728,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-06","system":"Open Code Review","model":"GLM-5.1","vendor":"Zhipu AI","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":20.4,"precision":28.9,"precision_fraction":"237/820","recall":15.7,"recall_fraction":"237/1505","avg_time":"4m11s","avg_tokens":"743K","avg_tokens_in_out":"707K / 36K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":820,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-07","system":"Open Code Review","model":"Claude-4.8-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":17.9,"precision":37.8,"precision_fraction":"176/465","recall":11.7,"recall_fraction":"176/1505","avg_time":"1m6s","avg_tokens":"352K","avg_tokens_in_out":"342K / 11K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":465,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-08","system":"Open Code Review","model":"Deepseek-V4-Pro","vendor":"DeepSeek","measured_by":"Published by Open Code Review","version":"Open Code Review v1.3.1","f1":17.9,"precision":30.6,"precision_fraction":"191/624","recall":12.7,"recall_fraction":"191/1505","avg_time":"6m28s","avg_tokens":"394K","avg_tokens_in_out":"350K / 44K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":624,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-09","system":"Claude Code","model":"Claude-4.8-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":14.13,"precision":15.93,"precision_fraction":"191/1200","recall":12.7,"recall_fraction":"191/1505","avg_time":"5m38s","avg_tokens":"2,062K","avg_tokens_in_out":"2,039K / 23K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":1200,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-10","system":"Claude Code","model":"Qwen3.7-Max","vendor":"Alibaba","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":12.17,"precision":8.23,"precision_fraction":"351/4260","recall":23.37,"recall_fraction":"351/1505","avg_time":"8m6s","avg_tokens":"5,153K","avg_tokens_in_out":"5,108K / 44K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":4260,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-11","system":"Claude Code","model":"GLM-5.1","vendor":"Zhipu AI","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":11.93,"precision":8.37,"precision_fraction":"313/3742","recall":20.8,"recall_fraction":"313/1505","avg_time":"14m10s","avg_tokens":"4,038K","avg_tokens_in_out":"3,998K / 39K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":3742,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-12","system":"Claude Code","model":"Claude-4.6-Opus","vendor":"Anthropic","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":11.57,"precision":7.23,"precision_fraction":"435/5980","recall":28.9,"recall_fraction":"435/1505","avg_time":"13m6s","avg_tokens":"5,664K","avg_tokens_in_out":"5,603K / 60K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":5980,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-13","system":"Claude Code","model":"Deepseek-V4-Pro","vendor":"DeepSeek","measured_by":"Published by Open Code Review","version":"Claude Code v2.1.169","f1":10.93,"precision":8.27,"precision_fraction":"243/2945","recall":16.13,"recall_fraction":"243/1505","avg_time":"14m24s","avg_tokens":"5,450K","avg_tokens_in_out":"5,389K / 60K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":2945,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"},
+{"id":"pub-14","system":"Codex","model":"GPT-5.5","vendor":"OpenAI","measured_by":"Published by Open Code Review","version":"Codex v0.140.0","f1":8.36,"precision":27.82,"precision_fraction":"74/266","recall":4.92,"recall_fraction":"74/1505","avg_time":"2m58s","avg_tokens":"525K","avg_tokens_in_out":"520K / 5K","instances":200,"notes":1505,"judge":"not published","rounds":null,"comments":266,"source":"https://open-codereview.ai/ (section Open Benchmark)","read":"2026-10-31","judge_logs":"not published"}],
+"escaped_defects":{"strongest_reader":10,"recordings":22,"recordings_and_proof":31,"of":43,"clean_refused_reader":22,"clean_refused_recordings":4,"source":"the paper's abstract (paper v3)"},
+"unscored":{"count":12,"of":196,"reason":"11 commits GitHub no longer serves, 1 reader failure","source":"research/open-code-review/d3/RESULT.md"}};
+
+const US = 'Measured by us', PUB = 'Published by Open Code Review';
+const SYSTEMS = ['DA + lean','Open Code Review','Claude Code','Codex'];
+const COLS = [
+  {k:'pos',  h:'#', l:true},
+  {k:'system',h:'System · model', l:true, sort:true},
+  {k:'measured_by',h:'Measured by', l:true, sort:true},
+  {k:'f1',   h:'F1', sort:true},
+  {k:'precision',h:'Precision', sort:true},
+  {k:'recall',h:'Recall', sort:true},
+  {k:'avg_time',h:'Time / PR', sort:true},
+  {k:'avg_tokens',h:'Tokens / PR', sort:true},
+  {k:'instances',h:'Instances', sort:true},
+  {k:'chev',h:''}
+];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const pct = v => v.toFixed(2);
+const secs = t => { const m = /(\d+)m(\d+)s/.exec(t); return m ? +m[1]*60 + +m[2] : null; };
+const kTok = t => t == null ? null : parseFloat(t.replace(/[,K]/g,''));
+const byTag = mb => `<span class="by">${mb === US ? '<span class="us">Measured by us</span>' : '<span class="pub">Published by Open Code Review</span>'}</span>`;
+const sortVal = (r, k) => k === 'avg_time' ? secs(r.avg_time) : k === 'avg_tokens' ? kTok(r.avg_tokens) : r[k];
+const nf = n => n.toLocaleString('en-US');
+
+function nav(){
+  return `<div class="nav"><a class="logo" href="#"><span class="mark">${'<i></i>'.repeat(9)}</span>provedreview</a>
+  <div class="links"><a class="on" href="#" aria-current="page">Benchmark</a><a href="#">Quick start</a><a href="#">Docs</a><a href="#">Paper</a><a class="gh" href="#">GitHub</a></div></div>`;
+}
+function head(){
+  return `<div class="head"><div><div class="kick">Benchmark · AACR-Bench · read 2026-10-31</div><h1>Benchmark</h1>
+  <p class="scope"><b>16</b> rows on AACR-Bench: <b>200</b> pull requests, <b>50</b> repositories, <b>10</b> languages, <b>1,505</b> verified human comments. arXiv 2601.19494.</p></div>
+  <p class="pull">Two judge runs, one table. Our <span class="n">2</span> rows: <span class="n">184</span> instances, our judge. Open Code Review’s <span class="n">14</span>: <span class="n">200</span> instances, their judge.<br><a href="#">How each run was measured ↓</a></p></div>`;
+}
+function bar(st){
+  const sysChips = SYSTEMS.map(s => `<button class="chip" data-f="sys" data-v="${esc(s)}" aria-pressed="${st.sys.has(s)}">${esc(s)}</button>`).join('');
+  const byChips = `<button class="chip us" data-f="by" data-v="${US}" aria-pressed="${st.by.has(US)}">Measured by us</button><button class="chip pub" data-f="by" data-v="${PUB}" aria-pressed="${st.by.has(PUB)}">Published by Open Code Review</button>`;
+  const n = visible(st).length, on = st.sys.size || st.by.size;
+  return `<div class="bar"><div class="grp"><span>System</span>${sysChips}</div><div class="grp"><span>Measured by</span>${byChips}</div><div class="sp"></div>
+  <span class="count"><b>${n}</b> of ${DATA.rows.length} rows</span><button class="reset" data-reset ${on ? '' : 'hidden'}>Reset filters</button><a class="dl" href="#">Download all judge logs ↓</a></div>`;
+}
+function visible(st){
+  let rows = DATA.rows.filter(r => (!st.sys.size || st.sys.has(r.system)) && (!st.by.size || st.by.has(r.measured_by)));
+  const k = st.sort, d = st.dir === 'asc' ? 1 : -1;
+  return rows.slice().sort((a,b) => {
+    const x = sortVal(a,k), y = sortVal(b,k);
+    if (x == null && y == null) return 0; if (x == null) return 1; if (y == null) return -1;
+    if (typeof x === 'string') return x.localeCompare(y) * d;
+    return (x - y) * d || (b.f1 - a.f1);
+  });
+}
+function detail(r, phone){
+  const ours = r.measured_by === US;
+  const inst = ours ? `<span class="n">${r.instances}</span> of <span class="n">${DATA.unscored.of}</span> scored <span class="q">· ${DATA.unscored.count} unscored: ${esc(DATA.unscored.reason)}</span>` : `<span class="n">${r.instances}</span> of <span class="n">${r.instances}</span>`;
+  const pr = r.precision_fraction ? `<dt>Matches</dt><dd><span class="n">${r.precision_fraction}</span> comments · <span class="n">${r.recall_fraction}</span> notes</dd>` : `<dt>Comments · notes</dt><dd><span class="n">${nf(r.comments)}</span> comments · <span class="n">${nf(r.notes)}</span> notes</dd>`;
+  const tok = r.avg_tokens_in_out ? `<dt>Tokens in / out</dt><dd><span class="n">${r.avg_tokens_in_out}</span></dd>` : `<dt>Time · tokens</dt><dd>not in the source</dd>`;
+  const src = /^https?:/.test(r.source) ? `<a href="#">${esc(r.source.split(' ')[0].replace(/^https?:\/\//,''))}</a> <span class="q">${esc(r.source.replace(/^\S+\s*/,''))}</span>` : `<span class="q">${esc(r.source)}</span>`;
+  const act = ours
+    ? `<a href="#">judge.jsonl ↓</a><span class="q" style="font-family:var(--mono);font-size:11px;color:var(--mut)">${r.rounds} rounds · judge ${esc(r.judge)}</span>`
+    : `<span class="off">Judge logs not published.</span>`;
+  return `<tr class="det"><td colspan="${COLS.length}"><div class="in">
+    <dl><dt>Measured by</dt><dd>${byTag(r.measured_by)}</dd><dt>Version</dt><dd>${esc(r.version)}</dd></dl>
+    <dl><dt>Instances</dt><dd>${inst}</dd>${pr}</dl>
+    <dl><dt>Judge</dt><dd>${ours ? `<span class="n">${esc(r.judge)}</span>` : 'not published'}</dd><dt>Rounds</dt><dd>${r.rounds ? `<span class="n">${r.rounds}</span>` : 'not published'}</dd></dl>
+    <dl><dt>Source · read</dt><dd>${src} <span class="q">· read ${r.read}</span></dd>${tok}</dl>
+    <div class="act">${act}<a class="paper" href="#">the paper →</a></div>
+  </div></td></tr>`;
+}
+function cell(r, c, i, phone){
+  const ours = r.measured_by === US;
+  const stk = phone && ['pos','system','f1'].includes(c.k) ? ` stk c${['pos','system','f1'].indexOf(c.k)}` : '';
+  switch (c.k){
+    case 'pos': return `<td class="pos${stk}">${String(i+1).padStart(2,'0')}</td>`;
+    case 'system': return `<td class="sys${stk}"><span class="s">${esc(r.system)}</span>${phone ? '' : `<span class="v">${esc(r.vendor)}</span>`}<span class="m">${esc(r.model)}</span>${phone ? `<span class="tag">${byTag(r.measured_by)}</span>` : ''}</td>`;
+    case 'measured_by': return phone ? '' : `<td class="by">${byTag(r.measured_by)}</td>`;
+    case 'f1': return `<td class="f1${stk}">${pct(r.f1)}</td>`;
+    case 'precision': case 'recall': return `<td>${pct(r[c.k])}</td>`;
+    case 'avg_time': case 'avg_tokens': return r[c.k] == null ? `<td class="na">—</td>` : `<td>${r[c.k]}</td>`;
+    case 'instances': return `<td>${r.instances}</td>`;
+    case 'chev': return `<td class="chev"><i>›</i></td>`;
+  }
+}
+function table(st){
+  const phone = st.phone;
+  const cols = COLS.filter(c => !(phone && c.k === 'measured_by'));
+  const th = cols.map((c,ci) => {
+    const stk = phone && ['pos','system','f1'].includes(c.k) ? ` stk c${['pos','system','f1'].indexOf(c.k)}` : '';
+    const s = st.sort === c.k ? (st.dir === 'asc' ? 'ascending' : 'descending') : 'none';
+    const inner = c.sort ? `<button data-sort="${c.k}">${c.h}<span class="dir">${st.sort === c.k ? (st.dir === 'asc' ? '▲' : '▼') : ''}</span></button>` : c.h;
+    return `<th class="${c.l ? 'l' : ''}${stk}" ${c.sort ? `aria-sort="${s}"` : ''}>${c.k === 'pos' && phone ? '#' : inner}</th>`;
+  }).join('');
+  let body;
+  if (st.state === 'loading'){
+    body = Array.from({length:10}, (_,i) => `<tr class="skel">${cols.map(c => `<td><i style="width:${c.k==='system'?60+((i*17)%30):c.k==='measured_by'?70:c.k==='pos'||c.k==='chev'?40:70}%;margin-left:${c.l?0:'auto'}"></i></td>`).join('')}</tr>`).join('');
+  } else if (st.state === 'error'){
+    body = `<tr><td colspan="${cols.length}" style="padding:0;text-align:left"><div class="stbox"><h3>The table did not load.</h3><p>data/leaderboard.json failed to load. The method and the downloads below still work.</p><button class="retry">Retry</button></div></td></tr>`;
+  } else {
+    const rows = visible(st);
+    if (!rows.length){
+      body = `<tr><td colspan="${cols.length}" style="padding:0;text-align:left"><div class="stbox"><h3>No row matches.</h3><p>${[...st.sys].join(', ') || 'Any system'} · ${[...st.by].join(', ') || 'any measurer'} · 0 of ${DATA.rows.length} rows</p><button class="reset" data-reset>Reset filters</button></div></td></tr>`;
+    } else {
+      body = rows.map((r,i) => {
+        const open = st.open.has(r.id);
+        return `<tr class="r${r.measured_by === US ? ' ours' : ''}${open ? ' open' : ''}" data-id="${r.id}" aria-expanded="${open}">${cols.map(c => cell(r,c,i,phone)).join('')}</tr>${open ? detail(r, phone) : ''}`;
+      }).join('');
+    }
+  }
+  const foot = st.state === 'loaded' || !st.state ? `<tfoot><tr><td colspan="${cols.length}">F1: the harmonic mean of precision (tool comments matched / tool comments) and recall (human notes matched / human notes). — : not in the source. Published rows read from open-codereview.ai on 2026-10-31; our rows from RESULT.md at the DA d3 pin.</td></tr></tfoot>` : '';
+  const loadline = st.state === 'loading' ? `<div class="loadline">Loading data/leaderboard.json …</div>` : '';
+  const t = `<table class="res"><thead><tr>${th}</tr></thead><tbody>${body}</tbody>${foot}</table>`;
+  return `<div class="tblw">${loadline}${phone ? `<div class="scr">${t}</div>${st.state === 'loaded' ? '<div class="swipe">precision · recall · time · tokens · instances →</div>' : ''}` : t}</div>`;
+}
+function below(phone){
+  const e = DATA.escaped_defects;
+  const ticks = (n, us) => `<div class="ticks${us ? ' us' : ''}">${Array.from({length:e.of}, (_,i) => `<i class="${i < n ? 'on' : ''}"></i>`).join('')}</div>`;
+  const row = (who, us, n) => phone
+    ? `<tr><td class="who${us ? ' us' : ''}">${who}</td><td class="val">${n} <small>of ${e.of}</small></td></tr><tr class="tickrow"><td colspan="2">${ticks(n, us)}</td></tr>`
+    : `<tr><td class="who${us ? ' us' : ''}">${who}</td><td>${ticks(n, us)}</td><td class="val">${n} <small>of ${e.of}</small></td></tr>`;
+  const thr = phone ? '' : `<thead><tr><th>Who decides</th><th></th><th style="text-align:right">Count</th></tr></thead>`;
+  return `
+  <section class="sec"><div class="sech"><div class="k">Method</div><div><h2>How the numbers were made</h2></div></div>
+  <div class="method"><ol>
+    <li><h3><b>1</b>The benchmark</h3><p>AACR-Bench: <span class="n">200</span> pull requests from <span class="n">50</span> repositories in <span class="n">10</span> languages, judged against <span class="n">1,505</span> verified human review comments. arXiv <span class="n">2601.19494</span>.</p></li>
+    <li><h3><b>2</b>The official pipeline</h3><p>Each system reviews each pull request. The benchmark’s official pipeline collects the review comments and hands them to the judge. Our two rows ran through it.</p></li>
+    <li><h3><b>3</b>The judge</h3><p>A model matches each tool comment to a human note. <i>Precision</i> is tool comments matched over tool comments; <i>recall</i> is human notes matched over human notes; <i>F1</i> is their harmonic mean. Our rows: judge <span class="n">claude-opus-5-5</span>, <span class="n">3</span> rounds. Open Code Review does not publish its judge.</p></li>
+    <li><h3><b>4</b>How our rows were measured</h3><p>DA + lean: reader <span class="n">claude-opus-5-5</span>, filter <span class="n">claude-opus-4-8</span>, <span class="n">1,059</span> comments. Open Code Review’s published reader <span class="n">375f64c</span> on <span class="n">claude-opus-4-6</span>, run by us: <span class="n">1,426</span> comments. Same <span class="n">184</span> instances, same <span class="n">1,414</span> notes, same judge.</p></li>
+    <li><h3><b>5</b>The 12 unscored instances</h3><p><span class="n">12</span> of <span class="n">196</span> instances carry no score: <span class="n">11</span> commits GitHub no longer serves, <span class="n">1</span> reader failure. Source: RESULT.md.</p></li>
+  </ol></div></section>
+
+  <section class="sec"><div class="sech"><div class="k">Escaped defects</div><div><h2>What gets through</h2></div></div>
+  <div class="esc"><div class="body" style="grid-column:${phone ? 1 : 2}">
+    <table><caption>Defects caught, of ${e.of} — more is better</caption>${thr}<tbody>
+      ${row('Recordings and proof', true, e.recordings_and_proof)}
+      ${row('Recordings alone', true, e.recordings)}
+      ${row('The strongest reader', false, e.strongest_reader)}
+    </tbody></table>
+    <div class="gap"></div>
+    <table><caption>Clean changes refused, of ${e.of} — fewer is better</caption>${thr}<tbody>
+      ${row('Recordings', true, e.clean_refused_recordings)}
+      ${row('The strongest reader', false, e.clean_refused_reader)}
+    </tbody></table>
+    <p class="src">Source: ${esc(e.source)}.</p>
+  </div></div></section>
+
+  <section class="sec"><div class="sech"><div class="k">Downloads</div><div><h2>Downloads</h2></div></div>
+  <div class="downs"><ul style="grid-column:${phone ? 1 : 2}">
+    <li><a href="#">judge-logs.zip ↓</a><span>Every judge log of our two rows.</span><em>all rounds</em></li>
+    <li><a href="#">composed/judge.jsonl ↓</a><span>DA + lean, the composed entry.</span><em>2,241 lines</em></li>
+    <li><a href="#">floor/judge.jsonl ↓</a><span>Open Code Review 375f64c, our run.</span><em>3 rounds</em></li>
+    <li><a href="#">leaderboard.json ↓</a><span>The table above, all 16 rows with sources.</span><em>read 2026-10-31</em></li>
+    <li><a href="#">the paper →</a><span>Differential Attestation, v3.</span><em>PDF</em></li>
+  </ul></div></section>`;
+}
+function footer(){
+  return `<footer class="foot"><span>provedreview.ai</span><nav aria-label="Footer"><a href="#">lean</a><a href="#">differential-attestation</a><a href="#">benchmark</a><a href="#">paper</a><a href="#">Nexus</a></nav></footer>`;
+}
+
+function mount(el, opt){
+  const st = Object.assign({sort:'f1', dir:'desc', sys:new Set(), by:new Set(), open:new Set(), state:'loaded', phone:false, full:true}, opt);
+  st.sys = new Set(st.sys); st.by = new Set(st.by); st.open = new Set(st.open);
+  const keepFold = el.querySelector('.fold');
+  function render(){
+    el.innerHTML = `<div class="pg">${nav()}<div class="wrap">${head()}${bar(st)}${table(st)}${st.full ? below(st.phone) : ''}</div>${st.full ? footer() : ''}</div>`;
+    if (keepFold) el.appendChild(keepFold);
+  }
+  el.addEventListener('click', ev => {
+    const s = ev.target.closest('[data-sort]'), f = ev.target.closest('[data-f]'), rs = ev.target.closest('[data-reset]'), tr = ev.target.closest('tr.r');
+    if (s){ const k = s.dataset.sort; if (st.sort === k) st.dir = st.dir === 'desc' ? 'asc' : 'desc'; else { st.sort = k; st.dir = ['system','measured_by','avg_time','avg_tokens'].includes(k) ? 'asc' : 'desc'; } }
+    else if (f){ const set = f.dataset.f === 'sys' ? st.sys : st.by, v = f.dataset.v; set.has(v) ? set.delete(v) : set.add(v); }
+    else if (rs){ st.sys.clear(); st.by.clear(); }
+    else if (tr){ const id = tr.dataset.id; st.open.has(id) ? st.open.delete(id) : st.open.add(id); }
+    else return;
+    ev.preventDefault(); render();
+  });
+  render();
+}
+const $ = id => document.getElementById(id);
+mount($('f-desk'), {});
+mount($('f-phone'), {phone:true});
+mount($('f-exp'), {open:['da-lean-opus'], full:false});
+mount($('f-empty'), {sys:['Codex'], by:[US], full:false});
+mount($('f-load'), {state:'loading', full:false});
+mount($('f-err'), {state:'error', full:false});
+mount($('f-pexp'), {phone:true, open:['da-lean-opus'], full:false});
+</script>
+</body>
+</html>

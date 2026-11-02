@@ -1,0 +1,10 @@
+[
+  {
+    "id": "A",
+    "rung": "layout",
+    "title": "Rail: the whole map always in view",
+    "axis": "fixed left sidebar of every section and page (all open), wide reading column, sticky in-page table of contents on the right for long pages; phone: rail becomes a menu sheet, table of contents a disclosure",
+    "entry": "index.html",
+    "worse_at": "Least focused reading of the three: 520 px of chrome flanks the text. The 30-entry rail is taller than a screen, so the lower sections need a rail scroll, and switching sections is a scroll, not a click. Crowded between 1024 and 1280 px. On the phone, its main value (seeing where you are) hides behind the Menu button. Search lives in the rail, not in a dominant spot."
+  }
+]

@@ -1,0 +1,966 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Benchmark · style round 2 · B · instrument</title>
+<style>
+:root{--sans:"Inter",ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;--mono:"JetBrains Mono",ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;--serif:"Source Serif 4",Georgia,"Times New Roman",serif;--bg:#0a0b0f;--fg:#e9eaee;--mut:#8b90a0;--dim:#5d6272;--line:rgba(255,255,255,.08);--hair:rgba(255,255,255,.05);--steel:#9fb3c8;--cream:#f3efe6;--wit:#f0a08c;--ok:#8fd3b4;--ask:#e6c37a;--panel:#0d0e13}
+*{box-sizing:border-box}
+html,body{margin:0;background:#050608;color:var(--fg);font-family:var(--sans);-webkit-font-smoothing:antialiased}
+a{color:inherit;text-decoration:none}
+button,select{font:inherit;color:inherit}
+
+/* ---------- the board around the frames (not the page) ---------- */
+.board{padding:32px 40px 80px;min-width:1520px}
+.bhead{display:flex;gap:18px;align-items:baseline;margin-bottom:6px;font-family:var(--mono);font-size:12px;color:var(--mut)}
+.badge{font-family:var(--mono);font-size:22px;font-weight:700;color:#050608;background:var(--cream);padding:2px 12px;border-radius:4px}
+.bhead h1{font-family:var(--sans);font-size:18px;font-weight:500;color:var(--fg);margin:0}
+.bnote{font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--mut);max-width:150ch;margin:4px 0 0}
+.flabel{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);margin:40px 0 10px;display:flex;gap:12px;align-items:center}
+.flabel b{color:#050608;background:var(--cream);padding:1px 7px;border-radius:3px;letter-spacing:0}
+.frame{position:relative;outline:1px solid rgba(255,255,255,.14);background:var(--bg);overflow:hidden}
+.frame.d{width:1440px}.frame.p{width:390px}
+.fold{position:absolute;left:0;right:0;border-top:1px dashed var(--wit);z-index:20;pointer-events:none}
+.fold span{position:absolute;right:10px;top:-19px;font-family:var(--mono);font-size:10.5px;color:var(--wit);background:var(--bg);padding:1px 6px}
+.states{display:grid;grid-template-columns:repeat(2,720px);gap:28px 40px}
+.states .frame{zoom:.5}
+.states .cap{font-family:var(--mono);font-size:11px;color:var(--mut);margin:0 0 8px;line-height:1.5}
+.states .cap b{color:var(--fg);font-weight:500}
+.side{display:flex;gap:40px;align-items:flex-start}
+.side .bnote{max-width:56ch}
+
+/* ---------- the page ---------- */
+.pg{background-color:var(--bg);background-image:linear-gradient(rgba(159,179,200,.04) 1px,transparent 1px),linear-gradient(90deg,rgba(159,179,200,.04) 1px,transparent 1px);background-size:14px 14px;font-size:14px;line-height:1.45}
+.wrap{max-width:1344px;margin:0 auto}
+.d .wrap{padding:0 48px;max-width:1440px}
+.p .wrap{padding:0 16px}
+.mono,.num{font-family:var(--mono);font-variant-numeric:tabular-nums}
+
+/* nav: the home page's markup and sizes */
+.nav{display:flex;align-items:center;justify-content:space-between;padding:18px 48px;font-size:14px;border-bottom:1px solid var(--line)}
+.p .nav{padding:14px 16px}
+.logo{font-weight:600;letter-spacing:-.02em;display:flex;align-items:center;gap:10px}
+.logo .mark{display:grid;grid-template-columns:repeat(3,7px);gap:1px}.logo .mark i{display:block;width:7px;height:7px;background:var(--steel);border-radius:1px;opacity:.9}.logo .mark i:nth-child(2),.logo .mark i:nth-child(4),.logo .mark i:nth-child(9){opacity:.35}
+.links{display:flex;gap:28px;color:var(--mut);align-items:center}.links a:hover{color:var(--fg)}
+.links a.cur{color:var(--fg);position:relative}.links a.cur::after{content:"";position:absolute;left:0;right:0;bottom:-21px;height:2px;background:var(--fg)}
+.btn{font-size:13px;padding:8px 13px;border-radius:7px;display:inline-flex;align-items:center;gap:8px;font-weight:500;border:1px solid var(--line);background:rgba(255,255,255,.04);cursor:pointer;white-space:nowrap}
+.btn:hover{border-color:rgba(255,255,255,.22)}.btn:active{background:rgba(255,255,255,.09)}
+.btn.m{font-family:var(--mono);font-size:12px;font-weight:400}
+.p .links a:not(.btn){display:none}
+
+/* page head: the lock amendment, 24 px above and below instead of 80 */
+.phead{padding:24px 0 20px;display:grid;grid-template-columns:auto minmax(0,1fr);gap:40px;align-items:end}
+.p .phead{grid-template-columns:minmax(0,1fr);gap:12px;padding:20px 0 16px}
+.phead h2{margin:0;font-size:30px;line-height:1.05;letter-spacing:-.03em;font-weight:500}
+.scope{font-family:var(--mono);font-size:11.5px;color:var(--mut);margin-top:8px}
+.caveat{justify-self:end;display:flex;flex-direction:column;gap:5px;font-family:var(--mono);font-size:11.5px;line-height:1.55;color:var(--mut);max-width:640px}
+.p .caveat{justify-self:stretch;flex-direction:column;gap:6px}
+.caveat>span{display:flex;gap:9px;align-items:flex-start}.caveat .sw{margin-top:2px}
+.caveat b{color:var(--fg);font-weight:500}
+
+/* the measured-by device: a rail. solid cream = measured by us; dashed steel = published by Open Code Review */
+.sw{flex:0 0 6px;width:6px;height:14px;display:inline-block;border-radius:1px}
+.own .sw,.sw.own{background:var(--cream)}
+.pub .sw,.sw.pub{background:repeating-linear-gradient(180deg,var(--steel) 0 2px,transparent 2px 4px)}
+
+/* filter bar */
+.bar{display:flex;align-items:center;gap:18px;white-space:nowrap;padding:10px 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);font-family:var(--mono);font-size:12px}
+.grp{display:flex;align-items:center;gap:5px}
+.grp>em{font-style:normal;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-right:4px}
+.chip{display:inline-flex;align-items:center;gap:7px;border:1px solid var(--line);border-radius:5px;padding:5px 8px;background:transparent;font-family:var(--mono);font-size:12px;color:var(--mut);cursor:pointer;white-space:nowrap}
+.chip u{text-decoration:none;color:var(--dim);font-size:11px}
+.chip:hover{color:var(--fg);border-color:rgba(255,255,255,.2)}
+.chip[aria-pressed=true]{color:var(--fg);border-color:rgba(233,234,238,.55);background:rgba(255,255,255,.06)}
+.chip[aria-pressed=true] u{color:var(--mut)}
+.chip[disabled]{opacity:.4;cursor:default}.chip[disabled]:hover{color:var(--mut);border-color:var(--line)}
+.bar .cnt{margin-left:auto;color:var(--fg)}.bar .cnt u{text-decoration:none;color:var(--mut)}
+.reset{background:none;border:0;color:var(--steel);cursor:pointer;font-family:var(--mono);font-size:12px;padding:5px 2px;text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(159,179,200,.4)}
+.reset[disabled]{color:var(--dim);text-decoration:none;cursor:default}
+.p .bar{gap:10px;flex-wrap:wrap}
+.p .bar .cnt{margin-left:0}
+.p .bar select{margin-left:auto;background:var(--panel);border:1px solid var(--line);border-radius:5px;padding:5px 6px;font-family:var(--mono);font-size:12px}
+.sheet{display:none;border-bottom:1px solid var(--line);padding:12px 0 14px;font-family:var(--mono);font-size:12px}
+.sheet.on{display:block}
+.sheet .grp{flex-wrap:wrap;margin-bottom:10px}
+.sheet .grp>em{width:100%;margin-bottom:2px}
+
+/* the table */
+.tblw{margin-top:0}
+.tbl{position:relative}
+.row,.thr{display:grid;align-items:stretch}
+.d .row,.d .thr{grid-template-columns:6px 60px minmax(0,1fr) 222px 184px 152px 152px 78px 88px 62px 28px}
+.p .row,.p .thr{grid-template-columns:6px 30px 148px 86px 210px 150px 150px 76px 86px 68px 0}
+.p .scr{overflow-x:auto;overflow-y:hidden;margin:0 -16px;padding:0 16px;scrollbar-width:thin;scrollbar-color:#2a2d36 transparent}
+.p .tbl{width:1010px}
+.row>*,.thr>*{display:flex;align-items:center;min-width:0;padding:0 10px;border-bottom:1px solid var(--hair)}
+.row>.rail,.thr>.rail{padding:0;border-bottom:0}
+.row{height:38px;cursor:pointer;position:relative}
+.p .row{height:56px}
+.thr{height:46px;position:sticky;top:0;z-index:3;background:var(--bg)}
+.thr>*{border-bottom:1px solid var(--line);font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);cursor:pointer;user-select:none;white-space:nowrap}
+.thr>*.nos{cursor:default}
+.thr>*:hover:not(.nos){color:var(--fg)}
+.thr>[aria-sort=descending],.thr>[aria-sort=ascending]{color:var(--fg)}
+.thr .ar{color:var(--wit);margin-left:5px;letter-spacing:0}
+.thr .posh{flex-direction:column;align-items:flex-start;justify-content:center;gap:2px}
+.thr .posh small{font-size:9.5px;letter-spacing:.06em;text-transform:none;color:var(--wit)}
+.r{justify-content:flex-end;text-align:right}
+.own .rail{background:var(--cream)}
+.pub .rail{background:repeating-linear-gradient(180deg,rgba(159,179,200,.75) 0 2px,transparent 2px 4px)}
+.row>.pos{font-family:var(--mono);font-size:12px;color:var(--mut);font-variant-numeric:tabular-nums}
+.p .row>.pos{padding:0 4px 0 8px;font-size:11px}
+.sys{flex-direction:column;align-items:flex-start!important;justify-content:center}
+.sys b{font-weight:500;font-size:13.5px;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%}
+.sys small{font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;margin-top:1px}
+.sys small i{font-style:normal;color:var(--dim)}
+.d .sys b{font-size:13px;line-height:16px}.d .sys small{font-size:10.5px;line-height:13px}
+.own .sys b{color:var(--cream)}
+.sys .tag{display:none}
+.p .sys .tag{display:flex;align-items:center;gap:6px;font-family:var(--mono);font-size:10px;color:var(--mut);margin-top:3px}
+.p .sys .tag .sw{height:9px;width:4px}
+.by{gap:9px;font-family:var(--mono);font-size:11px;color:var(--mut);white-space:nowrap}
+.own .by{color:var(--cream)}
+.n{font-family:var(--mono);font-size:12.5px;font-variant-numeric:tabular-nums;color:#c7ccd6}
+.n.none,.g.none{color:var(--dim)}
+.chev{color:var(--dim);font-family:var(--mono);justify-content:center!important;padding:0!important}
+.chev i{font-style:normal;display:inline-block;transition:transform .18s ease}
+.tr.open .chev i{transform:rotate(90deg);color:var(--fg)}
+.row:hover>*:not(.rail){background:rgba(255,255,255,.03)}
+.row:active>*:not(.rail){background:rgba(255,255,255,.06)}
+.row:focus-visible{outline:1px solid var(--steel);outline-offset:-1px}
+.own .row>*:not(.rail){background:rgba(243,239,230,.025)}
+.own .row:hover>*:not(.rail){background:rgba(243,239,230,.05)}
+.tr.open .row>*:not(.rail){border-bottom-color:transparent}
+
+/* gauges: a number and its track on one shared scale; F1 a bar, precision and recall a needle */
+.g{display:flex;align-items:center;gap:10px;width:100%}
+.gv{font-family:var(--mono);font-weight:400;font-size:12.5px;font-variant-numeric:tabular-nums;color:#c7ccd6;display:inline-flex;flex:0 0 auto}
+.gv .i{display:inline-block;width:2ch;text-align:right}.gv .f{display:inline-block;width:2ch;text-align:left}
+.f1 .gv{color:var(--fg);font-size:13.5px;font-weight:500}
+.gt{position:relative;flex:1;height:10px;background:linear-gradient(90deg,rgba(255,255,255,.16) 1px,transparent 1px) 0 100%/var(--step) 4px repeat-x,linear-gradient(rgba(255,255,255,.13),rgba(255,255,255,.13)) 0 100%/100% 1px no-repeat}
+.gt i{position:absolute;bottom:0;display:block}
+.bar-k .gt i{left:0;height:4px;background:var(--steel);opacity:.85;border-radius:0 1px 1px 0}
+.own .bar-k .gt i{background:var(--cream);opacity:1}
+.ndl .gt i{width:2px;height:10px;margin-left:-1px;background:#c7ccd6;opacity:.8}
+.own .ndl .gt i{background:var(--cream);opacity:1}
+.row:hover .ndl .gt i{opacity:1;background:var(--fg)}
+.p .f1c .g{flex-direction:column;align-items:flex-end;gap:5px}
+.p .f1c .gt{width:58px;flex:0 0 auto}
+.p .f1c .gv .i{width:auto}
+.sc{background:none!important;height:auto;display:flex;justify-content:space-between;font-size:9.5px;letter-spacing:0;color:var(--dim);text-transform:none}
+.sc em{font-style:normal}
+.hs{display:flex;flex-direction:column;gap:4px;width:100%}.hs .gv{visibility:hidden;height:0;overflow:hidden;font-size:12.5px}.f1c .hs .gv{font-size:13.5px;font-weight:500}.thr .hs .g{height:10px}
+.p .f1c .hs .g{display:none}
+
+/* phone: the left four cells hold still while the rest scrolls */
+.p .row>*,.p .thr>*{order:5}.p .row>.rail,.p .thr>.rail{order:1}.p .row>.pos,.p .thr>.pos{order:2}.p .row>.sys,.p .thr>.sysh{order:3}.p .row>.f1c,.p .thr>.f1c{order:4}
+.bar .btn{height:30px;padding:0 12px}
+.p .row>.rail,.p .thr>.rail{position:sticky;left:0;z-index:2}
+.p .row>.pos,.p .thr>.pos{position:sticky;left:6px;z-index:2;background:var(--bg)}
+.p .row>.sys,.p .thr>.sysh{position:sticky;left:36px;z-index:2;background:var(--bg)}
+.p .row>.f1c,.p .thr>.f1c{position:sticky;left:184px;z-index:2;background:var(--bg);box-shadow:8px 0 10px -6px rgba(0,0,0,.8);border-right:1px solid var(--line)}
+.p .own .row>.pos,.p .own .row>.sys,.p .own .row>.f1c{background:#0e0f12}
+.p .thr>*{background:var(--bg)}
+
+/* row detail, in place under its row */
+.det{display:grid;grid-template-rows:0fr;transition:grid-template-rows .18s ease,opacity .18s ease;opacity:0;position:relative}
+.tr.open .det{grid-template-rows:1fr;opacity:1}
+.det>div{overflow:hidden;min-height:0}
+.det::before{content:"";position:absolute;left:0;top:0;bottom:0;width:6px}
+.own .det::before{background:var(--cream)}
+.pub .det::before{background:repeating-linear-gradient(180deg,rgba(159,179,200,.75) 0 2px,transparent 2px 4px)}
+.p .det{position:sticky;left:0;width:358px}
+.dbox{margin-left:6px;background:var(--panel);border-bottom:1px solid var(--line);padding:18px 24px 18px 70px;display:grid;grid-template-columns:330px minmax(0,1fr);gap:40px}
+.p .dbox{grid-template-columns:minmax(0,1fr);gap:18px;padding:16px 14px 16px 16px}
+.ro{display:flex;flex-direction:column;gap:12px}
+.ro .k{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--steel);display:flex;justify-content:space-between}
+.ro .k span{letter-spacing:0;text-transform:none;color:var(--dim)}
+.ro .g{gap:14px}
+.ro .gv{font-size:17px;min-width:5ch}
+.ro .gt{height:14px}
+.ro .bar-k .gt i{height:6px}.ro .ndl .gt i{height:14px}
+.ro .frac{font-family:var(--mono);font-size:10.5px;color:var(--dim);margin:-6px 0 0 calc(5ch + 14px)}
+.spec{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px 28px;margin:0}
+.p .spec{grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px 16px}
+.spec>div{min-width:0}
+.spec dt{font-family:var(--mono);font-size:10px;letter-spacing:.12em;text-transform:uppercase;color:var(--dim);margin-bottom:3px}
+.spec dd{margin:0;font-family:var(--mono);font-size:12px;line-height:1.5;color:var(--fg);overflow-wrap:anywhere}
+.spec dd small{display:block;color:var(--mut);font-size:11px}
+.spec .w2{grid-column:span 2}
+.p .spec .w2{grid-column:span 2}
+.spec dd a{color:var(--steel);text-decoration:underline;text-underline-offset:3px;text-decoration-color:rgba(159,179,200,.35)}
+.spec dd .off{color:var(--mut)}
+.cite{grid-column:1/-1;display:flex;gap:12px;align-items:center;border-top:1px solid var(--line);padding-top:14px}
+.p .cite{flex-wrap:wrap}
+.cite code{flex:1;min-width:0;font-family:var(--mono);font-size:11.5px;color:#c7ccd6;line-height:1.55}
+.cite .btn{padding:6px 11px;font-size:12px}
+.cite a.pp{font-family:var(--mono);font-size:12px;color:var(--fg);white-space:nowrap}
+
+/* table foot */
+.tfoot{display:flex;gap:28px;flex-wrap:wrap;padding:12px 0 0 6px;font-family:var(--mono);font-size:11px;color:var(--dim)}
+.tfoot a{color:var(--steel)}
+.p .tfoot{gap:6px 16px;padding-left:0}
+
+/* states inside the table */
+.empty,.err,.load{border-bottom:1px solid var(--line)}
+.empty{display:flex;align-items:center;gap:18px;padding:26px 0 26px 70px;font-family:var(--mono);font-size:12.5px;color:var(--mut)}
+.p .empty{padding:22px 0;flex-direction:column;align-items:flex-start;gap:12px}
+.empty b{color:var(--fg);font-weight:500}
+.sk .pos,.sk .n{color:var(--dim)}
+.sk .bone{display:block;height:9px;border-radius:2px;background:rgba(255,255,255,.07)}
+.sk .rail{background:rgba(255,255,255,.06)!important}
+.sk .row{cursor:default}
+.sk .gv{color:var(--dim)}
+.loadline{display:flex;gap:12px;align-items:center;padding:10px 0 0 70px;font-family:var(--mono);font-size:11.5px;color:var(--mut)}
+.p .loadline{padding-left:0}
+.loadline i{width:6px;height:6px;border-radius:50%;background:var(--steel);animation:pulse 2.4s ease-in-out infinite}
+.sk{animation:pulse 2.4s ease-in-out infinite}
+@keyframes pulse{50%{opacity:.45}}
+.err{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:22px;align-items:center;padding:28px 24px 28px 70px;background:rgba(240,160,140,.04);border-left:2px solid var(--wit)}
+.p .err{grid-template-columns:minmax(0,1fr);padding:20px 16px;gap:12px}
+.err .code{font-family:var(--mono);font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--wit)}
+.err p{margin:0;font-family:var(--mono);font-size:12.5px;line-height:1.6;color:var(--fg)}
+.err p small{display:block;color:var(--mut);font-size:11.5px}
+.err .acts{display:flex;gap:10px}
+
+/* sections below: the lock's padding returns */
+.sec{padding:80px 0;border-top:1px solid var(--line)}
+.p .sec{padding:48px 0}
+.tfoot+.after .sec:first-child{margin-top:24px}
+.eyebrow{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--steel);display:inline-flex;gap:10px;align-items:center}
+.eyebrow::before{content:"";width:14px;height:1px;background:var(--steel);opacity:.6}
+.sec h3{font-size:32px;line-height:1.1;letter-spacing:-.03em;font-weight:500;margin:14px 0 36px}
+.p .sec h3{font-size:24px;margin:12px 0 24px}
+.mgrid{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));border-top:1px solid var(--line)}
+.p .mgrid{grid-template-columns:minmax(0,1fr)}
+.m{padding:18px 20px 4px 0;border-right:1px solid var(--line);margin-right:20px;min-width:0}
+.m:last-child{border-right:0;margin-right:0}
+.p .m{border-right:0;margin-right:0;padding:16px 0 14px;border-bottom:1px solid var(--line)}
+.m .id{font-family:var(--mono);font-size:10.5px;color:var(--wit);letter-spacing:.08em}
+.m h4{margin:6px 0 12px;font-size:15px;font-weight:500;letter-spacing:-.01em}
+.m dl{margin:0;display:grid;grid-template-columns:minmax(0,1fr);gap:8px}
+.m dt{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;color:var(--dim)}
+.m dd{margin:1px 0 0;font-family:var(--mono);font-size:12px;line-height:1.5;color:#c7ccd6;overflow-wrap:anywhere}
+.math{font-family:var(--serif);font-style:italic;font-size:16px;color:var(--cream);line-height:1.6}
+.math sub{font-size:10px}
+.esc{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:56px}
+.p .esc{grid-template-columns:minmax(0,1fr);gap:32px}
+.esc h4{margin:0 0 4px;font-size:15px;font-weight:500}
+.esc .hint{font-family:var(--mono);font-size:11px;color:var(--dim);margin:0 0 16px}
+.strip{display:grid;grid-template-columns:150px minmax(0,1fr) 64px;gap:14px;align-items:center;margin:0 0 12px;font-size:13px;color:#c7ccd6}
+.p .strip{grid-template-columns:minmax(0,1fr) 52px;gap:6px 10px}
+.p .strip .cells{grid-column:1/-1;grid-row:2}
+.cells{display:grid;grid-template-columns:repeat(var(--of),minmax(0,1fr));gap:2px;height:16px}
+.p .cells{height:12px;gap:1px}
+.cells i{display:block;background:rgba(255,255,255,.07);border-radius:1px}
+.cells i.on{background:var(--c)}
+.strip .n{text-align:right;color:var(--fg)}
+.strip .n u{text-decoration:none;color:var(--dim)}
+.srcl{font-family:var(--mono);font-size:11px;color:var(--dim);margin-top:24px}
+.dl{border-top:1px solid var(--line)}
+.dlr{display:grid;grid-template-columns:6px 380px minmax(0,1fr) auto;gap:18px;align-items:center;padding:12px 0;border-bottom:1px solid var(--hair);font-family:var(--mono);font-size:12px}
+.p .dlr{grid-template-columns:6px minmax(0,1fr) auto;gap:6px 12px}
+.p .dlr .what{grid-column:2/-1;grid-row:2}
+.dlr .sw{height:100%;min-height:18px}
+.dlr .sw.none{background:none}
+.dlr .nm{color:var(--fg)}.dlr .what{color:var(--mut)}
+.dlr a{color:var(--steel)}
+.foot{padding:40px 0 56px;display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;border-top:1px solid var(--line);font-size:13.5px;color:var(--mut)}
+.foot .wm{display:flex;flex-direction:column;gap:10px}
+.foot .fl{display:flex;gap:22px;flex-wrap:wrap;font-family:var(--mono);font-size:12px}
+.foot .fl a:hover{color:var(--fg)}
+.crop .after{display:none}
+@media (prefers-reduced-motion:reduce){.det,.chev i{transition:none}.sk,.loadline i{animation:none}}
+</style>
+</head>
+<body>
+<div class="board">
+  <div class="bhead"><span class="badge">b</span><h1>Benchmark · style round 2 · lane B · “instrument”</h1><span>layout A (scoreboard first) · real data, every row of data/leaderboard.json</span></div>
+  <p class="bnote">Axis: dense rows read like a meter. F1, precision and recall share one 0 to <span data-scale></span> % scale: F1 is a bar, precision and recall are needles, decimals line up. Who measured a row is a rail at its left edge: solid cream is “Measured by us”, dashed steel is “Published by Open Code Review”. Adjacent rows of one run join into one segment, so the two runs read as blocks and break apart when a sort interleaves them. Frames are live: sort, filter and expand work.</p>
+  <p class="bnote">Worse at: a reader who wants one number and nothing else gets three tracks of ink per row. The scale is only honest while every value stays under <span data-scale></span> %. The phone shows only F1 as a gauge without a swipe. Full paragraph in NOTES.md.</p>
+
+  <div class="flabel"><b>b</b> desktop · 1440 · loaded (sorted by F1, nothing open) · dashed line = the 900 px fold</div>
+  <div class="frame d" id="f-desk"><div class="fold" style="top:900px"><span>900 px fold</span></div><div class="host"></div></div>
+
+  <div class="flabel"><b>b</b> phone · 390 · loaded · the table scrolls sideways inside its frame; rail, #, system and F1 hold still</div>
+  <div class="side">
+    <div class="frame p" id="f-phone"><div class="host"></div></div>
+    <div>
+      <p class="bnote">Designed for the 1440 desktop first, the brief's primary viewport; the phone is the adaptation. Trade: precision, recall, time, tokens and instances cost a sideways swipe. F1 keeps its bar in the fixed column, and the rail and a one-line tag keep the measured-by distinction on screen without the swipe. Rows grow to 56 px for the thumb, so the phone shows about nine rows per screen, not sixteen.</p>
+      <p class="bnote">Filters open a panel under the bar (tap “Filters”); sort is a select. A tapped row opens its detail at the frame's width, outside the sideways scroll.</p>
+    </div>
+  </div>
+
+  <div class="flabel"><b>b</b> the four other states · desktop, half scale</div>
+  <div class="states">
+    <div><p class="cap"><b>Row expanded.</b> DA + lean open: readout on the shared scale, the conditions, the judge-log files, the cite line, “The paper →”. The rail runs through the detail. A second click closes it; several rows may stay open.</p><div class="frame d crop" id="f-exp" style="height:1240px"><div class="host"></div></div></div>
+    <div><p class="cap"><b>Empty filter result.</b> System: Codex with Measured by: Measured by us. The head stays, the count reads 0 of 16, one line names the filters and resets them.</p><div class="frame d crop" id="f-empty" style="height:1240px"><div class="host"></div></div></div>
+    <div><p class="cap"><b>Loading.</b> The scale and the tracks are drawn, values are not: no number is shown before it is read. Filters are inert until the rows exist.</p><div class="frame d crop" id="f-load" style="height:1000px"><div class="host"></div></div></div>
+    <div><p class="cap"><b>Error.</b> The data file failed. The bar is inert, the table names the file and offers a retry. Method, escaped defects and downloads still render below the table (outside this crop).</p><div class="frame d crop" id="f-err" style="height:1000px"><div class="host"></div></div></div>
+  </div>
+</div>
+
+<script>
+const DATA = {
+ "benchmark": "AACR-Bench (200 pull requests, 50 repositories, 10 languages, 1,505 verified comments; arXiv 2601.19494)",
+ "columns": {
+  "f1": "percent; the harmonic mean of precision and recall over the judge's matches",
+  "precision": "tool comments matched / tool comments",
+  "recall": "human notes matched / human notes",
+  "avg_time": "wall time per pull request as published",
+  "avg_tokens": "tokens per pull request as published",
+  "measured_by": "who ran the judge: our run of the official pipeline, or the numbers Open Code Review publishes; rows of the two were not judged in one run"
+ },
+ "rows": [
+  {
+   "id": "da-lean-opus",
+   "system": "DA + lean",
+   "model": "claude-opus-5-5 (reader) with a claude-opus-4-8 filter",
+   "vendor": "Nexus",
+   "measured_by": "Measured by us",
+   "version": "DA d3 (composed entry: d2-reader + gate + C4), lean v0.1.2 findings",
+   "f1": 31.61,
+   "precision": 34.09,
+   "recall": 29.47,
+   "avg_time": null,
+   "avg_tokens": null,
+   "instances": 184,
+   "notes": 1414,
+   "judge": "claude-opus-5-5",
+   "rounds": 3,
+   "comments": 1059,
+   "source": "research/open-code-review/d3/RESULT.md '## Same instances' (DA repository)",
+   "read": "2026-10-31",
+   "judge_logs": "available"
+  },
+  {
+   "id": "ocr-floor-opus46",
+   "system": "Open Code Review",
+   "model": "claude-opus-4-6",
+   "vendor": "Alibaba",
+   "measured_by": "Measured by us",
+   "version": "OCR 375f64c (the published reader, our run through the official pipeline)",
+   "f1": 29.02,
+   "precision": 27.72,
+   "recall": 30.43,
+   "avg_time": null,
+   "avg_tokens": null,
+   "instances": 184,
+   "notes": 1414,
+   "judge": "claude-opus-5-5",
+   "rounds": 3,
+   "comments": 1426,
+   "source": "research/open-code-review/d3/RESULT.md '## Same instances' (DA repository)",
+   "read": "2026-10-31",
+   "judge_logs": "available"
+  },
+  {
+   "id": "pub-01",
+   "system": "Open Code Review",
+   "model": "Claude-4.6-Opus",
+   "vendor": "Anthropic",
+   "measured_by": "Published by Open Code Review",
+   "version": "Open Code Review v1.3.1",
+   "f1": 25.1,
+   "precision": 33.9,
+   "precision_fraction": "301/889",
+   "recall": 20,
+   "recall_fraction": "301/1505",
+   "avg_time": "1m23s",
+   "avg_tokens": "385K",
+   "avg_tokens_in_out": "375K / 10K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 889,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-02",
+   "system": "Open Code Review",
+   "model": "Qwen3.8-Max",
+   "vendor": "Alibaba",
+   "measured_by": "Published by Open Code Review",
+   "version": "Open Code Review v1.8.7",
+   "f1": 23,
+   "precision": 33.9,
+   "precision_fraction": "262/774",
+   "recall": 17.4,
+   "recall_fraction": "262/1505",
+   "avg_time": "5m14s",
+   "avg_tokens": "334K",
+   "avg_tokens_in_out": "303K / 32K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 774,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-03",
+   "system": "Open Code Review",
+   "model": "GLM-5.2",
+   "vendor": "Zhipu AI",
+   "measured_by": "Published by Open Code Review",
+   "version": "Open Code Review v1.3.1",
+   "f1": 21.3,
+   "precision": 32.3,
+   "precision_fraction": "239/741",
+   "recall": 15.9,
+   "recall_fraction": "239/1505",
+   "avg_time": "7m58s",
+   "avg_tokens": "682K",
+   "avg_tokens_in_out": "624K / 58K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 741,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-04",
+   "system": "Open Code Review",
+   "model": "Qwen3.7-Max",
+   "vendor": "Alibaba",
+   "measured_by": "Published by Open Code Review",
+   "version": "Open Code Review v1.3.1",
+   "f1": 21.2,
+   "precision": 25.2,
+   "precision_fraction": "276/1096",
+   "recall": 18.3,
+   "recall_fraction": "276/1505",
+   "avg_time": "4m41s",
+   "avg_tokens": "625K",
+   "avg_tokens_in_out": "587K / 38K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 1096,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-05",
+   "system": "Open Code Review",
+   "model": "GPT-5.5",
+   "vendor": "OpenAI",
+   "measured_by": "Published by Open Code Review",
+   "version": "Open Code Review v1.3.1",
+   "f1": 21,
+   "precision": 32.1,
+   "precision_fraction": "234/728",
+   "recall": 15.5,
+   "recall_fraction": "234/1505",
+   "avg_time": "2m51s",
+   "avg_tokens": "422K",
+   "avg_tokens_in_out": "409K / 13K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 728,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-06",
+   "system": "Open Code Review",
+   "model": "GLM-5.1",
+   "vendor": "Zhipu AI",
+   "measured_by": "Published by Open Code Review",
+   "version": "Open Code Review v1.3.1",
+   "f1": 20.4,
+   "precision": 28.9,
+   "precision_fraction": "237/820",
+   "recall": 15.7,
+   "recall_fraction": "237/1505",
+   "avg_time": "4m11s",
+   "avg_tokens": "743K",
+   "avg_tokens_in_out": "707K / 36K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 820,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-07",
+   "system": "Open Code Review",
+   "model": "Claude-4.8-Opus",
+   "vendor": "Anthropic",
+   "measured_by": "Published by Open Code Review",
+   "version": "Open Code Review v1.3.1",
+   "f1": 17.9,
+   "precision": 37.8,
+   "precision_fraction": "176/465",
+   "recall": 11.7,
+   "recall_fraction": "176/1505",
+   "avg_time": "1m6s",
+   "avg_tokens": "352K",
+   "avg_tokens_in_out": "342K / 11K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 465,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-08",
+   "system": "Open Code Review",
+   "model": "Deepseek-V4-Pro",
+   "vendor": "DeepSeek",
+   "measured_by": "Published by Open Code Review",
+   "version": "Open Code Review v1.3.1",
+   "f1": 17.9,
+   "precision": 30.6,
+   "precision_fraction": "191/624",
+   "recall": 12.7,
+   "recall_fraction": "191/1505",
+   "avg_time": "6m28s",
+   "avg_tokens": "394K",
+   "avg_tokens_in_out": "350K / 44K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 624,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-09",
+   "system": "Claude Code",
+   "model": "Claude-4.8-Opus",
+   "vendor": "Anthropic",
+   "measured_by": "Published by Open Code Review",
+   "version": "Claude Code v2.1.169",
+   "f1": 14.13,
+   "precision": 15.93,
+   "precision_fraction": "191/1200",
+   "recall": 12.7,
+   "recall_fraction": "191/1505",
+   "avg_time": "5m38s",
+   "avg_tokens": "2,062K",
+   "avg_tokens_in_out": "2,039K / 23K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 1200,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-10",
+   "system": "Claude Code",
+   "model": "Qwen3.7-Max",
+   "vendor": "Alibaba",
+   "measured_by": "Published by Open Code Review",
+   "version": "Claude Code v2.1.169",
+   "f1": 12.17,
+   "precision": 8.23,
+   "precision_fraction": "351/4260",
+   "recall": 23.37,
+   "recall_fraction": "351/1505",
+   "avg_time": "8m6s",
+   "avg_tokens": "5,153K",
+   "avg_tokens_in_out": "5,108K / 44K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 4260,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-11",
+   "system": "Claude Code",
+   "model": "GLM-5.1",
+   "vendor": "Zhipu AI",
+   "measured_by": "Published by Open Code Review",
+   "version": "Claude Code v2.1.169",
+   "f1": 11.93,
+   "precision": 8.37,
+   "precision_fraction": "313/3742",
+   "recall": 20.8,
+   "recall_fraction": "313/1505",
+   "avg_time": "14m10s",
+   "avg_tokens": "4,038K",
+   "avg_tokens_in_out": "3,998K / 39K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 3742,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-12",
+   "system": "Claude Code",
+   "model": "Claude-4.6-Opus",
+   "vendor": "Anthropic",
+   "measured_by": "Published by Open Code Review",
+   "version": "Claude Code v2.1.169",
+   "f1": 11.57,
+   "precision": 7.23,
+   "precision_fraction": "435/5980",
+   "recall": 28.9,
+   "recall_fraction": "435/1505",
+   "avg_time": "13m6s",
+   "avg_tokens": "5,664K",
+   "avg_tokens_in_out": "5,603K / 60K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 5980,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-13",
+   "system": "Claude Code",
+   "model": "Deepseek-V4-Pro",
+   "vendor": "DeepSeek",
+   "measured_by": "Published by Open Code Review",
+   "version": "Claude Code v2.1.169",
+   "f1": 10.93,
+   "precision": 8.27,
+   "precision_fraction": "243/2945",
+   "recall": 16.13,
+   "recall_fraction": "243/1505",
+   "avg_time": "14m24s",
+   "avg_tokens": "5,450K",
+   "avg_tokens_in_out": "5,389K / 60K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 2945,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  },
+  {
+   "id": "pub-14",
+   "system": "Codex",
+   "model": "GPT-5.5",
+   "vendor": "OpenAI",
+   "measured_by": "Published by Open Code Review",
+   "version": "Codex v0.140.0",
+   "f1": 8.36,
+   "precision": 27.82,
+   "precision_fraction": "74/266",
+   "recall": 4.92,
+   "recall_fraction": "74/1505",
+   "avg_time": "2m58s",
+   "avg_tokens": "525K",
+   "avg_tokens_in_out": "520K / 5K",
+   "instances": 200,
+   "notes": 1505,
+   "judge": "not published",
+   "rounds": null,
+   "comments": 266,
+   "source": "https://open-codereview.ai/ (section Open Benchmark)",
+   "read": "2026-10-31",
+   "judge_logs": "not published"
+  }
+ ],
+ "escaped_defects": {
+  "strongest_reader": 10,
+  "recordings": 22,
+  "recordings_and_proof": 31,
+  "of": 43,
+  "clean_refused_reader": 22,
+  "clean_refused_recordings": 4,
+  "source": "the paper's abstract (paper v3)"
+ },
+ "unscored": {
+  "count": 12,
+  "of": 196,
+  "reason": "11 commits GitHub no longer serves, 1 reader failure",
+  "source": "research/open-code-review/d3/RESULT.md"
+ }
+};
+const ROWS = DATA.rows;
+const OWN = 'Measured by us';
+const kind = r => r.measured_by === OWN ? 'own' : 'pub';
+const SCALE = Math.ceil(Math.max(...ROWS.flatMap(r => [r.f1, r.precision, r.recall])) / 10) * 10;
+const STEP = (100 * 10 / SCALE) + '%';
+const SYSTEMS = [...new Set(ROWS.map(r => r.system))];
+const BYS = [...new Set(ROWS.map(r => r.measured_by))];
+const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const sec = s => { if (!s) return null; const m = /^(?:(\d+)m)?(?:(\d+)s)?$/.exec(s); return m ? (+m[1] || 0) * 60 + (+m[2] || 0) : null; };
+const tok = s => s == null ? null : parseFloat(String(s).replace(/,/g, ''));
+const decs = v => (String(v).split('.')[1] || '').length;
+const fmt = v => v.toFixed(Math.max(1, decs(v)));
+const dec = v => { const [i, f] = fmt(v).split('.'); return `<span class="i">${i}</span>.<span class="f">${f}</span>`; };
+const thou = n => n.toLocaleString('en-US');
+const KEYS = {
+  system:      { get: r => (r.system + ' ' + r.model).toLowerCase(), first: 'asc',  short: 'name' },
+  measured_by: { get: r => r.measured_by, first: 'asc', short: 'run' },
+  f1:          { get: r => r.f1, first: 'desc', short: 'F1' },
+  precision:   { get: r => r.precision, first: 'desc', short: 'precision' },
+  recall:      { get: r => r.recall, first: 'desc', short: 'recall' },
+  avg_time:    { get: r => sec(r.avg_time), first: 'asc', short: 'time' },
+  avg_tokens:  { get: r => tok(r.avg_tokens), first: 'asc', short: 'tokens' },
+  instances:   { get: r => r.instances, first: 'desc', short: 'instances' },
+};
+document.querySelectorAll('[data-scale]').forEach(e => e.textContent = SCALE);
+
+const MARK = '<span class="mark">' + '<i></i>'.repeat(9) + '</span>';
+
+function gauge(v, cls) {
+  if (v == null) return '<span class="g none">—</span>';
+  const pct = Math.min(100, v / SCALE * 100);
+  const mark = cls.startsWith('bar-k') ? `width:${pct}%` : `left:${pct}%`;
+  return `<span class="g ${cls}"><b class="gv">${dec(v)}</b><span class="gt"><i style="${mark}"></i></span></span>`;
+}
+function scaleHead(label) {
+  return `<span class="hs"><span class="hl">${label}</span><span class="g"><b class="gv" aria-hidden="true">${dec(88.88)}</b><span class="gt sc"><em>0</em><em>${SCALE / 2}</em><em>${SCALE}</em></span></span></span>`;
+}
+
+function view(st) {
+  let rows = ROWS.map((r, i) => ({ r, i })).filter(({ r }) =>
+    (!st.sys.size || st.sys.has(r.system)) && (!st.by.size || st.by.has(r.measured_by)));
+  const K = KEYS[st.sort.key], dir = st.sort.dir === 'asc' ? 1 : -1;
+  rows.sort((a, b) => {
+    const x = K.get(a.r), y = K.get(b.r);
+    if (x == null && y == null) return a.i - b.i;
+    if (x == null) return 1; if (y == null) return -1;
+    if (x < y) return -dir; if (x > y) return dir; return a.i - b.i;
+  });
+  // competition rank on the active key: equal values share a position
+  let last, lastPos = 0;
+  rows.forEach((o, n) => {
+    const v = K.get(o.r);
+    if (v == null) { o.pos = null; return; }
+    if (n === 0 || v !== last) lastPos = n + 1;
+    o.pos = lastPos; last = v;
+  });
+  return rows;
+}
+
+function detail(r) {
+  const k = kind(r);
+  const un = k === 'own' && DATA.unscored ? DATA.unscored : null;
+  const total = un ? un.of : r.instances;
+  const logs = r.judge_logs === 'available' && r.rounds
+    ? Array.from({ length: r.rounds }, (_, j) => `<a href="#dl">${esc(r.id)}/round-${j + 1}.json</a>`).join('<br>')
+    : `<span class="off">${esc(r.judge_logs)}</span><small>the source publishes scores, not verdicts</small>`;
+  const cite = `${r.system} · ${r.model}: F1 ${fmt(r.f1)} %, precision ${fmt(r.precision)} %, recall ${fmt(r.recall)} %; AACR-Bench, ${r.instances} instances; judge ${r.judge}${r.rounds ? ', ' + r.rounds + ' rounds' : ''}; ${r.measured_by.toLowerCase()}; read ${r.read}.`;
+  const ro = (lab, v, cls, frac) => `<div><div class="k">${lab}<span>0 – ${SCALE} %</span></div>${gauge(v, cls)}${frac ? `<div class="frac">${esc(frac)}</div>` : ''}</div>`;
+  return `<div class="det" aria-hidden="true"><div><div class="dbox">
+    <div class="ro">${ro('F1', r.f1, 'bar-k', '')}${ro('Precision', r.precision, 'ndl', r.precision_fraction ? r.precision_fraction + ' comments matched' : '')}${ro('Recall', r.recall, 'ndl', r.recall_fraction ? r.recall_fraction + ' notes matched' : '')}</div>
+    <dl class="spec">
+      <div class="w2"><dt>Version</dt><dd>${esc(r.version)}</dd></div>
+      <div><dt>Measured by</dt><dd>${esc(r.measured_by)}</dd></div>
+      <div><dt>Instances</dt><dd>${r.instances} of ${total} scored${un ? `<small>${un.count} unscored: ${esc(un.reason)}</small>` : ''}</dd></div>
+      <div><dt>Notes · comments</dt><dd>${thou(r.notes)} human notes<small>${thou(r.comments)} tool comments</small></dd></div>
+      <div><dt>Judge</dt><dd>${esc(r.judge)}${r.rounds ? `<small>${r.rounds} rounds, mean reported</small>` : ''}</dd></div>
+      <div class="w2"><dt>Source</dt><dd>${/^https?:/.test(r.source) ? `<a href="${esc(r.source.split(' ')[0])}">${esc(r.source)}</a>` : esc(r.source)}<small>read ${esc(r.read)}</small></dd></div>
+      <div><dt>Time · tokens per PR</dt><dd>${r.avg_time ? esc(r.avg_time) + ' · ' + esc(r.avg_tokens) : '—'}<small>${r.avg_tokens_in_out ? 'in / out ' + esc(r.avg_tokens_in_out) : 'no figure in the source'}</small></dd></div>
+      <div class="w2"><dt>Judge logs</dt><dd>${logs}</dd></div>
+      <div><dt>Model · vendor</dt><dd>${esc(r.model)}<small>${esc(r.vendor)}</small></dd></div>
+      <div class="cite"><code>${esc(cite)}</code><button class="btn m" data-copy="${esc(cite)}">Copy</button><a class="pp" href="#paper">The paper →</a></div>
+    </dl>
+  </div></div></div>`;
+}
+
+function rowHtml(o, st) {
+  const r = o.r, k = kind(r), open = st.open.has(r.id);
+  const pos = o.pos == null ? '—' : String(o.pos).padStart(2, '0');
+  const tag = k === 'own' ? 'by us' : 'by Open Code Review';
+  return `<div class="tr ${k}${open ? ' open' : ''}" data-id="${r.id}">
+    <div class="row" role="button" tabindex="0" aria-expanded="${open}">
+      <span class="rail"></span><span class="pos">${pos}</span>
+      <span class="sys"><b>${esc(r.system)}</b><small>${esc(r.model)} <i>· ${esc(r.vendor)}</i></small><span class="tag"><i class="sw ${k}"></i>${tag}</span></span>
+      <span class="by"><i class="sw ${k}"></i>${esc(r.measured_by)}</span>
+      <span class="f1c">${gauge(r.f1, 'bar-k f1')}</span>
+      <span>${gauge(r.precision, 'ndl')}</span>
+      <span>${gauge(r.recall, 'ndl')}</span>
+      <span class="r n${r.avg_time ? '' : ' none'}">${r.avg_time ? esc(r.avg_time) : '—'}</span>
+      <span class="r n${r.avg_tokens ? '' : ' none'}">${r.avg_tokens ? esc(r.avg_tokens) : '—'}</span>
+      <span class="r n">${r.instances}</span>
+      <span class="chev"><i>›</i></span>
+    </div>${detail(r)}</div>`;
+}
+
+function headHtml(st) {
+  const s = st.sort, ar = key => s.key === key ? `<span class="ar">${s.dir === 'desc' ? '▼' : '▲'}</span>` : '';
+  const as = key => s.key === key ? (s.dir === 'desc' ? 'descending' : 'ascending') : 'none';
+  const by = s.key === 'f1' ? '' : `<small>by ${KEYS[s.key].short}</small>`;
+  return `<div class="thr">
+    <span class="rail"></span><span class="pos posh nos">#${by}</span>
+    <span class="sysh" data-sort="system" aria-sort="${as('system')}">System · model${ar('system')}</span>
+    <span data-sort="measured_by" aria-sort="${as('measured_by')}">Measured by${ar('measured_by')}</span>
+    <span class="f1c" data-sort="f1" aria-sort="${as('f1')}">${scaleHead('F1' + ar('f1'))}</span>
+    <span data-sort="precision" aria-sort="${as('precision')}">${scaleHead('Precision' + ar('precision'))}</span>
+    <span data-sort="recall" aria-sort="${as('recall')}">${scaleHead('Recall' + ar('recall'))}</span>
+    <span class="r" data-sort="avg_time" aria-sort="${as('avg_time')}">Time/PR${ar('avg_time')}</span>
+    <span class="r" data-sort="avg_tokens" aria-sort="${as('avg_tokens')}">Tokens/PR${ar('avg_tokens')}</span>
+    <span class="r" data-sort="instances" aria-sort="${as('instances')}">Inst.${ar('instances')}</span>
+    <span class="nos"></span></div>`;
+}
+
+function bodyHtml(st, o) {
+  if (o.state === 'loading') {
+    const sk = Array.from({ length: 10 }, () => `<div class="tr"><div class="row"><span class="rail"></span><span class="pos">··</span><span class="sys"><span class="bone" style="width:${150 + Math.random() * 90 | 0}px"></span></span><span class="by"><span class="bone" style="width:120px"></span></span>${['bar-k f1', 'ndl', 'ndl'].map(c => `<span><span class="g ${c}"><b class="gv"><span class="i">··</span>.<span class="f">··</span></b><span class="gt"></span></span></span>`).join('')}<span class="r n">··</span><span class="r n">··</span><span class="r n">··</span><span></span></div></div>`).join('');
+    return `<div class="sk">${sk}</div>`;
+  }
+  if (o.state === 'error') return `<div class="err"><span class="code">data error</span><p>data/leaderboard.json did not load. No row is shown without it.<small>F1, precision and recall are never estimated or cached on this page.</small></p><span class="acts"><button class="btn m">Retry</button><a class="btn m" href="#dl">Open the data file</a></span></div>`;
+  const rows = view(st);
+  if (!rows.length) {
+    const f = [...(st.sys.size ? ['System: ' + [...st.sys].join(', ')] : []), ...(st.by.size ? ['Measured by: ' + [...st.by].join(', ')] : [])].join(' · ');
+    return `<div class="empty"><span>No row matches <b>${esc(f)}</b>.</span><button class="btn m" data-reset>Reset filters</button></div>`;
+  }
+  return rows.map(x => rowHtml(x, st)).join('');
+}
+
+function chips(st, inert) {
+  const n = (f, v) => ROWS.filter(r => r[f] === v).length;
+  const sys = SYSTEMS.map(v => `<button class="chip" data-f="sys" data-v="${esc(v)}" aria-pressed="${st.sys.has(v)}"${inert ? ' disabled' : ''}>${esc(v)}</button>`).join('');
+  const by = BYS.map(v => `<button class="chip" data-f="by" data-v="${esc(v)}" aria-pressed="${st.by.has(v)}"${inert ? ' disabled' : ''}><i class="sw ${v === OWN ? 'own' : 'pub'}"></i>${esc(v)} <u>${n('measured_by', v)}</u></button>`).join('');
+  return { sys: `<span class="grp"><em>System</em>${sys}</span>`, by: `<span class="grp"><em>Measured by</em>${by}</span>` };
+}
+
+function barHtml(st, o) {
+  const inert = o.state === 'loading' || o.state === 'error';
+  const shown = inert ? null : view(st).length;
+  const cnt = o.state === 'loading' ? '<u>reading rows…</u>' : o.state === 'error' ? '<u>no rows</u>' : `${shown} <u>of ${ROWS.length} rows</u>`;
+  const active = st.sys.size + st.by.size;
+  const c = chips(st, inert);
+  if (o.vp === 'p') {
+    const opts = Object.entries(KEYS).map(([k, v]) => `<option value="${k}"${st.sort.key === k ? ' selected' : ''}>Sort: ${v.short}</option>`).join('');
+    return `<div class="bar"><button class="btn m" data-sheet${inert ? ' disabled' : ''}>Filters${active ? ' (' + active + ')' : ''}</button><span class="cnt">${cnt}</span><select data-sortsel${inert ? ' disabled' : ''}>${opts}</select></div>
+      <div class="sheet${st.sheet ? ' on' : ''}">${c.sys}${c.by}<span class="grp"><button class="reset" data-reset${active ? '' : ' disabled'}>Reset filters</button></span></div>`;
+  }
+  return `<div class="bar">${c.sys}${c.by}<span class="cnt">${cnt}</span>${active ? '<button class="reset" data-reset>Reset filters</button>' : ''}<a class="btn m" href="#dl">Download all judge logs ↓</a></div>`;
+}
+
+function afterHtml() {
+  const e = DATA.escaped_defects, u = DATA.unscored;
+  const own = ROWS.filter(r => kind(r) === 'own');
+  const strip = (label, v, of, c) => `<div class="strip"><span>${label}</span><span class="cells" style="--of:${of};--c:${c}">${Array.from({ length: of }, (_, i) => `<i${i < v ? ' class="on"' : ''}></i>`).join('')}</span><span class="n mono">${v} <u>/ ${of}</u></span></div>`;
+  const logs = own.map(r => `<div class="dlr"><i class="sw own"></i><span class="nm">${esc(r.system)} · ${esc(r.model.split(' ')[0])}</span><span class="what">${esc(r.id)}/round-1.json … round-${r.rounds}.json · every judge verdict per comment · ${esc(r.version.split(' (')[0])}</span><a href="#">↓ ${r.rounds} files</a></div>`).join('');
+  return `<div class="after">
+  <section class="sec" id="method"><span class="eyebrow">Method</span><h3>How each row was measured</h3>
+    <div class="mgrid">
+      <div class="m"><span class="id">M1</span><h4>The benchmark</h4><dl><dt>Set</dt><dd>${esc(DATA.benchmark)}</dd><dt>Instance</dt><dd>one pull request and its human review notes</dd></dl></div>
+      <div class="m"><span class="id">M2</span><h4>The official pipeline</h4><dl><dt>Input</dt><dd>each entry reviews every pull request of the set</dd><dt>Output</dt><dd>its review comments, which the judge scores</dd></dl></div>
+      <div class="m"><span class="id">M3</span><h4>The judge</h4><dl><dt>Match</dt><dd>${esc(DATA.columns.precision)} · ${esc(DATA.columns.recall)}</dd><dd class="math">F<sub>1</sub> = 2 P R / (P + R)</dd><dt>Our rows</dt><dd>${esc(own[0].judge)}, ${own[0].rounds} rounds, mean reported</dd><dt>Published rows</dt><dd>judge not published</dd></dl></div>
+      <div class="m"><span class="id">M4</span><h4>How our rows were measured</h4><dl>${own.map(r => `<dt>${esc(r.system)}</dt><dd>${esc(r.model)} · ${esc(r.version)}</dd>`).join('')}<dt>Same for both</dt><dd>${own[0].instances} instances, ${thou(own[0].notes)} notes, one judge run</dd></dl></div>
+      <div class="m"><span class="id">M5</span><h4>The ${u.count} unscored instances</h4><dl><dt>Count</dt><dd>${u.count} of ${u.of}</dd><dt>Cause</dt><dd>${esc(u.reason)}</dd><dt>Source</dt><dd>${esc(u.source)}</dd></dl></div>
+    </div>
+  </section>
+  <section class="sec" id="escaped"><span class="eyebrow">Escaped defects</span><h3>On ${e.of} defects that escaped human review</h3>
+    <div class="esc">
+      <div><h4>Caught</h4><p class="hint">one cell per defect · more is better</p>
+        ${strip('Recordings + proof', e.recordings_and_proof, e.of, 'var(--cream)')}${strip('Recordings', e.recordings, e.of, 'var(--steel)')}${strip('Strongest reader', e.strongest_reader, e.of, 'var(--mut)')}</div>
+      <div><h4>Clean changes refused</h4><p class="hint">one cell per clean change · fewer is better</p>
+        ${strip('Recordings', e.clean_refused_recordings, e.of, 'var(--wit)')}${strip('Strongest reader', e.clean_refused_reader, e.of, 'var(--wit)')}</div>
+    </div>
+    <p class="srcl">source: ${esc(e.source)} · <a href="#paper" style="color:var(--steel)">The paper →</a></p>
+  </section>
+  <section class="sec" id="dl"><span class="eyebrow">Downloads</span><h3>Judge logs and data</h3>
+    <div class="dl">${logs}
+      <div class="dlr"><i class="sw none"></i><span class="nm">leaderboard.json</span><span class="what">all ${ROWS.length} rows, both runs, every field on this page</span><a href="#">↓ json</a></div>
+      <div class="dlr"><i class="sw pub"></i><span class="nm">Published rows</span><span class="what">judge logs not published by Open Code Review · source open-codereview.ai, read ${esc(ROWS.find(r => kind(r) === 'pub').read)}</span><a href="https://open-codereview.ai/">source ↗</a></div>
+    </div>
+  </section>
+  <footer class="foot"><div class="wm"><a class="logo" href="#top">${MARK}provedreview</a><span>Differential attestation is built by Nexus. lean is the checker inside it.</span></div><nav class="fl"><a href="#">lean</a><a href="#">differential-attestation</a><a href="#">benchmark</a><a href="#">paper</a><a href="#">Nexus</a></nav></footer>
+  </div>`;
+}
+
+function mount(frame, o) {
+  const host = frame.querySelector('.host');
+  const st = { sys: new Set(o.sys || []), by: new Set(o.by || []), sort: { key: 'f1', dir: 'desc' }, open: new Set(o.open || []), sheet: false };
+  frame.classList.add(o.vp);
+  host.className = 'host pg ' + o.vp;
+  host.style.setProperty('--step', STEP);
+  const own = ROWS.filter(r => kind(r) === 'own'), pub = ROWS.filter(r => kind(r) === 'pub');
+  host.innerHTML = `
+    <div class="nav"><a class="logo" href="#top">${MARK}provedreview</a><div class="links"><a class="cur" href="#">Benchmark</a><a href="#">Quick start</a><a href="#">Docs</a><a href="#">Paper</a><a class="btn" href="#">GitHub</a>${o.vp === 'p' ? '<button class="btn">Menu</button>' : ''}</div></div>
+    <div class="wrap">
+      <div class="phead"><div><h2>Benchmark</h2><div class="scope">${esc(DATA.benchmark)}</div></div>
+        <div class="caveat"><span><i class="sw own"></i><span><b>Measured by us</b> · ${own.length} rows, one judge run, ${own[0].instances} instances</span></span><span><i class="sw pub"></i><span><b>Published by Open Code Review</b> · ${pub.length} rows, their run, ${pub[0].instances} instances. The two runs were not judged together.</span></span></div></div>
+      <div class="barh"></div>
+      <div class="scr"><div class="tbl"></div></div>
+      <div class="tfoot"></div>
+      ${afterHtml()}
+    </div>`;
+  const draw = () => {
+    host.querySelector('.barh').innerHTML = barHtml(st, o);
+    host.querySelector('.tbl').innerHTML = headHtml(st) + bodyHtml(st, o);
+    host.querySelector('.tfoot').innerHTML = o.state === 'error' ? '' : `<span>scale 0 – ${SCALE} % on F1, precision, recall</span><span>— no figure in the source</span><span>published rows read ${esc(pub[0].read)}</span><span>our rows: ${esc(own[0].version.split(' (')[0])}</span><a href="#method">Method ↓</a>`;
+  };
+  draw();
+  const toggle = id => {
+    const tr = host.querySelector(`.tr[data-id="${id}"]`);
+    if (!tr) return;
+    const on = !st.open.has(id);
+    on ? st.open.add(id) : st.open.delete(id);
+    tr.classList.toggle('open', on);
+    tr.querySelector('.row').setAttribute('aria-expanded', on);
+    tr.querySelector('.det').setAttribute('aria-hidden', !on);
+  };
+  host.addEventListener('click', ev => {
+    const t = ev.target;
+    const cp = t.closest('[data-copy]');
+    if (cp) { navigator.clipboard?.writeText(cp.dataset.copy).catch(() => {}); cp.textContent = 'Copied'; setTimeout(() => cp.textContent = 'Copy', 1400); return; }
+    if (t.closest('a')) { ev.preventDefault(); return; }
+    const h = t.closest('[data-sort]');
+    if (h) { const k = h.dataset.sort; st.sort = st.sort.key === k ? { key: k, dir: st.sort.dir === 'desc' ? 'asc' : 'desc' } : { key: k, dir: KEYS[k].first }; draw(); return; }
+    const ch = t.closest('.chip');
+    if (ch && !ch.disabled) { const set = st[ch.dataset.f], v = ch.dataset.v; set.has(v) ? set.delete(v) : set.add(v); draw(); return; }
+    if (t.closest('[data-reset]')) { st.sys.clear(); st.by.clear(); draw(); return; }
+    if (t.closest('[data-sheet]')) { st.sheet = !st.sheet; draw(); return; }
+    const row = t.closest('.row');
+    if (row && !row.closest('.sk')) toggle(row.parentElement.dataset.id);
+  });
+  host.addEventListener('keydown', ev => {
+    const row = ev.target.closest && ev.target.closest('.row');
+    if (row && (ev.key === 'Enter' || ev.key === ' ')) { ev.preventDefault(); toggle(row.parentElement.dataset.id); }
+  });
+  host.addEventListener('change', ev => {
+    if (ev.target.matches('[data-sortsel]')) { const k = ev.target.value; st.sort = { key: k, dir: KEYS[k].first }; draw(); }
+  });
+}
+
+const firstOwn = ROWS.find(r => kind(r) === 'own');
+const lastSys = SYSTEMS[SYSTEMS.length - 1];
+const $ = id => document.getElementById(id);
+mount($('f-desk'), { vp: 'd', state: 'loaded' });
+mount($('f-phone'), { vp: 'p', state: 'loaded' });
+mount($('f-exp'), { vp: 'd', state: 'loaded', open: [firstOwn.id] });
+mount($('f-empty'), { vp: 'd', state: 'loaded', sys: [lastSys], by: [OWN] });
+mount($('f-load'), { vp: 'd', state: 'loading' });
+mount($('f-err'), { vp: 'd', state: 'error' });
+</script>
+</body>
+</html>

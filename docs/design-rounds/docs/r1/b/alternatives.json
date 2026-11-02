@@ -1,0 +1,10 @@
+[
+ {
+  "id": "B",
+  "rung": "layout",
+  "title": "Top sections",
+  "axis": "navigation is horizontal: the six sections as a second nav bar with search in it, a slim left list of the current section's pages (with the open page's headings nested under it), one wide reading column with no right rail",
+  "entry": "index.html",
+  "worse_at": "Never shows the whole tree on a docs page: a reader who does not know a page's section guesses a tab or searches, and only the /docs/ landing lists every page. Two stacked bars cost vertical space, and on the phone the section strip hides tabs 4 to 6. Six uneven labels and section sizes (nine DA pages, one FAQ page). The table of contents is cramped inside the 240 px list on long pages."
+ }
+]

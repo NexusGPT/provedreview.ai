@@ -1,0 +1,10 @@
+[
+  {
+    "id": "1c",
+    "rung": "layout",
+    "title": "Reader first: one reading column; the page tree in a drawer on every viewport; a sticky docs bar with Contents, breadcrumb and a persistent search field; the table of contents as a sticky strip under the title",
+    "axis": "what is dominant: the page being read, not the tree around it",
+    "entry": "index.html",
+    "worse_at": "Browsing: the page tree is never beside the page, so finding a section's sibling pages costs a click on every viewport; about half of 1440 is empty margin; the 'sidebar entry highlighted' of J3.3 and J1.5 exists only inside the open drawer, and the breadcrumb carries 'where am I'; long pages push the heading strip into a 'more' overflow."
+  }
+]

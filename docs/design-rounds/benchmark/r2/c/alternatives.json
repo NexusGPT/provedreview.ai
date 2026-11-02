@@ -1,0 +1,10 @@
+[
+  {
+    "id": "2c",
+    "rung": "style",
+    "title": "Editorial",
+    "axis": "a printed results table: Source Serif 4 head, method and section heads; the two-runs caveat as a serif pull line beside the title; cream rules at the header and the foot, hairlines between rows; mono tabular numerals; 'Measured by us' in serif italic cream against 'PUBLISHED BY OPEN CODE REVIEW' in mono steel capitals",
+    "entry": "index.html",
+    "worse_at": "no bars or ticks, so gaps are read as digits; zero slack above the fold (ten rows exactly at the lock's 80 px); the 14 repeated mono-capital published labels make a loud column; on a phone the serif head and the pull line push the table to about 650 px; thin serif italic on low-DPI screens"
+  }
+]
