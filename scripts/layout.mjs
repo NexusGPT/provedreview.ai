@@ -32,11 +32,12 @@ export function nav(active) {
   return `<header class="nav" id="top"><a class="logo" href="/" aria-label="provedreview, home">${MARK}provedreview</a><nav class="links" aria-label="Site">${links}</nav><div class="nav-r"><a class="btn" href="${GITHUB}">GitHub</a></div></header>`;
 }
 
-export function footer() {
+// `line` is the footer's sentence; the home passes its own (scripts/build.mjs), every other page keeps this one
+export function footer(line = 'Differential attestation is built by Nexus. lean is the checker inside it.') {
   return `<footer class="foot" data-pagefind-ignore>
   <div class="wm">
     <a class="logo" href="/">${MARK}provedreview</a>
-    <span>Differential attestation is built by Nexus. lean is the checker inside it.</span>
+    <span>${esc(line)}</span>
   </div>
   <nav class="fl" aria-label="Footer">${NAV.map(([l, h]) => `<a href="${h}">${l.toLowerCase()}</a>`).join('')}<a href="${GITHUB}">lean</a><a href="${DA}">differential-attestation</a><a href="https://gpt.nexus">Nexus</a></nav>
 </footer>`;

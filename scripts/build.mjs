@@ -58,12 +58,13 @@ const ctx = { rows: board.rows, board };
 
 // the home: index.html with the shell filled in and the three teaser rows from the data
 const top3 = [...board.rows].sort((a, b) => b.f1 - a.f1).slice(0, 3);
-const teaser = top3.map((r, i) => `<tr${i === 0 ? ' class="ours"' : ''}><td class="en">${esc(r.system)}<small>${esc(r.model.replace(/ \(reader\)/, ''))}</small></td><td class="by">${r.measured_by === 'Measured by us' ? 'Nexus' : 'Open Code Review'}</td><td><span class="num">${r.instances}</span></td><td><span class="num">${r.f1.toFixed(2)}</span></td></tr>`).join('');
+const teaser = top3.map((r, i) => `<tr${i === 0 ? ' class="ours"' : ''}><td class="en">${esc(r.system)} <small>· ${esc(r.model.replace(/ \(reader\)/, ''))}</small></td><td class="by">${r.measured_by === 'Measured by us' ? 'Nexus' : 'Open Code Review'}</td><td><span class="num">${r.instances}</span></td><td><span class="num">${r.f1.toFixed(2)}</span></td></tr>`).join('');
 let home = fs.readFileSync(path.join(root, 'index.html'), 'utf8');
 const fill = (marker, html) => { const re = new RegExp(`<!--#${marker}[^>]*-->`); if (!re.test(home)) throw new Error(`index.html lacks <!--#${marker}-->`); home = home.replace(re, html); };
 fill('shell-head', assets());
 fill('nav', nav(''));
-fill('footer', footer());
+// the home's footer line is direction D's (2026-11-03); every other page keeps the shared line in scripts/layout.mjs
+fill('footer', footer('Nexus builds differential attestation. lean is the checker inside it.'));
 fill('teaser-rows', teaser);
 home = home.replace('<main class="hero">', '<main class="hero" data-pagefind-body>').replace('<div class="below">', '<div class="below" data-pagefind-body>');
 write('index.html', rebase(home));

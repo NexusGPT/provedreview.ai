@@ -5,7 +5,7 @@
 </head><body>
 <canvas id="far" aria-hidden="true"></canvas><canvas id="glow" aria-hidden="true"></canvas><canvas id="ascii" aria-hidden="true"></canvas><canvas id="near" aria-hidden="true"></canvas><canvas id="glass" aria-hidden="true"></canvas>
 <!--#nav: the shared nav (scripts/layout.mjs)-->
-<div id="scrim2"></div><main class="hero"><div><!-- src: lean@dbe9a32 CHANGELOG.md "## v0.1.3, 2026-10-31" (content/PINS.json) --><span class="kicker reveal"><i></i>differential attestation · built on lean 0.1.3</span><h1 class="reveal">Deterministic <span class="g">code review</span>.</h1><p class="sub reveal">A proof that the change did only what you asked. Or the input that breaks it, with the line to fix. Same change, same verdict, every time.</p><div style="display:flex;gap:10px;flex-wrap:wrap" class="reveal"><a class="btn p" href="/quick-start/">Quick start →</a><a class="btn" href="https://github.com/NexusGPT/differential-attestation">Differential attestation on GitHub</a></div></div>
+<div id="scrim2"></div><main class="hero"><div><!-- src: lean@dbe9a32 CHANGELOG.md "## v0.1.3, 2026-10-31" (content/PINS.json) --><span class="kicker reveal"><i></i>differential attestation · built on lean 0.1.3</span><h1 class="reveal">Deterministic <span class="g">code review</span>.</h1><!-- src: the DA README (differential-attestation): "Differential attestation (DA) accepts or refuses a change to a program from evidence about the two versions, the one before and the one after." --><p class="sub reveal def">Differential attestation (DA) accepts or refuses a change from evidence about the code before and after it.</p><p class="sub reveal">A proof that the change did only what you asked. Or the input that breaks it, with the line to fix. Same change, same verdict, every time.</p><div style="display:flex;gap:10px;flex-wrap:wrap" class="reveal"><a class="btn p" href="/quick-start/">Quick start →</a><a class="btn" href="https://github.com/NexusGPT/differential-attestation">Differential attestation on GitHub</a></div></div>
 <!-- src: lean@fe06326 README.md "## Three runs": {"input":17,"floor":-1,"parent":1,"candidate":0}, --n 60 --seed 3. "candidate.ts:15" is [pending source]: the slip sits at langs/ts/tests/pairs/readme_ledger/candidate.ts:15 (lean@d0d88fc); the hero is kept verbatim, the lead decides --><div class="cert reveal"><div class="hd"><span>ledger.json · certificate</span><span class="w">witness</span></div><pre>{
   <span class="k">"unit"</span>: "applyAll",
   <span class="k">"verdict"</span>: <span class="w">"WITNESS"</span>,
@@ -19,215 +19,220 @@
 
 <div class="below">
 
-<!-- 1. counters -->
-<section class="sec counters" id="numbers" aria-label="Numbers">
-  <div class="row5">
-    <div class="ctr rv">
-      <!-- src: differential-attestation@77b43b0 legit/round7/lean-v3/research/open-code-review/d3/RESULT.md, "## Same instances", mean of 3: composed F1 31.61 %, floor F1 29.02 % -->
-      <div class="v">31.6<small>vs 29.0</small></div>
-      <div class="k">AACR-Bench F1</div>
-      <p>Against the published reader, same 184 instances, same judge.</p>
-    </div>
-    <div class="ctr rv">
-      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "the recording checks caught 22 of 43, 2.2 times the reader"; reader "10 of 43" -->
-      <div class="v">2.2x<small>22 vs 10</small></div>
-      <div class="k">Escaped defects caught</div>
-      <p>Recordings against the strongest reader, on 43 defects that passed review.</p>
-    </div>
-    <div class="ctr rv">
-      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "found a separating input for 120 of 143 planted mutations and proved none of them equal" -->
-      <div class="v">120<small>of 143</small></div>
-      <div class="k">Planted mutations</div>
-      <p>Each separated by an input lean found. None proved equal.</p>
-    </div>
-    <div class="ctr rv">
-      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "its reach is 53 percent of 39,775 functions in 36 repositories" -->
-      <div class="v">53%<small>of 39,775</small></div>
-      <div class="k">Functions in reach</div>
-      <p>Proved or executed, across 36 repositories.</p>
-    </div>
-    <div class="ctr rv">
-      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "917 changes in 13 days, against about ten a day for a reviewer" -->
-      <div class="v">917<small>in 13 days</small></div>
-      <div class="k">Agent changes</div>
-      <p>One repository we operate. A reviewer reads about ten a day.</p>
-    </div>
-  </div>
+<!-- 0. the example: a bug planted in a real pull request, as a strip under the hero -->
+<div class="sec case-sec">
+<section class="cert case case-strip rv" aria-labelledby="case">
+<div class="hd"><span>bluewave-labs/Checkmate #3185</span></div>
+<div class="case-bd">
+<!-- src: a DA run on the real pull request bluewave-labs/Checkmate #3185 with a planted bug: client/src/Components/v1/TextLink/index.jsx line 13, direction="row" became direction="rowx"; the comment below is DA's output, verbatim -->
+<h2 class="case-t" id="case">A bug we planted in a real pull request</h2>
+<p>In the parent, the code before the change, line 13 of TextLink reads <code>direction="row"</code>. The bug makes it <code>direction="rowx"</code>. DA ran both versions, with no model in the path.</p>
+<div class="case-label">DA's comment:</div>
+<pre class="term case-comment"><code>TextLink</code> behaves differently because of line 13 (<code>direction="rowx"</code>), where the parent has <code>direction="row"</code>: on input <code>{"href": {"fake": "arg0.href"}, "linkText": {"fake": "arg0.linkText"}, "state": {"fake": "arg0.state"}, "target":…</code>, with the parent text there it returns <code>…"direction": "row", "gap": {"fake": "module:@emotion/react.useTheme().spacing()"}}}</code>, as written it returns <code>…"direction": "rowx", "gap": {"fake": "module:@emotion/react.useTheme().spacing()"}}}</code>. The change at line 22 also changes it.</pre>
+</div>
+</section>
+</div>
+
+<!-- 1. counters: DA in numbers -->
+<section class="sec numbers" id="numbers">
+<div class="head rv"><div>
+<h2>DA in numbers</h2>
+</div></div>
+<div class="counters"><div class="row5">
+<!-- src: differential-attestation@77b43b0 legit/round7/lean-v3/research/open-code-review/d3/RESULT.md, "## Same instances", mean of 3: composed F1 31.61 %, floor F1 29.02 % -->
+<div class="ctr rv"><div class="v">31.6 <small>vs 29.0</small></div><div class="k">AACR-Bench F1</div><p>F1 score on AACR-Bench, a code-review benchmark, in percent. Against Open Code Review, a published reader: an AI reviewer that reads the change. Same judge model, same 184 instances, each a pull request.</p></div>
+<!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "the recording checks caught 22 of 43, 2.2 times the reader"; reader "10 of 43" -->
+<div class="ctr rv"><div class="v">2.2x <small>· 22 vs 10</small></div><div class="k">Escaped defects caught</div><p>A recording runs both versions on fixed inputs and compares them. Against the strongest reader, on 43 defects that passed review. Recordings caught 22 and the reader 10: 2.2x as many.</p></div>
+<!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "found a separating input for 120 of 143 planted mutations and proved none of them equal" -->
+<div class="ctr rv"><div class="v">120 <small>of 143</small></div><div class="k">Planted mutations</div><p>A planted mutation is a bug we put into code on purpose. For 120 of them, lean, the checker inside DA, found an input that exposes the bug. lean proved none of them equal to the original code.</p></div>
+<!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "its reach is 53 percent of 39,775 functions in 36 repositories" -->
+<div class="ctr rv"><div class="v">53% <small>· of 39,775</small></div><div class="k">Functions in reach</div><p>Of 39,775 functions across 36 repositories, DA proved or ran 53%.</p></div>
+<!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "917 changes in 13 days, against about ten a day for a reviewer" -->
+<div class="ctr rv"><div class="v">917 <small>· in 13 days</small></div><div class="k">Agent changes</div><p>Coding agents wrote them, in one repository we operate. A reviewer reads about ten a day.</p></div>
+</div></div>
 </section>
 
-<!-- 2. use cases -->
+<!-- 2. use cases: Who DA is for -->
 <section class="sec" id="use-cases">
-  <div class="head rv">
-    <div>
-      <span class="eyebrow">Use cases</span>
-      <h2>Where a reader cannot keep up.</h2>
-      <p class="lede">The gate reads neither the change text nor any statement by its producer. It runs both versions and compares them.</p>
-    </div>
-    <canvas class="fig" data-fig="branch" aria-hidden="true"></canvas>
-  </div>
-  <div class="cards c3">
-    <article class="card rim rv">
-      <div class="tag"><span>01 · AGENTS</span><span class="w">WITNESS</span></div>
-      <h3>Agent-heavy repositories</h3>
-      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "917 changes in 13 days" -->
-      <p>917 changes in 13 days in one repository. The agent's account of a change never enters the verdict.</p>
-      <!-- src: lean@fe06326 README.md, "### 5. A coding agent's loop" -->
-      <div class="ex">A <span class="w">WITNESS</span> carries the source line of the first difference and the advised rewrite. The agent fixes against an input it can replay.</div>
-    </article>
-    <article class="card rim rv">
-      <div class="tag"><span>02 · PLATFORM</span><span class="w">--block witness</span></div>
-      <h3>Platform teams</h3>
-      <p>A gate in CI. Run it advisory first: one comment per pull request, updated on every push. Then block on <code>WITNESS</code>.</p>
-      <!-- src: lean@fe06326 README.md, "## Using it", the pull-request comment and gate row -->
-      <div class="ex"><span class="k">$</span> node langs/ts/ci/comment.mjs --repo &lt;checkout&gt; --base &lt;sha&gt; --head &lt;sha&gt; --post --block witness</div>
-    </article>
-    <article class="card rim rv">
-      <div class="tag"><span>03 · RESEARCH</span><span class="ok">judge.jsonl</span></div>
-      <h3>Researchers</h3>
-      <!-- src: differential-attestation@77b43b0 .../d3/RESULT.md, "Files:" (per-round metrics with every judge verdict, judge.jsonl); lean@fe06326 README.md "## Contributing" and "## What is built and what is planned" (Python at its second milestone, five pairs) -->
-      <p>The benchmark ships with every judge verdict and both judge logs. A new language merges when it passes the conformance suite.</p>
-      <div class="ex"><span class="k">$</span> python3 -I conformance/run.py<br>Python at milestone 2: the lint names the rewrite, lane B in the TypeScript record shape, five pairs.</div>
-    </article>
-  </div>
+<div class="head rv"><div>
+<span class="eyebrow">Use cases</span>
+<h2>Who DA is for</h2>
+<p class="lede">DA runs both versions and compares them. What the author says about a change never affects the verdict.</p>
+</div><canvas class="fig" data-fig="branch" aria-hidden="true"></canvas></div>
+<div class="cards c3">
+<article class="card rim rv">
+<div class="tag"><span>01 · Agents · <span class="w">WITNESS</span></span></div>
+<h3>Agent-heavy repositories</h3>
+<!-- src: lean@fe06326 README.md, "### 5. A coding agent's loop" -->
+<p>DA gives the agent a witness: an input on which the two versions differ. The witness also names the source line of the first difference and a rewrite DA advises. The agent replays that input and fixes the change against it.</p>
+</article>
+<article class="card rim rv">
+<div class="tag"><span>02 · Platform · <span class="w">--block witness</span></span></div>
+<h3>Platform teams</h3>
+<p>Add DA to your CI as a gate: a check that can block a pull request. Start in advisory mode: DA keeps one comment per pull request up to date on every push. Then add <code>--block witness</code>, and a witness blocks the pull request.</p>
+<!-- src: lean@fe06326 README.md, "## Using it", the pull-request comment and gate row -->
+<div class="ex"><span class="k">$</span> node langs/ts/ci/comment.mjs --repo &lt;checkout&gt; --base &lt;sha&gt; --head &lt;sha&gt; --post --block witness</div>
+</article>
+<article class="card rim rv">
+<div class="tag"><span>03 · Research · <span class="ok">judge.jsonl</span></span></div>
+<h3>Researchers</h3>
+<!-- src: differential-attestation@77b43b0 .../d3/RESULT.md, "Files:" (per-round metrics with every judge verdict, judge.jsonl); lean@fe06326 README.md "## Contributing" and "## What is built and what is planned" (Python at its second milestone, five pairs) -->
+<p>The benchmark ships with every judge verdict and both judge logs. Support for a new language merges into lean once it passes the conformance suite. That suite is the set of tests every language must pass. The command below runs it.</p>
+<div class="ex"><span class="k">$</span> python3 -I conformance/run.py</div>
+</article>
+</div>
 </section>
 
-<!-- 3. core features -->
+<!-- 3. core features: How DA reaches a verdict -->
 <section class="sec" id="method">
-  <div class="head rv">
-    <div>
-      <span class="eyebrow">Core features</span>
-      <h2>Three instruments. Five verdicts.</h2>
-      <p class="lede">Each instrument compares two versions of the system and refuses on evidence. lean reports the strongest verdict the evidence supports.</p>
-    </div>
-    <canvas class="fig" data-fig="scale" aria-hidden="true"></canvas>
-  </div>
-  <div class="cards c3">
-    <article class="card rim rv">
-      <div class="tag"><span>RECORDING</span><span>instrument 1</span></div>
-      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex, "A recording: ..."; "caught 22 of 43 ... refused 4 of 43 clean changes" -->
-      <p>The system runs under a fixed stimulus set before and after the change. A difference outside the selected scope is refused.</p>
-      <div class="ex">The difference inside the scope must equal an edit the requester made on a real recording. <b>22 of 43</b> escaped defects caught, <b>4 of 43</b> clean changes refused.</div>
-    </article>
-    <article class="card rim rv" id="lean">
-      <div class="tag"><span>PROOF</span><span class="ok">PASS-proved · PASS-decided</span></div>
-      <!-- src: lean@fe06326 README.md, "## Three runs" (statement, Toggle) -->
-      <p>lean proves the candidate equal to the parent for every input and every world. A component finite by its types is explored to the end.</p>
-      <div class="ex"><b>statement</b>: a loop with <code>continue</code> became a <code>filter</code> and a <code>map</code>. <span class="ok">Equal_statement: true</span>, 5 verified, 0 errors.<br><b>Toggle</b>: <span class="ok">PASS-decided</span>, 8 state pairs over 2 assignment(s).</div>
-    </article>
-    <article class="card rim rv">
-      <div class="tag"><span>RELATION</span><span>instrument 3</span></div>
-      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex, "A relation: ..."; "the artifact lane to \artunion", \artunion = "40 of 43" in v3/sections/numbers.tex:12 -->
-      <p>For every artifact that is not a function, a predicate declared outside the change compares the two versions.</p>
-      <div class="ex">Build and pipeline configuration, locale files, schemas, documents. With the artifact lane: <b>40 of 43</b> escaped defects caught.</div>
-    </article>
-    <article class="card rim rv">
-      <div class="tag"><span>VERDICT</span><span class="w">WITNESS</span></div>
-      <!-- src: lean@fe06326 README.md, "## Three runs", "A slip the tests missed" -->
-      <p>An input on which the two versions differ. lean draws it itself, and names the source line on each side.</p>
-      <div class="ex"><b>applyAll</b>: <code>&lt;=</code> where the parent had <code>&lt;</code>.<br>{"input":17,"floor":-1,"parent":<span class="ok">1</span>,"candidate":<span class="w">0</span>}</div>
-    </article>
-    <article class="card rim rv">
-      <div class="tag"><span>VERDICT</span><span class="ask">PASS-bounded · ASK</span></div>
-      <!-- src: lean@fe06326 README.md, "## The verdicts" and "## Writing code lean can prove", usual/booking.ts -->
-      <p>No difference found within a stated bound, and it says so. A bounded pass never becomes a proof. ASK names the construct.</p>
-      <div class="ex"><span class="ask">PASS-bounded</span> -&gt; usual-booking.json<br># lanes.A: <span class="ask">ASK</span>, translate: outside the subset (unsupported-syntax)</div>
-    </article>
-    <article class="card rim rv">
-      <div class="tag"><span>SCREEN ROW</span><span>in DA</span></div>
-      <!-- src: lean@fe06326 README.md, "## What couples with lean" and "### 4. The front end" -->
-      <p>Two builds on the same screens: pixels, layout and the accessibility tree. lean names the state where two renders differ.</p>
-      <div class="ex"><b>Search</b>: <span class="w">WITNESS</span> after a click and a timer.<br>div[2]/ul[0] insert &lt;li key="vefqj"&gt;"vefqj"&lt;/li&gt;</div>
-    </article>
-  </div>
+<div class="head rv"><div>
+<span class="eyebrow">Core features</span>
+<h2>How DA reaches a verdict</h2>
+<p class="lede">An instrument is one of DA's three ways to gather evidence. Each instrument compares the parent, the version before the change, with the candidate, the version after. Any refusal rests on that evidence. lean then gives one of five verdicts. A card below explains each one. lean reports the strongest verdict the evidence supports. That verdict claims as much as the evidence allows, and no more.</p>
+</div><canvas class="fig" data-fig="scale" aria-hidden="true"></canvas></div>
+<div class="cards c3">
+<article class="card rim rv">
+<div class="tag"><span>Instrument 1</span></div>
+<h3>Recording</h3>
+<!-- src: paper@1c557a1 v3/sections/00-abstract.tex, "A recording: ..."; "caught 22 of 43 ... refused 4 of 43 clean changes" -->
+<p>A recording runs the system on a fixed set of inputs, before and after the change. You choose a scope: the part of the behaviour the change may alter. DA refuses any difference outside that scope. Inside it, the difference must equal an edit you made on a real recording.</p>
+</article>
+<article class="card rim rv">
+<div class="tag"><span>Instrument 2</span></div>
+<h3>Proof</h3>
+<!-- src: lean@fe06326 README.md, "## Three runs" (statement, Toggle) -->
+<p>lean proves the candidate equal to the parent for every input and every world: PASS-proved. A world is every answer the outside of the function can give: files, the network, the clock. lean does this with a prover, software that checks proofs. When a component's types allow only a finite number of states, lean checks every state the component can reach: PASS-decided.</p>
+<p>Example: in the function <code>statement</code>, a loop with <code>continue</code> became a <code>filter</code> and a <code>map</code>. The prover reports:</p>
+<div class="ex"><span class="ok">Equal_statement: true</span>, 5 verified, 0 errors.</div>
+<p>Example: the <code>Toggle</code> component, where an assignment is one starting setting of the component.</p>
+<div class="ex">Toggle: <span class="ok">PASS-decided</span>, 8 state pairs over 2 assignment(s).</div>
+</article>
+<article class="card rim rv">
+<div class="tag"><span>Instrument 3</span></div>
+<h3>Relation</h3>
+<!-- src: paper@1c557a1 v3/sections/00-abstract.tex, "A relation: ..."; "the artifact lane to \artunion", \artunion = "40 of 43" in v3/sections/numbers.tex:12 -->
+<p>A relation compares the two versions of anything that is not a function. You write its check outside the change. Examples: build and pipeline configuration, locale files, schemas and documents. With the artifact lane, the part that checks these files, DA caught 40 of 43 escaped defects.</p>
+</article>
+<article class="card rim rv">
+<div class="tag"><span>Verdict</span></div>
+<h3>WITNESS</h3>
+<!-- src: lean@fe06326 README.md, "## Three runs", "A slip the tests missed" -->
+<p>A witness is an input on which the two versions differ. lean picks that input itself. It names the source line on each side: one in the parent, one in the candidate.</p>
+<p>Example: the ledger pair that ships with lean. In <code>applyAll</code>, line 15 of the candidate has <code>&lt;=</code> where the parent had <code>&lt;</code>. On input 17, with the argument <code>floor</code> at -1, the parent returns <code>posted</code> 1 and the candidate 0. The <code>replay</code> line reruns this check. The certificate below is the record of this verdict in ledger.json, the file the run writes.</p>
+<div class="cert card-cert"><div class="hd"><span>ledger.json · certificate · <span class="w">witness</span></span></div><pre>{
+  <span class="k">"unit"</span>: "applyAll",
+  <span class="k">"verdict"</span>: <span class="w">"WITNESS"</span>,
+  <span class="k">"input"</span>: <span class="n">17</span>,
+  <span class="k">"floor"</span>: <span class="n">-1</span>,
+  <span class="k">"parent"</span>: { "posted": <span class="n">1</span> },
+  <span class="k">"candidate"</span>: { "posted": <span class="n">0</span> },
+  <span class="k">"where"</span>: "candidate.ts:15 &lt;= where the parent had &lt;",
+  <span class="k">"replay"</span>: "node langs/ts/check.mjs --seed 3 --n 60"
+}</pre></div>
+</article>
+<article class="card rim rv">
+<div class="tag"><span>Verdicts</span></div>
+<h3>PASS-bounded · ASK</h3>
+<!-- src: lean@fe06326 README.md, "## The verdicts" and "## Writing code lean can prove", usual/booking.ts -->
+<p>PASS-bounded: no difference found within a stated number of inputs. A bounded pass never becomes a proof. ASK means lean names the construct it cannot read. A construct is a piece of the language's syntax.</p>
+<p>In the output below, the verdict is PASS-bounded. The proof side, lane A, answers ASK: the code uses syntax outside what it can translate.</p>
+<div class="ex"><span class="ask">PASS-bounded</span> -&gt; usual-booking.json<br># lanes.A: <span class="ask">ASK</span>, translate: outside the subset (unsupported-syntax)</div>
+</article>
+<article class="card rim rv">
+<div class="tag"><span>In DA</span></div>
+<h3>Screen row</h3>
+<!-- src: lean@fe06326 README.md, "## What couples with lean" and "### 4. The front end" -->
+<p>The screen row compares two builds of your app on the same screens: pixels, layout and the accessibility tree. lean names the app state where the two rendered screens differ.</p>
+<p>Example: on <code>Search</code>, lean found a witness after a click and a timer. The two screens differ by one inserted list item:</p>
+<div class="ex">div[2]/ul[0] insert &lt;li key="vefqj"&gt;"vefqj"&lt;/li&gt;</div>
+</article>
+</div>
 </section>
 
-<!-- 4. open benchmark -->
+<!-- 4. open benchmark: Measured against readers -->
 <section class="sec" id="benchmark">
-  <div class="head rv">
-    <div>
-      <span class="eyebrow">Open benchmark</span>
-      <h2>AACR-Bench, with the judge's logs.</h2>
-      <!-- src: differential-attestation@77b43b0 .../d3/RESULT.md, header: official pipeline, 3 rounds, judge claude-opus-5-5; data/leaderboard.json: 16 rows, 14 published by Open Code Review -->
-      <p class="lede">The official pipeline, unchanged judge, three rounds. Our runs beside the 14 rows Open Code Review publishes.</p>
-    </div>
-    <canvas class="fig" data-fig="dial" aria-hidden="true"></canvas>
-  </div>
-  <div class="bench">
-    <div class="rim tbl-wrap rv">
-      <!-- src: data/leaderboard.json, the three rows with the highest F1, filled at build (scripts/build.mjs) -->
-      <table class="tbl teaser">
-        <thead><tr><th>Entry</th><th>Measured by</th><th>Instances</th><th>F1</th></tr></thead>
-        <tbody><!--#teaser-rows--></tbody>
-      </table>
-      <!-- src: same RESULT.md: "## Tokens and dollars" (composed reader claude-opus-5-5 + claude-opus-4-8 filter; floor reader claude-opus-4-6); "## Instances not scored" (12 listed, 11 "GitHub no longer serves the commit", 1 composed-only reader failure). "A same-model run is scheduled" is the lead's brief, no file states it. -->
-      <p class="caveat">F1 in percent. Our two rows: the 184 instances both scored, judge claude-opus-5-5, mean of three rounds; the readers ran on different models. The published row: 200 pull requests, as Open Code Review publishes it.</p>
-      <a class="more" href="/benchmark/">Every row, with its conditions →</a>
-    </div>
-    <div class="rim bars rv">
-      <h3>On 43 defects that escaped human review</h3>
-      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: reader "10 of 43"; recordings "22 of 43"; "the proof lane raised the count to 31" -->
-      <div class="bar"><span>Strongest reader</span><span class="track"><span class="fill" style="--w:23.26%;--c:var(--mut)"></span></span><span class="n">10 / 43</span></div>
-      <div class="bar"><span>Recordings</span><span class="track"><span class="fill" style="--w:51.16%;--c:var(--steel)"></span></span><span class="n">22 / 43</span></div>
-      <div class="bar"><span>Recordings + proof</span><span class="track"><span class="fill" style="--w:72.09%;--c:var(--ok)"></span></span><span class="n">31 / 43</span></div>
-      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "refused 22 of 43 clean changes"; recordings "refused 4 of 43 clean changes"; "two readers from different vendors missed the same defects"; "144 defects that escaped review in six repositories" -->
-      <p>The reader also refused 22 of 43 clean changes; the recordings refused 4. Two readers from different vendors missed the same defects. 144 escaped defects, six repositories.</p>
-    </div>
-  </div>
+<div class="head rv"><div>
+<span class="eyebrow">Open benchmark</span>
+<h2>Measured against readers</h2>
+<!-- src: differential-attestation@77b43b0 .../d3/RESULT.md, header: official pipeline, 3 rounds, judge claude-opus-5-5; data/leaderboard.json: 16 rows, 14 published by Open Code Review -->
+<p class="lede">We ran AACR-Bench, a code-review benchmark, through its official pipeline. Its judge, the model that scores each review, stayed unchanged.</p>
+</div><canvas class="fig" data-fig="dial" aria-hidden="true"></canvas></div>
+<div class="bench">
+<div class="rim tbl-wrap rv">
+<!-- src: data/leaderboard.json, the three rows with the highest F1, filled at build (scripts/build.mjs) -->
+<table class="tbl teaser">
+<thead><tr><th>Entry</th><th>Measured by</th><th>Instances</th><th>F1</th></tr></thead>
+<tbody><!--#teaser-rows--></tbody>
+</table>
+<!-- src: same RESULT.md: "## Tokens and dollars" (composed reader claude-opus-5-5 + claude-opus-4-8 filter; floor reader claude-opus-4-6); "## Instances not scored" (12 listed, 11 "GitHub no longer serves the commit", 1 composed-only reader failure). "A same-model run is scheduled" is the lead's brief, no file states it. -->
+<p class="caveat">F1 is the benchmark's score, in percent. Our two rows use the 184 instances that both entries have scores for. Their judge is claude-opus-5-5. Each F1 in those rows is the mean of three judging rounds. DA's row and Open Code Review's row ran on different models. The third row is the score Open Code Review publishes, on 200 pull requests.</p>
+<p class="caveat">The benchmark page lists our two runs beside the 14 rows Open Code Review publishes.</p>
+<a class="more" href="/benchmark/">Every row, with its conditions →</a>
+</div>
+<div class="rim bars rv">
+<h3>On 43 defects that escaped human review</h3>
+<!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "refused 22 of 43 clean changes"; recordings "refused 4 of 43 clean changes"; "two readers from different vendors missed the same defects"; "144 defects that escaped review in six repositories" -->
+<p>The study mined 144 defects that escaped review in six repositories. The bars compare DA and the reader on the same 43 of them. Each bar counts how many of the 43 defects one method caught.</p>
+<!-- src: paper@1c557a1 v3/sections/00-abstract.tex: reader "10 of 43"; recordings "22 of 43"; "the proof lane raised the count to 31" -->
+<div class="bar"><span>Strongest reader</span><span class="track"><span class="fill" style="--w:23.26%;--c:var(--mut)"></span></span><span class="n">10 / 43</span></div>
+<div class="bar"><span>Recordings</span><span class="track"><span class="fill" style="--w:51.16%;--c:var(--steel)"></span></span><span class="n">22 / 43</span></div>
+<div class="bar"><span>Recordings + proof</span><span class="track"><span class="fill" style="--w:72.09%;--c:var(--ok)"></span></span><span class="n">31 / 43</span></div>
+<!-- src: paper@1c557a1 v3/sections/00-abstract.tex: "refused 22 of 43 clean changes"; recordings "refused 4 of 43 clean changes"; "two readers from different vendors missed the same defects"; "144 defects that escaped review in six repositories" -->
+<p>That reader also refused 22 of 43 clean changes, ones with no defect. The recordings refused 4 of them. Two readers from different vendors missed the same defects.</p>
+</div>
+</div>
 </section>
 
-<!-- 5. quick start -->
+<!-- 5. quick start: Run lean yourself -->
 <section class="sec" id="quick-start">
-  <div class="head rv">
-    <div>
-      <span class="eyebrow">Quick start</span>
-      <h2>One function, one verdict.</h2>
-      <!-- src: lean@fe06326 README.md, "## Three runs" (first code block comment) and "## Using it" ("Lane B needs only Node") -->
-      <p class="lede">Lane B needs only Node 24. Python 3 and Dafny 4 run the proof lane; without them lane A reports ASK.</p>
-    </div>
-    <canvas class="fig" data-fig="term" aria-hidden="true"></canvas>
-  </div>
-  <!-- src: every command and output below is verbatim from lean@fe06326 README.md, "## Three runs" -->
-  <div class="steps">
-    <div class="step rim rv">
-      <span class="no">01</span>
-      <h3>Clone</h3>
-      <p>The checkout holds the pairs the runs below use.</p>
-      <pre class="term"><span class="p">$</span> git clone https://github.com/NexusGPT/lean &amp;&amp; cd lean</pre>
-    </div>
-    <div class="step rim rv">
-      <span class="no">02</span>
-      <h3>Check one function</h3>
-      <p>Parent, candidate, unit name. lean picks the lanes and draws the input.</p>
-      <pre class="term"><span class="p">$</span> node langs/ts/check.mjs --parent langs/ts/tests/pairs/readme_ledger/parent.ts --candidate langs/ts/tests/pairs/readme_ledger/candidate.ts --unit applyAll --no-project --n 60 --seed 3 --out ledger.json
+<div class="head rv"><div>
+<span class="eyebrow">Quick start</span>
+<h2>Run lean yourself</h2>
+<!-- src: lean@fe06326 README.md, "## Three runs" (first code block comment) and "## Using it" ("Lane B needs only Node") -->
+<p class="lede">lean, the checker inside DA, checks a change from two sides. The run side, lane B, runs both versions on inputs it picks. It needs only Node 24. The proof side, lane A, proves the two versions equal with a prover. It needs Python 3 and Dafny 4. Without Python and Dafny, lane A reports ASK.</p>
+</div><canvas class="fig" data-fig="term" aria-hidden="true"></canvas></div>
+<!-- src: every command and output below is verbatim from lean@fe06326 README.md, "## Three runs" -->
+<div class="steps">
+<div class="step rim rv">
+<h3><span class="no">01 · </span>Clone</h3>
+<p>Clone lean's repository and move into it. It holds example pairs: a parent, the version before a change, and a candidate, the version after. Steps 02 and 03 use two of these pairs.</p>
+<pre class="term"><span class="p">$</span> git clone https://github.com/NexusGPT/lean &amp;&amp; cd lean</pre>
+</div>
+<div class="step rim rv">
+<h3><span class="no">02 · </span>Check one function</h3>
+<p>Give lean a parent file, a candidate file and the name of one function. lean picks which sides to run and picks the inputs. Here it finds a witness: an input on which the two versions of <code>applyAll</code> differ.</p>
+<pre class="term"><span class="p">$</span> node langs/ts/check.mjs --parent langs/ts/tests/pairs/readme_ledger/parent.ts --candidate langs/ts/tests/pairs/readme_ledger/candidate.ts --unit applyAll --no-project --n 60 --seed 3 --out ledger.json
 <span class="p">$</span> jq -c '.witness | {input, floor: .args[3], parent: .parent.outcome.returned.posted, candidate: .candidate.outcome.returned.posted}' ledger.json
 <span class="w">{"input":17,"floor":-1,"parent":1,"candidate":0}</span></pre>
-    </div>
-    <div class="step rim rv">
-      <span class="no">03</span>
-      <h3>Decide a component</h3>
-      <p>Every click order from every prop assignment, to the end of its state space.</p>
-      <pre class="term"><span class="p">$</span> node langs/ts/check.mjs --parent langs/ts/tests/pairs/finite_components/parent.tsx --candidate langs/ts/tests/pairs/finite_components/candidate.tsx --unit Toggle --no-project --n 60 --out toggle.json
-<span class="ok">PASS-decided -&gt; toggle.json</span>   <span class="p"># every click order from every prop assignment, decided: 8 state pairs over 2 assignment(s)</span></pre>
-    </div>
-  </div>
-  <!-- src: lean@fe06326 README.md, "## What is built and what is planned" (node 24.22.2, python3, Dafny 4.11.0, Z3 4.12.1 pinned in the Dockerfile) -->
-  <div class="docker rv"><span>Or the image, both lanes pinned:</span><code>docker build -t lean:local .</code></div>
-  <div class="go rv"><a class="btn p" href="/quick-start/">The full quick start →</a><a class="btn" href="/docs/">Docs</a></div>
+<p>The <code>jq</code> command prints that witness: input 17, the <code>floor</code> argument -1, and the <code>posted</code> value each version returns.</p>
+</div>
+<div class="step rim rv">
+<h3><span class="no">03 · </span>Decide a component</h3>
+<p>Check a UI component, <code>Toggle</code>, in every state the component can reach. lean tries every order of clicks from every prop assignment, a starting setting of the component. When it has seen every state and found no difference, the verdict is PASS-decided.</p>
+<pre class="term"><span class="p">$</span> node langs/ts/check.mjs --parent langs/ts/tests/pairs/finite_components/parent.tsx --candidate langs/ts/tests/pairs/finite_components/candidate.tsx --unit Toggle --no-project --n 60 --out toggle.json
+<span class="ok">PASS-decided -&gt; toggle.json</span> <span class="p"># every click order from every prop assignment, decided: 8 state pairs over 2 assignment(s)</span></pre>
+<p>The output gives the verdict, the result file, and the state pairs and starting settings lean checked. A state pair is the parent's state and the candidate's state after the same clicks. lean compares them at every step.</p>
+</div>
+</div>
+<!-- src: lean@fe06326 README.md, "## What is built and what is planned" (node 24.22.2, python3, Dafny 4.11.0, Z3 4.12.1 pinned in the Dockerfile) -->
+<div class="docker rv"><span>Or build the Docker image, which fixes the tool versions for both sides:</span><code>docker build -t lean:local .</code></div>
+<p class="qs-note rv">Python is at milestone 2, the second stage of lean's Python support. It comes with five example pairs. For Python, lean's checker says what to rewrite. Its run side, lane B, uses the same result format as TypeScript.</p>
+<div class="go rv"><a class="btn p" href="/quick-start/">The full quick start →</a><a class="btn" href="/docs/">Docs</a></div>
 </section>
 
 <!-- 6. the paper -->
 <section class="sec" id="paper">
-  <div class="paper rim glass rv">
-    <div>
-      <span class="eyebrow">The paper</span>
-      <!-- src: paper@1c557a1 v3/main.tex:20 \title -->
-      <h2>Differential Attestation: Accepting Agent-Written Changes from Recordings, Proofs and Declared Relations, Never from the Producer's Account</h2>
-      <!-- src: paper@1c557a1 v3/sections/00-abstract.tex -->
-      <p class="lede">An acceptance gate that reads neither the change text nor any statement by its producer.</p>
-      <div class="btns"><a class="btn p" href="/public/paper/differential-attestation.pdf" download="differential-attestation.pdf" type="application/pdf">Read the paper (PDF) →</a><a class="btn" href="https://github.com/NexusGPT/differential-attestation">The DA repository</a></div>
-    </div>
-    <canvas class="fig" data-fig="page" aria-hidden="true"></canvas>
-  </div>
+<div class="paper rim glass rv">
+<div>
+<span class="eyebrow">The paper</span>
+<!-- src: paper@1c557a1 v3/main.tex:20 \title -->
+<h2>Differential Attestation: Accepting Agent-Written Changes from Recordings, Proofs and Declared Relations, Never from the Producer's Account</h2>
+<!-- src: paper@1c557a1 v3/sections/00-abstract.tex -->
+<p class="lede">It describes an acceptance gate: a check that accepts or refuses a change. The gate reads neither the change text nor any statement by its producer, the person or agent who wrote it.</p>
+<div class="btns"><a class="btn p" href="/public/paper/differential-attestation.pdf" download="differential-attestation.pdf" type="application/pdf">Read the paper (PDF) →</a><a class="btn" href="https://github.com/NexusGPT/differential-attestation">The DA repository</a></div>
+</div>
+<canvas class="fig" data-fig="page" aria-hidden="true"></canvas>
+</div>
 </section>
 
 <!-- 7. footer -->
@@ -242,6 +247,8 @@
   // the koi draw only while the hero is on screen; below it the sections cover them
   const hero = document.querySelector('main.hero');
   if ('IntersectionObserver' in window) new IntersectionObserver((es) => { window.__koiIdle = !es[0].isIntersecting; }).observe(hero);
+  // the hero's reveal has run by 1.2 s (its last element starts at .4 s and runs .8 s): take the animation off, so Chrome no longer clips the headline's ink to its box (d.css .reveal.shown)
+  setTimeout(() => document.querySelectorAll('.hero .reveal').forEach((el) => el.classList.add('shown')), 1200);
   // section reveal: on scroll, and on any jump (anchor, full-page capture) since every element checks its own position
   const els = [...document.querySelectorAll('.rv')];
   const show = () => { const line = innerHeight * 0.92; for (const el of els) if (!el.classList.contains('in') && el.getBoundingClientRect().top < line) el.classList.add('in'); };
